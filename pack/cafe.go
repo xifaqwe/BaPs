@@ -235,8 +235,6 @@ func CafeTravel(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	bin.SyncAf.Lock()
-	defer bin.SyncAf.Unlock()
 	if _, ok := bin.FriendList[req.TargetAccountId]; !ok &&
 		enter.GetYostarClanByServerId(game.GetServerId(s)).GetClanAccount(req.TargetAccountId) == nil {
 		return
@@ -246,8 +244,6 @@ func CafeTravel(s *enter.Session, request, response mx.Message) {
 	if friendS == nil {
 		return
 	}
-	friendS.GoroutinesSync.Lock()
-	defer friendS.GoroutinesSync.Unlock()
 
 	rsp.FriendDB = game.GetFriendDB(friendS)
 	rsp.CafeDBs = game.GetPbCafeDBs(friendS)

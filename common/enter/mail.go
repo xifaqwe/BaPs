@@ -2,6 +2,7 @@ package enter
 
 import (
 	"encoding/json"
+	"github.com/gucooing/BaPs/common/check"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 
 	"github.com/gucooing/BaPs/db"
@@ -10,9 +11,7 @@ import (
 )
 
 func (e *EnterSet) checkMail() {
-	e.mailSync.Lock()
-	defer e.mailSync.Unlock()
-	e.MailMap = make(map[int64]*dbstruct.YostarMail)
+	list := make(map[int64]*dbstruct.YostarMail)
 	for _, bin := range db.GetDBGame().GetAllYostarMail() {
 		if bin.ParcelInfoListSql != "" {
 			bin.ParcelInfoList = make([]*dbstruct.ParcelInfo, 0)
@@ -27,14 +26,15 @@ func (e *EnterSet) checkMail() {
 				}
 			}
 		}
-		e.MailMap[bin.MailIndex] = bin
+		list[bin.MailIndex] = bin
 	}
+	check.GateWaySync.Lock()
+	defer check.GateWaySync.Unlock()
+	e.MailMap = list
 }
 
 func GetYostarMail() map[int64]*dbstruct.YostarMail {
 	e := getEnterSet()
-	e.mailSync.RLock()
-	defer e.mailSync.RUnlock()
 	list := make(map[int64]*dbstruct.YostarMail, 0)
 	for k, v := range e.MailMap {
 		list[k] = v
@@ -54,8 +54,6 @@ func AddYostarMail(mail *dbstruct.YostarMail) bool {
 	if err := db.GetDBGame().UpdateYostarMail(mail); err != nil {
 		return false
 	}
-	e.mailSync.RLock()
-	defer e.mailSync.RUnlock()
 	if e.MailMap == nil {
 		e.MailMap = make(map[int64]*dbstruct.YostarMail)
 	}

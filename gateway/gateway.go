@@ -5,15 +5,15 @@ import (
 	"compress/gzip"
 	"fmt"
 	"github.com/bytedance/sonic"
-	"github.com/gucooing/BaPs/protocol/mx"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/config"
 	"github.com/gucooing/BaPs/pkg/alg"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"github.com/gucooing/BaPs/protocol"
+	"github.com/gucooing/BaPs/protocol/mx"
+	"net/http"
 )
 
 type Gateway struct {
@@ -28,16 +28,14 @@ func NewGateWay(router *gin.Engine) *Gateway {
 	enter.MaxPlayerNum = config.GetGateWay().MaxPlayerNum
 	g.initRouter()
 
-	go status(router)
-
 	return g
 }
 
 func (g *Gateway) initRouter() {
-	g.router.POST("/getEnterTicket/gateway", g.getEnterTicket) // 这个地方要加个限速器,不然会被dos
+	g.router.POST("/getEnterTicket/gateway", check.GateSync(), g.getEnterTicket) // 这个地方要加个限速器,不然会被dos
 	api := g.router.Group("/api")
 	{
-		api.POST("/gateway", g.gateWay)
+		api.POST("/gateway", check.GateSync(), g.gateWay)
 	}
 }
 
@@ -79,6 +77,7 @@ func (g *Gateway) gateWay(c *gin.Context) {
 		logger.Debug("unmarshal c--->s err:%s,json:%s", err, string(bin))
 		return
 	}
+
 	g.registerMessage(c, packet, base)
 }
 

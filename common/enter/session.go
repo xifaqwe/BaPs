@@ -2,11 +2,12 @@ package enter
 
 import (
 	"fmt"
+	"github.com/gucooing/BaPs/common/check"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
+	"sync/atomic"
 	"time"
 
 	sro "github.com/gucooing/BaPs/common/server_only"
@@ -24,11 +25,11 @@ type Session struct {
 	AccountServerId int64
 	YostarUID       int64
 	MxToken         string
-	EndTime         time.Time
+	ActiveTime      time.Time // 上次活跃时间
+	LastUpTime      time.Time // 上次保存时间
 	AccountState    proto.AccountState
 	PlayerBin       *sro.PlayerBin // 玩家数据
 	Actions         map[proto.ServerNotificationFlag]bool
-	GoroutinesSync  sync.Mutex
 	AccountFriend   *AccountFriend
 	Mission         *Mission
 	Toast           []string
@@ -40,12 +41,15 @@ type Session struct {
 // 定时检查一次是否有用户长时间离线
 func (e *EnterSet) checkSession() {
 	yostarGameList := make([]*dbstruct.YostarGame, 0)
+	yostarFriendList := make([]*dbstruct.YostarFriend, 0)
 	for accountServerId, info := range GetAllSession() {
-		if time.Now().After(info.EndTime) {
+		if time.Now().After(info.ActiveTime.Add(time.Duration(MaxCachePlayerTime) * time.Minute)) {
 			bin := info.GetYostarGame()
 			if bin != nil {
 				yostarGameList = append(yostarGameList, bin)
+				yostarFriendList = append(yostarFriendList, info.GetFriendInfo().GetYostarFriend())
 			}
+			info.LastUpTime = time.Now()
 			DelSession(accountServerId)
 			logger.Debug("AccountId:%v,超时离线", accountServerId)
 		}
@@ -56,7 +60,12 @@ func (e *EnterSet) checkSession() {
 	if db.GetDBGame().UpAllYostarGame(yostarGameList) != nil {
 		logger.Error("玩家数据保存失败")
 	} else {
-		logger.Info("玩家数据保存完毕")
+		logger.Info("玩家数据保存完毕,num:%v", len(yostarGameList))
+	}
+	if db.GetDBGame().UpAllYostarFriend(yostarFriendList) != nil {
+		logger.Error("好友数据保存失败")
+	} else {
+		logger.Info("好友数据保存完毕,num:%v", len(yostarFriendList))
 	}
 }
 
@@ -68,8 +77,6 @@ func GetSessionBySessionKey(sessionKey *proto.SessionKey) *Session {
 		return nil
 	}
 	e := getEnterSet()
-	e.sessionSync.RLock()
-	defer e.sessionSync.RUnlock()
 	if info, ok := e.SessionMap[sessionKey.AccountServerId]; ok {
 		if info.MxToken != sessionKey.MxToken {
 			return nil
@@ -85,8 +92,6 @@ func GetSessionByAccountServerId(accountServerId int64) *Session {
 		return nil
 	}
 	e := getEnterSet()
-	e.sessionSync.RLock()
-	defer e.sessionSync.RUnlock()
 	if info, ok := e.SessionMap[accountServerId]; ok {
 		return info
 	}
@@ -99,20 +104,17 @@ func GetSessionByUid(uid int64) *Session {
 		return nil
 	}
 	e := getEnterSet()
-	e.sessionSync.RLock()
 	info, ok := e.SessionMap[uid]
 	if ok {
-		e.sessionSync.RUnlock()
 		return info
 	}
-	e.sessionSync.RUnlock()
 	bin := db.GetDBGame().GetYostarGameByAccountServerId(uid)
 	if bin == nil || bin.BinData == nil {
 		return nil
 	}
 	info = NewSession(uid)
 	info.AccountServerId = uid
-	info.EndTime = time.Now().Add(time.Duration(MaxCachePlayerTime) * time.Minute)
+	info.ActiveTime = time.Now()
 	err := pb.Unmarshal(bin.BinData, info.PlayerBin)
 	if err != nil || info.PlayerBin.GetBaseBin().GetAccountId() != uid {
 		return nil
@@ -126,17 +128,16 @@ func NewSession(accountServerId int64) *Session {
 		AccountServerId: accountServerId,
 		Actions:         make(map[proto.ServerNotificationFlag]bool),
 		PlayerBin:       new(sro.PlayerBin),
-		GoroutinesSync:  sync.Mutex{},
-		AccountFriend:   GetAccountFriend(accountServerId),
+		AccountFriend:   newAccountFriend(accountServerId),
 	}
 }
 
-// GetAllSession 获取全部在线玩家
+// GetAllSession 获取全部在线玩家-有锁
 func GetAllSession() map[int64]*Session {
 	allSession := make(map[int64]*Session)
 	e := getEnterSet()
-	e.sessionSync.RLock()
-	defer e.sessionSync.RUnlock()
+	check.GateWaySync.Lock()
+	defer check.GateWaySync.Unlock()
 	for k, v := range e.SessionMap {
 		allSession[k] = v
 	}
@@ -147,32 +148,23 @@ func GetAllSession() map[int64]*Session {
 func GetAllSessionList() []*Session {
 	allSession := make([]*Session, 0)
 	e := getEnterSet()
-	e.sessionSync.RLock()
-	defer e.sessionSync.RUnlock()
 	for _, v := range e.SessionMap {
 		allSession = append(allSession, v)
 	}
 	return allSession
 }
 
-// GetSessionNum 获取在线玩家数量
-func GetSessionNum() int64 {
-	e := getEnterSet()
-	e.sessionSync.RLock()
-	defer e.sessionSync.RUnlock()
-	return int64(len(e.SessionMap))
-}
-
-// DelSession 删除指定在线玩家
+// DelSession 删除指定在线玩家-有锁
 func DelSession(accountServerId int64) bool {
 	e := getEnterSet()
-	e.sessionSync.Lock()
-	defer e.sessionSync.Unlock()
 	if e.SessionMap == nil {
 		e.SessionMap = make(map[int64]*Session)
 	}
+	check.GateWaySync.Lock()
+	defer check.GateWaySync.Unlock()
 	if _, ok := e.SessionMap[accountServerId]; ok {
 		delete(e.SessionMap, accountServerId)
+		atomic.AddInt64(&check.SessionNum, -1)
 		return true
 	}
 	return false
@@ -185,8 +177,6 @@ func AddSession(x *Session) bool {
 		return false
 	}
 	e := getEnterSet()
-	e.sessionSync.Lock()
-	defer e.sessionSync.Unlock()
 	if e.SessionMap == nil {
 		e.SessionMap = make(map[int64]*Session)
 	}
@@ -195,7 +185,12 @@ func AddSession(x *Session) bool {
 		return false
 	}
 	e.SessionMap[x.AccountServerId] = x
+	atomic.AddInt64(&check.SessionNum, 1)
 	return true
+}
+
+func (x *Session) GetFriendInfo() *AccountFriend {
+	return x.AccountFriend
 }
 
 // Close 保存全部玩家数据
@@ -205,59 +200,55 @@ func Close() {
 
 // UpAllPlayerBin 保存全部玩家数据
 func UpAllPlayerBin() {
-	logger.Info("正在保存全部在线数据")
 	// 保存玩家主要数据
 	yostarGameList := make([]*dbstruct.YostarGame, 0)
+	yostarFriendList := make([]*dbstruct.YostarFriend, 0)
 	for _, info := range GetAllSession() {
-		info.GoroutinesSync.Lock()
+		if info.LastUpTime.After(info.ActiveTime) {
+			continue
+		}
 		bin := info.GetYostarGame()
 		if bin != nil {
 			yostarGameList = append(yostarGameList, bin)
+			yostarFriendList = append(yostarFriendList, info.GetFriendInfo().GetYostarFriend())
 		}
-		info.GoroutinesSync.Unlock()
+		info.LastUpTime = time.Now()
 	}
-	if db.GetDBGame().UpAllYostarGame(yostarGameList) != nil {
-		logger.Error("玩家数据保存失败")
-	} else {
-		logger.Info("玩家数据保存完毕")
-	}
-	// 保存玩家次要数据 (好友数据
-	yostarFriendList := make([]*dbstruct.YostarFriend, 0)
-	for _, info := range GetAllAccountFriend() {
-		info.SyncAf.Lock()
-		bin := info.GetYostarFriend()
-		if bin != nil {
-			yostarFriendList = append(yostarFriendList, bin)
+	if len(yostarGameList) != 0 {
+		if db.GetDBGame().UpAllYostarGame(yostarGameList) != nil {
+			logger.Error("玩家数据保存失败")
+		} else {
+			logger.Info("玩家数据保存完毕,num:%v", len(yostarGameList))
 		}
-		info.SyncAf.Unlock()
+		if db.GetDBGame().UpAllYostarFriend(yostarFriendList) != nil {
+			logger.Error("好友数据保存失败")
+		} else {
+			logger.Info("好友数据保存完毕,num:%v", len(yostarFriendList))
+		}
 	}
-	if db.GetDBGame().UpAllYostarFriend(yostarFriendList) != nil {
-		logger.Error("好友数据保存失败")
-	} else {
-		logger.Info("好友数据保存完毕")
-	}
+
 	// 保存社团数据
 	yostarClanList := make([]*dbstruct.YostarClan, 0)
 	for _, info := range GetAllYostarClan() {
-		info.SyncYC.Lock()
+		if info.LastUpTime.After(info.ActiveTime) {
+			continue
+		}
 		bin := info.GetYostarClan()
 		if bin != nil {
 			yostarClanList = append(yostarClanList, bin)
 		}
-		info.SyncYC.Unlock()
 	}
-	if db.GetDBGame().UpAllYostarClan(yostarClanList) != nil {
-		logger.Error("社团数据保存失败")
-	} else {
-		logger.Info("社团数据保存完毕")
+	if len(yostarClanList) != 0 {
+		if db.GetDBGame().UpAllYostarClan(yostarClanList) != nil {
+			logger.Error("社团数据保存失败")
+		} else {
+			logger.Info("社团数据保存完毕,num:%v", len(yostarClanList))
+		}
 	}
-	logger.Info("保存全部在线数据成功")
 }
 
 // GetPbBinData 将玩家pb数据转二进制数据
 func (x *Session) GetPbBinData() []byte {
-	x.GoroutinesSync.Lock()
-	defer x.GoroutinesSync.Unlock()
 	bin, err := pb.Marshal(x.PlayerBin)
 	if err != nil {
 		return nil
@@ -270,10 +261,8 @@ func (x *Session) GetYostarGame() *dbstruct.YostarGame {
 	if x == nil {
 		return nil
 	}
-	x.GoroutinesSync.Lock() // 唯一线程操作锁
 	var fin = true
 	defer func() {
-		x.GoroutinesSync.Unlock()
 		if !fin {
 			logger.Debug("玩家:%v,数据保存失败,数据保存将保存到服务端硬盘,下次启动时将尝试写入数据库", x.AccountServerId)
 			if err := x.upDataDisk(); err != nil {

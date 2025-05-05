@@ -31,8 +31,6 @@ func FriendList(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	bin.SyncAf.RLock()
-	defer bin.SyncAf.RUnlock()
 
 	rsp.IdCardBackgroundDBs = game.GetIdCardBackgroundDBs(s)
 	rsp.FriendDBs = game.GetFriendDBs(s, bin.FriendList)
@@ -110,8 +108,6 @@ func FriendSendFriendRequest(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	bin.SyncAf.Lock()
-	defer bin.SyncAf.Unlock()
 
 	defer func() {
 		rsp.FriendDBs = game.GetFriendDBs(s, bin.FriendList)
@@ -131,8 +127,7 @@ func FriendSendFriendRequest(s *enter.Session, request, response mx.Message) {
 		logger.Warn("[UID:%v]好友信息拉取失败,请检查数据库连接情况", req.TargetAccountId)
 		return
 	}
-	targetFriendBin.SyncAf.Lock()
-	defer targetFriendBin.SyncAf.Unlock()
+
 	// 直接成为好友
 	if _, ok := targetFriendBin.SendReceivedList[s.AccountServerId]; ok ||
 		targetFriendBin.AutoAcceptFriendRequest {
@@ -159,8 +154,6 @@ func FriendAcceptFriendRequest(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	bin.SyncAf.Lock()
-	defer bin.SyncAf.Unlock()
 
 	defer func() {
 		rsp.FriendDBs = game.GetFriendDBs(s, bin.FriendList)
@@ -178,8 +171,6 @@ func FriendAcceptFriendRequest(s *enter.Session, request, response mx.Message) {
 		logger.Warn("[UID:%v]好友信息拉取失败,请检查数据库连接情况", req.TargetAccountId)
 		return
 	}
-	targetFriendBin.SyncAf.Lock()
-	defer targetFriendBin.SyncAf.Unlock()
 	game.AddFriendByUid(friendS, s.AccountServerId)
 	game.AddFriendByUid(s, req.TargetAccountId)
 }
@@ -192,8 +183,6 @@ func FriendDeclineFriendRequest(s *enter.Session, request, response mx.Message) 
 	if bin == nil {
 		return
 	}
-	bin.SyncAf.Lock()
-	defer bin.SyncAf.Unlock()
 
 	defer func() {
 		rsp.FriendDBs = game.GetFriendDBs(s, bin.FriendList)
@@ -210,8 +199,6 @@ func FriendDeclineFriendRequest(s *enter.Session, request, response mx.Message) 
 		logger.Warn("[UID:%v]好友信息拉取失败,请检查数据库连接情况", req.TargetAccountId)
 		return
 	}
-	targetFriendBin.SyncAf.Lock()
-	defer targetFriendBin.SyncAf.Unlock()
 
 	if bin.SendReceivedList == nil {
 		bin.SendReceivedList = make(map[int64]bool)
@@ -231,8 +218,6 @@ func FriendRemove(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	bin.SyncAf.Lock()
-	defer bin.SyncAf.Unlock()
 
 	defer func() {
 		rsp.FriendDBs = game.GetFriendDBs(s, bin.FriendList)
@@ -249,8 +234,6 @@ func FriendRemove(s *enter.Session, request, response mx.Message) {
 		logger.Warn("[UID:%v]好友信息拉取失败,请检查数据库连接情况", req.TargetAccountId)
 		return
 	}
-	targetFriendBin.SyncAf.Lock()
-	defer targetFriendBin.SyncAf.Unlock()
 	game.RemoveFriendByUid(s, req.TargetAccountId)
 	game.RemoveFriendByUid(friendS, s.AccountServerId)
 }

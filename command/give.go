@@ -70,8 +70,6 @@ func (c *Command) give(options map[string]*cdq.CommandOption) (string, error) {
 	}
 
 	// 执行
-	s.GoroutinesSync.Lock()
-	defer s.GoroutinesSync.Unlock()
 
 	mail := &sro.MailInfo{
 		Sender:     "gucooing",

@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/protocol/mx"
 	"sync"
 	"sync/atomic"
@@ -69,7 +70,7 @@ func (g *Gateway) getEnterTicket(c *gin.Context) {
 	}
 
 	rsp.RequiredSecondsPerUser = 1
-	if enter.GetSessionNum() >= enter.MaxPlayerNum &&
+	if check.SessionNum >= enter.MaxPlayerNum &&
 		enter.MaxPlayerNum > 0 {
 		rsp.TicketSequence = GetTicketSequence()                // 排队的玩家数量
 		rsp.AllowedSequence = GetAllowedSequence(req.YostarUID) // 你的顺序-倒序
@@ -140,7 +141,7 @@ func AccountCheckYostar(s *enter.Session, request, response mx.Message) {
 	// 更新一次账号缓存
 	mxToken := mx.GetMxToken(tickInfo.AccountServerId, 64)
 	s.MxToken = mxToken
-	s.EndTime = time.Now().Add(time.Duration(enter.MaxCachePlayerTime) * time.Minute)
+	s.ActiveTime = time.Now()
 	if !enter.AddSession(s) {
 		logger.Info("AccountServerId:%v,重复上线账号,如果老客户端在线则会被离线", tickInfo.AccountServerId)
 	} else {

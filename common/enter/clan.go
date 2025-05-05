@@ -3,9 +3,9 @@ package enter
 import (
 	"errors"
 	"github.com/bytedance/sonic"
+	"github.com/gucooing/BaPs/common/check"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"github.com/gucooing/BaPs/protocol/mx"
-	"sync"
 	"time"
 
 	"github.com/gucooing/BaPs/db"
@@ -14,15 +14,15 @@ import (
 	"github.com/gucooing/BaPs/protocol/proto"
 )
 
-var MaxCacheYostarClanTime = 24 // 最大玩家缓存时间 单位: 小时
+var MaxCacheYostarClanTime = 30 // 最大玩家缓存时间 单位:分
 const (
 	ClanMaxMemberCount = 50 // 社团最大成员数量
 )
 
 type YostarClan struct {
 	ServerId         int64                  `json:"serverId"`
-	UpTime           int64                  `json:"-"`
-	SyncYC           sync.RWMutex           `json:"-"`
+	ActiveTime       time.Time              `json:"-"` // 上次活跃时间
+	LastUpTime       time.Time              `json:"-"` // 上次保存时间
 	ClanName         string                 `json:"clanName"`
 	AllAccount       map[int64]*ClanAccount `json:"allAccount"` // 账号id
 	President        int64                  `json:"president"`  // 主席账号id
@@ -44,13 +44,13 @@ type ClanAccount struct {
 func (e *EnterSet) checkYostarClan() {
 	yostarClanList := make([]*dbstruct.YostarClan, 0)
 	for serverId, info := range GetAllYostarClan() {
-		if time.Now().After(time.Unix(info.UpTime, 0).
-			Add(time.Hour * time.Duration(MaxCacheYostarClanTime))) {
+		if time.Now().After(info.ActiveTime.
+			Add(time.Minute * time.Duration(MaxCacheYostarClanTime))) {
 			bin := info.GetYostarClan()
 			if bin != nil {
 				yostarClanList = append(yostarClanList, bin)
 			}
-			DelSession(serverId)
+			DelYostarClan(serverId)
 			logger.Debug("YostarClan:%v,超时离线", serverId)
 		}
 	}
@@ -61,12 +61,12 @@ func (e *EnterSet) checkYostarClan() {
 	}
 }
 
-// GetAllYostarClan 获取全部缓存社团
+// GetAllYostarClan 获取全部缓存社团-有锁
 func GetAllYostarClan() map[int64]*YostarClan {
 	list := make(map[int64]*YostarClan)
 	e := getEnterSet()
-	e.ycSync.RLock()
-	defer e.ycSync.RUnlock()
+	check.GateWaySync.Lock()
+	defer check.GateWaySync.Unlock()
 	for v, k := range e.YostarClan {
 		list[v] = k
 	}
@@ -77,8 +77,6 @@ func GetAllYostarClan() map[int64]*YostarClan {
 func GetAllYostarClanList() []*YostarClan {
 	list := make([]*YostarClan, 0)
 	e := getEnterSet()
-	e.ycSync.RLock()
-	defer e.ycSync.RUnlock()
 	for _, k := range e.YostarClan {
 		list = append(list, k)
 	}
@@ -86,23 +84,25 @@ func GetAllYostarClanList() []*YostarClan {
 }
 
 // GetYostarClanByServerId 拉取社团消息
-func GetYostarClanByServerId(ycId int64) *YostarClan {
+func GetYostarClanByServerId(ycId int64) (yc *YostarClan) {
+	defer func() {
+		if yc != nil {
+			yc.ActiveTime = time.Now()
+		}
+	}()
+	var err error
+	var ok bool
 	if ycId == 0 {
-		return nil
+		return
 	}
 	s := getEnterSet()
-	s.ycSync.RLock()
-	if af, ok := s.YostarClan[ycId]; ok {
-		s.ycSync.RUnlock()
-		return af
+	if yc, ok = s.YostarClan[ycId]; ok {
+		return
 	}
-	s.ycSync.RUnlock()
-	yc, err := DbGetYostarClan(ycId)
+	yc, err = DbGetYostarClan(ycId)
 	if err != nil {
-		return nil
+		return
 	}
-	s.ycSync.Lock()
-	defer s.ycSync.Unlock()
 	if s.YostarClan == nil {
 		s.YostarClan = make(map[int64]*YostarClan)
 	}
@@ -111,24 +111,19 @@ func GetYostarClanByServerId(ycId int64) *YostarClan {
 	}
 	s.YostarClan[ycId] = yc
 	s.YostarClanHash[yc.ClanName] = ycId
-	return yc
+	return
 }
 
 func GetYostarClanByClanName(clanName string) *YostarClan {
 	s := getEnterSet()
-	s.ycSync.RLock()
 	if serverId, ok := s.YostarClanHash[clanName]; ok {
-		s.ycSync.RUnlock()
 		return GetYostarClanByServerId(serverId)
 	}
-	s.ycSync.RUnlock()
 
 	yc, err := DbGetYostarClanByClanName(clanName)
 	if err != nil {
 		return nil
 	}
-	s.ycSync.Lock()
-	defer s.ycSync.Unlock()
 	if s.YostarClan == nil {
 		s.YostarClan = make(map[int64]*YostarClan)
 	}
@@ -150,8 +145,8 @@ func DbGetYostarClanByClanName(clanName string) (*YostarClan, error) {
 	sonic.Unmarshal([]byte(bin.ClanInfo), yc)
 	yc.ServerId = bin.ServerId
 	yc.ClanName = bin.ClanName
-	yc.UpTime = time.Now().Unix()
-	yc.SyncYC = sync.RWMutex{}
+	yc.ActiveTime = time.Now()
+	yc.LastUpTime = time.Now()
 	return yc, nil
 }
 
@@ -165,9 +160,22 @@ func DbGetYostarClan(ycId int64) (*YostarClan, error) {
 	sonic.Unmarshal([]byte(bin.ClanInfo), yc)
 	yc.ServerId = ycId
 	yc.ClanName = bin.ClanName
-	yc.UpTime = time.Now().Unix()
-	yc.SyncYC = sync.RWMutex{}
+	yc.ActiveTime = time.Now()
+	yc.LastUpTime = time.Now()
 	return yc, nil
+}
+
+func DelYostarClan(serverId int64) bool {
+	check.GateWaySync.Lock()
+	defer check.GateWaySync.Unlock()
+	s := getEnterSet()
+	if info, ok := s.YostarClan[serverId]; ok {
+		info.UpDate()
+		delete(s.YostarClan, serverId)
+		delete(s.YostarClanHash, info.ClanName)
+		return true
+	}
+	return false
 }
 
 // GetYostarClan 预处理db数据
@@ -209,8 +217,6 @@ func (x *YostarClan) GetMemberCount() int64 {
 	if x == nil {
 		return 0
 	}
-	x.SyncYC.RLock()
-	defer x.SyncYC.RUnlock()
 	return int64(len(x.AllAccount))
 }
 
@@ -218,8 +224,6 @@ func (x *YostarClan) GetAllAccount() map[int64]*ClanAccount {
 	if x == nil {
 		return nil
 	}
-	x.SyncYC.RLock()
-	defer x.SyncYC.RUnlock()
 	account := make(map[int64]*ClanAccount)
 	for k, v := range x.AllAccount {
 		account[k] = v
@@ -231,8 +235,6 @@ func (x *YostarClan) GetClanAccount(uid int64) *ClanAccount {
 	if x == nil {
 		return nil
 	}
-	x.SyncYC.RLock()
-	defer x.SyncYC.RUnlock()
 	info, ok := x.AllAccount[uid]
 	if !ok {
 		return nil
@@ -244,8 +246,6 @@ func (x *YostarClan) AddAccount(uid int64, socialGrade int32) bool {
 	if x == nil {
 		return false
 	}
-	x.SyncYC.Lock()
-	defer x.SyncYC.Unlock()
 	if x.AllAccount == nil {
 		x.AllAccount = make(map[int64]*ClanAccount)
 	}
@@ -265,8 +265,6 @@ func (x *YostarClan) RemoveAccount(uid int64) bool {
 	if x == nil {
 		return true
 	}
-	x.SyncYC.RLock()
-	defer x.SyncYC.RUnlock()
 	if x.AllAccount == nil {
 		x.AllAccount = make(map[int64]*ClanAccount)
 	}
@@ -286,8 +284,6 @@ func (x *YostarClan) SetPresident(uid int64) bool {
 	if x == nil {
 		return false
 	}
-	x.SyncYC.Lock()
-	defer x.SyncYC.Unlock()
 	if x.AllAccount == nil {
 		x.AllAccount = make(map[int64]*ClanAccount)
 	}
@@ -307,8 +303,6 @@ func (x *YostarClan) SetNotice(notice string) bool {
 	if x == nil {
 		return false
 	}
-	x.SyncYC.Lock()
-	defer x.SyncYC.Unlock()
 	x.Notice = notice
 	return true
 }
@@ -317,8 +311,6 @@ func (x *YostarClan) SetJoinOption(joinOption int32) bool {
 	if x == nil {
 		return false
 	}
-	x.SyncYC.Lock()
-	defer x.SyncYC.Unlock()
 	x.JoinOption = joinOption
 	return true
 }
@@ -327,8 +319,6 @@ func (x *YostarClan) GetAllApplicantAccount() map[int64]*ClanAccount {
 	if x == nil {
 		return nil
 	}
-	x.SyncYC.RLock()
-	defer x.SyncYC.RUnlock()
 	account := make(map[int64]*ClanAccount)
 	for k, v := range x.ApplicantAccount {
 		account[k] = v
@@ -343,8 +333,6 @@ func (x *YostarClan) AddApplicantAccount(uid int64) bool {
 	if x.GetMemberCount() >= ClanMaxMemberCount {
 		return false
 	}
-	x.SyncYC.Lock()
-	defer x.SyncYC.Unlock()
 	if x.ApplicantAccount == nil {
 		x.ApplicantAccount = make(map[int64]*ClanAccount)
 	}
@@ -360,8 +348,6 @@ func (x *YostarClan) RemoveApplicantAccount(uid int64) {
 	if x == nil {
 		return
 	}
-	x.SyncYC.Lock()
-	defer x.SyncYC.Unlock()
 	if x.ApplicantAccount == nil {
 		x.ApplicantAccount = make(map[int64]*ClanAccount)
 	}

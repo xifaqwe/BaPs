@@ -1,11 +1,12 @@
 package command
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/bytedance/sonic"
+	"runtime"
+	"sync/atomic"
 
 	"github.com/gucooing/BaPs/common/check"
-	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/pkg"
 	"github.com/gucooing/cdq"
 	"github.com/shirou/gopsutil/cpu"
@@ -13,13 +14,14 @@ import (
 )
 
 type Ping struct {
-	PlayerNum     int64   `json:"playerNum"`     // 在线玩家数量
-	Tps           int64   `json:"tps"`           // 上一分钟请求量
-	Rt            float64 `json:"rt"`            // 上一分钟每一个请求平均处理时间 单位ms
-	ClientVersion string  `json:"clientVersion"` // 客户端版本
-	ServerVersion string  `json:"serverVersion"` // 服务端版本
-	CpuOc         float64 `json:"cpuOc"`         // cpu占用
-	MemoryOc      string  `json:"memoryOc"`      // 内存占用
+	PlayerNum     int64       `json:"playerNum"`     // 在线玩家数量
+	Tps           int64       `json:"tps"`           // 上一分钟请求量
+	Rt            FloatString `json:"rt"`            // 上一分钟每一个请求平均处理时间 单位ms
+	ClientVersion string      `json:"clientVersion"` // 客户端版本
+	ServerVersion string      `json:"serverVersion"` // 服务端版本
+	CpuOc         float64     `json:"cpuOc"`         // cpu占用
+	MemoryOc      string      `json:"memoryOc"`      // 内存占用
+	BaPsMemoryOc  string      `json:"baPsMemoryOc"`  // BaPs内存占用
 }
 
 func (c *Command) ApplicationCommandPing() {
@@ -36,16 +38,17 @@ func (c *Command) ApplicationCommandPing() {
 
 func (c *Command) ping(options map[string]*cdq.CommandOption) (string, error) {
 	response := Ping{
-		PlayerNum:     enter.GetSessionNum(),
+		PlayerNum:     atomic.LoadInt64(&check.SessionNum),
 		Tps:           check.OLDTPS,
-		Rt:            check.OLDRT,
+		Rt:            FloatString(check.OLDRT),
 		ClientVersion: pkg.ClientVersion,
 		ServerVersion: pkg.ServerVersion,
 		CpuOc:         GetCpuOc(),
 		MemoryOc:      MemoryOc(),
+		BaPsMemoryOc:  BaPsMemoryOc(),
 	}
-	bin, err := json.Marshal(response)
-	return string(bin), err
+	bin, err := sonic.MarshalString(response)
+	return bin, err
 }
 
 func GetCpuOc() float64 {
@@ -68,4 +71,22 @@ func MemoryOc() string {
 		return fmt.Sprintf("%.2f/%.2fGB", used/1024/1024/1024, total/1024/1024/1024)
 	}
 	return fmt.Sprintf("%.2f/%.2fMB", used/1024/1024, total/1024/1024)
+}
+
+func BaPsMemoryOc() string {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+
+	used := float64(m.Alloc)
+	if used/1024/1024 > 1024 {
+		return fmt.Sprintf("%.2fGB", used/1024/1024/1024)
+	}
+	return fmt.Sprintf("%.2fMB", used/1024/1024)
+}
+
+type FloatString float64
+
+func (f FloatString) MarshalJSON() ([]byte, error) {
+	// 将浮点数格式化为字符串，保留必要精度
+	return []byte(fmt.Sprintf(`"%v"`, float64(f))), nil
 }

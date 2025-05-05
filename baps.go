@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
@@ -57,6 +58,7 @@ func NewBaPs() {
 	cfg := config.GetConfig()
 	// 设置时区
 	mx.SetTZ()
+	check.GateWaySync = &sync.Mutex{}
 	logger.InitLogger("BaPs", strings.ToUpper(cfg.LogLevel))
 	logger.Info("BaPs")
 	done := make(chan os.Signal, 1)

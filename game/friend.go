@@ -120,9 +120,7 @@ func GetFriendDBs(s *enter.Session, uidList map[int64]bool) []*proto.FriendDB {
 		if friendS == nil {
 			continue
 		}
-		friendS.GoroutinesSync.Lock()
 		list = append(list, GetFriendDB(friendS))
-		friendS.GoroutinesSync.Unlock()
 	}
 
 	return list

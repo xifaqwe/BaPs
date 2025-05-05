@@ -73,8 +73,6 @@ func (c *Command) giveALL(options map[string]*cdq.CommandOption) (string, error)
 	}
 
 	// 执行
-	s.GoroutinesSync.Lock()
-	defer s.GoroutinesSync.Unlock()
 	parcelInfoList := make([]*sro.ParcelInfo, 0)
 	test, ok := options["test"]
 	if ok && alg.S2I64(test.Option) == 1 {

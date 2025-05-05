@@ -60,8 +60,6 @@ func (c *Command) set(options map[string]*cdq.CommandOption) (string, error) {
 	if s == nil {
 		return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
 	}
-	s.GoroutinesSync.Lock()
-	defer s.GoroutinesSync.Unlock()
 
 	req := &ApiSet{
 		s:    s,

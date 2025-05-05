@@ -3,11 +3,11 @@ package check
 import (
 	"math"
 	"net/http"
+	"sync"
 	"sync/atomic"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/pkg/logger"
 )
 
@@ -15,6 +15,7 @@ var TPS int64
 var RT int64
 var OLDTPS int64
 var OLDRT float64
+var SessionNum int64
 
 func GinNetInfo() {
 	ticker := time.NewTicker(time.Second * 60)
@@ -28,7 +29,7 @@ func GinNetInfo() {
 			OLDRT = 0
 			continue
 		}
-		logger.Info("SessionNum: %v", enter.GetSessionNum())
+		logger.Info("SessionNum: %v", SessionNum)
 		logger.Info("TPS: %v", tps)
 		logger.Info("RT: %.6f ms", rt)
 		atomic.StoreInt64(&TPS, 0)
@@ -51,5 +52,15 @@ func Cors() gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusNoContent)
 		}
 		c.Next()
+	}
+}
+
+var GateWaySync *sync.Mutex
+
+func GateSync() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		GateWaySync.Lock()
+		c.Next()
+		GateWaySync.Unlock()
 	}
 }

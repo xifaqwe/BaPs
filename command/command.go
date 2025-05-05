@@ -2,6 +2,7 @@ package command
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/config"
 	"github.com/gucooing/cdq"
 	cdqlog "github.com/gucooing/cdq/logger"
@@ -14,7 +15,7 @@ type Command struct {
 func NewCommand(router *gin.Engine) {
 	command := new(Command)
 	command.c = cdq.New(&cdq.CDQ{Log: cdqlog.NewLog(cdqlog.LevelInfo, nil)})
-	ginApi := cdq.NewGinApi(command.c)
+	ginApi := cdq.NewGinApi(command.c, check.GateWaySync)
 	ginApi.SetRouter(router)
 	ginApi.SetApiKey(config.GetGucooingApiKey())
 	command.c.AddCommandRun(ginApi)

@@ -139,8 +139,6 @@ func (c *Command) mail(options map[string]*cdq.CommandOption) (string, error) {
 		if s == nil {
 			return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
 		}
-		s.GoroutinesSync.Lock()
-		defer s.GoroutinesSync.Unlock()
 		if game.AddMail(s, sendMail) {
 			return "请查询游戏内邮箱获取结果", nil
 		}

@@ -59,17 +59,6 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_Mail_Check:   pack.MailCheck,   // 邮件检查
 	proto.Protocol_Mail_List:    pack.MailList,    // 获取邮件列表
 	proto.Protocol_Mail_Receive: pack.MailReceive, // 领取邮件
-	// 好友
-	proto.Protocol_Friend_Check:                 pack.FriendCheck,                 // 好友检查
-	proto.Protocol_Friend_List:                  pack.FriendList,                  // 获取好友详情
-	proto.Protocol_Friend_GetIdCard:             pack.FriendGetIdCard,             // 获取账号板
-	proto.Protocol_Friend_SetIdCard:             pack.FriendSetIdCard,             // 设置账号板
-	proto.Protocol_Friend_Search:                pack.FriendSearch,                // 获取附近的人
-	proto.Protocol_Friend_GetFriendDetailedInfo: pack.FriendGetFriendDetailedInfo, // 获取玩家详细信息
-	proto.Protocol_Friend_SendFriendRequest:     pack.FriendSendFriendRequest,     // 发送好友申请
-	proto.Protocol_Friend_AcceptFriendRequest:   pack.FriendAcceptFriendRequest,   // 同意好友申请
-	proto.Protocol_Friend_DeclineFriendRequest:  pack.FriendDeclineFriendRequest,  // 拒绝好友申请
-	proto.Protocol_Friend_Remove:                pack.FriendRemove,                // 删除好友
 	// 背包
 	proto.Protocol_Account_CurrencySync:          pack.AccountCurrencySync,          // 同步账号货币
 	proto.Protocol_Item_List:                     pack.ItemList,                     // 获取背包物品
@@ -130,6 +119,17 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	// 课程表
 	proto.Protocol_Academy_GetInfo:        pack.AcademyGetInfo,        // 获取课程表信息
 	proto.Protocol_Academy_AttendSchedule: pack.AcademyAttendSchedule, // 上课
+	// 好友
+	proto.Protocol_Friend_Check:                 pack.FriendCheck,                 // 好友检查
+	proto.Protocol_Friend_List:                  pack.FriendList,                  // 获取好友详情
+	proto.Protocol_Friend_GetIdCard:             pack.FriendGetIdCard,             // 获取账号板
+	proto.Protocol_Friend_SetIdCard:             pack.FriendSetIdCard,             // 设置账号板
+	proto.Protocol_Friend_Search:                pack.FriendSearch,                // 获取附近的人
+	proto.Protocol_Friend_GetFriendDetailedInfo: pack.FriendGetFriendDetailedInfo, // 获取玩家详细信息
+	proto.Protocol_Friend_SendFriendRequest:     pack.FriendSendFriendRequest,     // 发送好友申请
+	proto.Protocol_Friend_AcceptFriendRequest:   pack.FriendAcceptFriendRequest,   // 同意好友申请
+	proto.Protocol_Friend_DeclineFriendRequest:  pack.FriendDeclineFriendRequest,  // 拒绝好友申请
+	proto.Protocol_Friend_Remove:                pack.FriendRemove,                // 删除好友
 	// 社团
 	proto.Protocol_Clan_Login:         pack.ClanLogin,         // 登录获取社团信息
 	proto.Protocol_Clan_Check:         pack.ClanCheck,         // 社团检查
@@ -229,8 +229,10 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 			return
 		}
 	}()
+
 	handler, ok := funcRouteMap[base.Protocol]
 	if !ok {
+
 		errBestHTTP(c, 15022)
 		logPlayerMsg(NoRoute, request)
 		return
@@ -255,7 +257,7 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 			logger.Debug("get session nil,SessionKey:%s", sessionKey.String())
 			return
 		}
-		s.EndTime = time.Now().Add(time.Duration(enter.MaxCachePlayerTime) * time.Minute)
+		s.ActiveTime = time.Now()
 	}
 
 	responsePacket := &proto.ResponsePacket{
@@ -267,10 +269,6 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 		StaticOpenConditions:       make(map[string]int32),
 	}
 	response.SetPacket(responsePacket) // 任何情况下都不要更改handler执行和SetSessionKey的顺序
-	if s != nil {                      // 唯一线程操作锁
-		s.GoroutinesSync.Lock()
-		defer s.GoroutinesSync.Unlock()
-	}
 
 	// 计时并执行函数
 	atomic.AddInt64(&check.TPS, 1)

@@ -3,14 +3,13 @@ module github.com/gucooing/BaPs
 go 1.23.2
 
 require (
-	github.com/arl/statsviz v0.6.0
 	github.com/bytedance/sonic v1.13.2
 	github.com/fatih/color v1.18.0
 	github.com/gin-contrib/pprof v1.5.3
 	github.com/gin-gonic/contrib v0.0.0-20250113154928-93b827325fec
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-resty/resty/v2 v2.16.5
-	github.com/gucooing/cdq v0.0.3
+	github.com/gucooing/cdq v0.0.4
 	github.com/ncruces/go-sqlite3 v0.25.0
 	github.com/ncruces/go-sqlite3/gormlite v0.24.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
@@ -33,7 +32,6 @@ require (
 	github.com/go-playground/validator/v10 v10.26.0 // indirect
 	github.com/go-sql-driver/mysql v1.9.2 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
