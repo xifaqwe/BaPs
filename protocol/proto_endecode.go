@@ -34,6 +34,27 @@ func UnmarshalRequest(b []byte) (mx.Message, *proto.BasePacket, error) {
 	return packet, base, nil
 }
 
+// MarshalRequest 编码req数据包
+func MarshalRequest(m mx.Message) ([]byte, error) {
+	return sonic.Marshal(m)
+}
+
+// UnmarshalResponse 解码rsp数据包
+func UnmarshalResponse(bin []byte) (mx.Message, proto.Protocol, error) {
+	ojb1 := new(NetworkProtocolResponse)
+	err := sonic.Unmarshal(bin, ojb1)
+	if err != nil {
+		return nil, 0, err
+	}
+	rspCmd := proto.Protocol_Common_Cheat.Value(ojb1.Protocol)
+	ojb2 := cmd.Get().GetResponsePacketByCmdId(rspCmd)
+	if ojb2 == nil {
+		return nil, 0, errors.New(fmt.Sprintf("response unknown cmd id: %v", ojb1.Protocol))
+	}
+	err = sonic.UnmarshalString(ojb1.Packet, ojb2)
+	return ojb2, rspCmd, nil
+}
+
 // MarshalResponse 编码rsp数据包
 func MarshalResponse(m mx.Message) (*NetworkProtocolResponse, error) {
 	if m == nil {

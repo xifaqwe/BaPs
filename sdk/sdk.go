@@ -1,6 +1,8 @@
 package sdk
 
 import (
+	"fmt"
+	"github.com/gucooing/BaPs/config"
 	"net/http"
 	"sync"
 
@@ -25,7 +27,9 @@ func New(router *gin.Engine) *SDK {
 }
 
 func (s *SDK) initRouter() {
+	s.router.LoadHTMLGlob(fmt.Sprintf("%s/templates/*", config.GetConfig().DataPath))
 	s.router.Any("/", handleIndex)
+	s.router.Any("/index", handleIndex)
 	s.router.GET("/r:url", s.connectionGroups)
 
 	s.router.GET("/prod/index.json", index)
@@ -67,5 +71,8 @@ func (s *SDK) initRouter() {
 }
 
 func handleIndex(c *gin.Context) {
-	c.String(http.StatusOK, "Ba Ps!")
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{
+		"title":  "Ba Ps!",
+		"github": "https://github.com/gucooing/BaPs",
+	})
 }

@@ -30,7 +30,7 @@ func GinNetInfo() {
 			continue
 		}
 		logger.Info("SessionNum: %v", SessionNum)
-		logger.Info("TPS: %v", tps)
+		logger.Info("TPS: %v", tps/60)
 		logger.Info("RT: %.6f ms", rt)
 		atomic.StoreInt64(&TPS, 0)
 		atomic.StoreInt64(&RT, 0)
