@@ -92,6 +92,8 @@ type GPP struct {
 	ArenaNPCInfo                        *ArenaNPCInfo
 	FavorLevel                          *FavorLevel
 	MailInfoMap                         map[string]*MailInfo
+	ProdIndex                           *ProdIndex
+	ServerInfo                          *ServerInfo
 }
 
 func LoadGameConfig(dataPath string, resPath string) *GameConfig {
@@ -189,6 +191,8 @@ func (g *GameConfig) gpp() {
 		g.loadStrategyMap,
 		g.loadArenaNPC,
 		g.loadMailInfo,
+		g.loadProdIndex,
+		g.loadServerInfo,
 	}
 
 	for _, fn := range g.gppFunc {

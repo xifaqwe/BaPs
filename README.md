@@ -68,18 +68,13 @@ docker run -d \
   -v /data/baps/sqlite:/usr/ba/sqlite \
   ghcr.io/gucooing/baps:latest
 ``` 
-<details>
-你展开了一个可用的镜像加速,这个镜像加速站来源于网络
-
+## 更多的镜像站
+``` 
+docker hub: gucooing/baps:latest "由gitea编译"
+ghcr: ghcr.io/gucooing/baps:latest
+南京大学镜像站:
+    ghcr: ghcr.nju.edu.cn/gucooing/baps:latest
 ```
-docker run -d \
-  -p 5000:5000 \
-  -v /data/baps/config:/usr/ba/config \
-  -v /data/baps/sqlite:/usr/ba/sqlite \
-  ghcr.nju.edu.cn/gucooing/baps:latest
-```
-</details>
-
 ---
 
 ## ⚙️ 配置说明
@@ -93,7 +88,7 @@ docker run -d \
   "AutoRegistration": true, // 是否自动注册
   "Tutorial": false, // 是否开启教程-不完善
   "OtherAddr": {
-    "ServerInfoUrl": "https://yostar-serverinfo.bluearchiveyostar.com", // 上游服务器地址
+    "ServerInfoUrl": "https://yostar-serverinfo.bluearchiveyostar.com", // 上游服务器地址 如果值为: 'local' 时使用本地文件
     "ManagementDataUrl": "https://prod-noticeindex.bluearchiveyostar.com/prod/index.json" // 公告地址
   },
   "HttpNet": {

@@ -2,27 +2,27 @@ package sdk
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/gucooing/BaPs/gdconf"
 	"io"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/config"
 )
 
-type ServerInfo struct {
-	loadSync                 sync.RWMutex
-	upTime                   time.Time
-	OverrideConnectionGroups []OverrideConnectionGroup `json:"OverrideConnectionGroups"`
-	BundleVersion            string                    `json:"BundleVersion"`
-}
-
-func (s *SDK) GetServerInfo(c *gin.Context) *ServerInfo {
+func (s *SDK) GetServerInfo(c *gin.Context) *gdconf.ServerInfo {
+	conf := gdconf.GetServerInfo()
+	data := &gdconf.ServerInfo{
+		ConnectionGroups: make([]*gdconf.ConnectionGroup, 0),
+	}
+	switch config.GetOtherAddr().ServerInfoUrl {
+	case "local":
+		return conf
+	}
 	getServerInfo := func() {
-		s.serverinfo.loadSync.Lock()
-		defer s.serverinfo.loadSync.Unlock()
+		conf.LoadSync.Lock()
+		defer conf.LoadSync.Unlock()
 		url := c.Request.URL.String()
 		resp, err := http.Get(config.GetOtherAddr().GetServerInfoUrl() + url)
 		if err != nil {
@@ -33,70 +33,23 @@ func (s *SDK) GetServerInfo(c *gin.Context) *ServerInfo {
 		if err != nil {
 			return
 		}
-		data := &ConnectionGroupS{
-			ConnectionGroups: make([]*ConnectionGroup, 0),
-		}
 		err = json.Unmarshal(bin, &data)
-		for _, v := range data.ConnectionGroups {
-			s.serverinfo.BundleVersion = v.BundleVersion
-			s.serverinfo.OverrideConnectionGroups = v.OverrideConnectionGroups
-			s.serverinfo.upTime = time.Now()
-			break
-		}
+
+		conf.ConnectionGroups = gdconf.GenServerInfo(data.ConnectionGroups)
+		conf.UpTime = time.Now()
 	}
 
-	s.serverinfo.loadSync.RLock()
-	defer s.serverinfo.loadSync.RUnlock()
-	if s.serverinfo.upTime.Add(15 * time.Minute).Before(time.Now()) {
-		s.serverinfo.loadSync.RUnlock()
+	conf.LoadSync.RLock()
+	defer conf.LoadSync.RUnlock()
+	if conf.UpTime.Add(15 * time.Minute).Before(time.Now()) {
+		conf.LoadSync.RUnlock()
 		getServerInfo()
-		s.serverinfo.loadSync.RLock()
+		conf.LoadSync.RLock()
 	}
 
-	return s.serverinfo
-}
-
-type ConnectionGroupS struct {
-	ConnectionGroups []*ConnectionGroup `json:"ConnectionGroups"`
-}
-type ConnectionGroup struct {
-	Name                       string                    `json:"Name"`
-	ManagementDataUrl          string                    `json:"ManagementDataUrl"`
-	IsProductionAddressables   bool                      `json:"IsProductionAddressables"`
-	ApiUrl                     string                    `json:"ApiUrl"`
-	GatewayUrl                 string                    `json:"GatewayUrl"`
-	KibanaLogUrl               string                    `json:"KibanaLogUrl"`
-	ProhibitedWordBlackListUri string                    `json:"ProhibitedWordBlackListUri"`
-	ProhibitedWordWhiteListUri string                    `json:"ProhibitedWordWhiteListUri"`
-	CustomerServiceUrl         string                    `json:"CustomerServiceUrl"`
-	OverrideConnectionGroups   []OverrideConnectionGroup `json:"OverrideConnectionGroups"`
-	BundleVersion              string                    `json:"BundleVersion"`
-}
-
-type OverrideConnectionGroup struct {
-	Name                       string `json:"Name"`
-	AddressablesCatalogUrlRoot string `json:"AddressablesCatalogUrlRoot"`
+	return conf
 }
 
 func (s *SDK) connectionGroups(c *gin.Context) {
-	data := &ConnectionGroupS{
-		ConnectionGroups: make([]*ConnectionGroup, 0),
-	}
-	sinfo := s.GetServerInfo(c)
-	connectionGroup := &ConnectionGroup{
-		Name:                       "Prod-Audit",
-		ManagementDataUrl:          config.GetOtherAddr().GetManagementDataUrl(),
-		IsProductionAddressables:   false,
-		ApiUrl:                     fmt.Sprintf("%s/api/", config.GetHttpNet().GetOuterAddr()),
-		GatewayUrl:                 fmt.Sprintf("%s/getEnterTicket/", config.GetHttpNet().GetOuterAddr()),
-		KibanaLogUrl:               "https://prod-logcollector.bluearchiveyostar.com:5300", //    fmt.Sprintf("%s/client/log/", s.GetOuterAddr()),
-		ProhibitedWordBlackListUri: "https://prod-notice.bluearchiveyostar.com/prod/ProhibitedWord/blacklist.csv",
-		ProhibitedWordWhiteListUri: "https://prod-notice.bluearchiveyostar.com/prod/ProhibitedWord/whitelist.csv",
-		CustomerServiceUrl:         "https://bluearchive.jp/contact-1-hint",
-		BundleVersion:              sinfo.BundleVersion,
-		OverrideConnectionGroups:   sinfo.OverrideConnectionGroups,
-	}
-	data.ConnectionGroups = append(data.ConnectionGroups, connectionGroup)
-
-	c.JSON(200, data)
+	c.JSON(200, s.GetServerInfo(c))
 }
