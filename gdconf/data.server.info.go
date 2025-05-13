@@ -44,7 +44,7 @@ func (g *GameConfig) loadServerInfo() {
 		logger.Error("文件:%s 读取失败,err:%s", name, err)
 		return
 	}
-	if err := json.Unmarshal(file, &g.GetGPP().ProdIndex); err != nil {
+	if err := json.Unmarshal(file, &g.GetGPP().ServerInfo); err != nil {
 		logger.Error("文件:%s 解析失败,err:%s", name, err)
 		return
 	}

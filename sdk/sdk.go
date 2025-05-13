@@ -44,25 +44,6 @@ func (s *SDK) initRouter() {
 		app.Any("/getSettings", getSettings)
 		app.Any("/getCode", getCode)
 	}
-
-	hash := s.router.Group("/r77_8q5tn5v8489fubab84a8")
-	{
-		hash.GET("/TableBundles/TableCatalog.hash", func(c *gin.Context) {
-			c.String(200, "0")
-		})
-		hash.GET("/MediaResources/Catalog/MediaCatalog.hash", func(c *gin.Context) {
-			c.String(200, "0")
-		})
-		hash.GET("/iOS/bundleDownloadInfo.hash", func(c *gin.Context) {
-			c.String(200, "0")
-		})
-		hash.GET("/iOS/catalog_iOS.hash", func(c *gin.Context) {
-			c.String(200, "0")
-		})
-		hash.GET("/TableBundles/TableCatalog.bytes", func(c *gin.Context) {
-			c.String(200, "0")
-		})
-	}
 }
 
 func handleIndex(c *gin.Context) {

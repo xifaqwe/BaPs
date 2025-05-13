@@ -35,3 +35,4 @@ gdconf/game.config.dev.go
 common/server_only/*.py
 /mx
 /protocol/proto2
+buildGetClientRes.bat
