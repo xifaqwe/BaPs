@@ -9,9 +9,6 @@ COPY . .
 RUN --mount=type=secret,id=excel_url,env=EXCEL_URL \
     wget "$EXCEL_URL" --quiet -O ./protocol/mx/excel.go
 
-RUN --mount=type=secret,id=gdconf_dev,env=GDCONF_DEV \
-    wget "$GDCONF_DEV" --quiet -O ./gdconf/game.config.dev.go
-
 RUN cd ./common/server_only && \
     protoc --proto_path=. --go_out=. --go_opt=paths=source_relative *.proto && \
     cd ../../

@@ -39,7 +39,6 @@ jobs:
           file: ./Dockerfile
           secrets: |
             excel_url=${{ secrets.EXCEL_URL }}
-            gdconf_dev=${{ secrets.GDCONF_DEV }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: gucooing/baps:latest
