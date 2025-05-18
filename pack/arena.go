@@ -114,7 +114,7 @@ func ArenaEnterBattlePart2(s *enter.Session, request, response mx.Message) {
 
 	bau := s.GetBattleArenaUser()
 	// 判断输赢
-	if req.ArenaBattleDB.BattleSummary.Winner != proto.GroupTag_Group01 || bau == nil {
+	if req.ArenaBattleDB.BattleSummary.Winner != proto.GroupTag_Group01.String() || bau == nil {
 		return
 	}
 

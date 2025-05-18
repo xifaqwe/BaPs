@@ -13,7 +13,7 @@ type EntityId struct {
 	Invalid    *EntityId
 	EntityType BattleEntityType
 	InstanceId int32
-	UniqueId   int32
+	UniqueId   int32 `json:"uniqueId"`
 	IsValid    bool
 }
 

@@ -8,7 +8,7 @@ import (
 
 type SkillCostSummary struct {
 	InitialCost           float32
-	CostPerFrameSnapshots *CostRegenSnapshotCollection
+	CostPerFrameSnapshots []*CostRegenSnapshotCollection
 	CostAddSnapshots      []*SkillCostAddSnapshot
 	CostUseSnapshots      []*SkillCostUseSnapshot
 }

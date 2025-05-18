@@ -20,7 +20,7 @@ type HeroSummary struct {
 	PassiveSkillLevel                 int32
 	ExtraPassiveSkillLevel            int32
 	FavorRank                         int32
-	StatSnapshotCollection            *StatSnapshotCollection
+	StatSnapshotCollection            []*StatSnapshotCollection
 	HPRateBefore                      int64
 	HPRateAfter                       int64
 	CrowdControlCount                 int32
@@ -44,9 +44,9 @@ type HeroSummary struct {
 	CharacterWeapon                   *WeaponSetting
 	CharacterGear                     *GearSetting
 	HitPointByFrame                   int32
-	SkillCount                        SkillSlot
+	SkillCount                        map[string]int64
 	ExSkillUseCount                   int32
-	KillLog                           *KillLogCollection
+	KillLog                           map[BattleEntityType]int64
 	KillCount                         int32
 	FullSnapshot                      map[int32]string
 	HeroSummaryAlmostEqualityComparer *HeroSummary

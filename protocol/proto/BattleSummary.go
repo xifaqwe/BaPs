@@ -12,7 +12,7 @@ type BattleSummary struct {
 	BattleType         BattleTypes
 	StageId            int64
 	GroundId           int64
-	Winner             GroupTag
+	Winner             string
 	IsPlayerWin        bool
 	EndType            BattleEndType
 	EndFrame           int32

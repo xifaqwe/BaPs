@@ -8,6 +8,9 @@ import (
 )
 
 type StatSnapshotCollection struct {
+	Stat  int64
+	Start int64
+	End   int64
 }
 
 func (x *StatSnapshotCollection) String() string {

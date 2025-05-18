@@ -580,12 +580,20 @@ message EventContentBin {
 }
 
 message EventContentInfo {
-    BoxGachaShopInfo BoxGachaShop_info = 1; // 活动盲盒商店信息
+    int64 event_content_id = 1;
+    BoxGachaShopInfo box_gacha_shop_info = 2; // 活动盲盒商店信息
+    map<int64,EventContentStageHistory> stage_history_list = 3; // 活动剧情信息
 }
 
 message BoxGachaShopInfo{
   int64 round = 1 ; // 当前回合数
   int32 purchase_count = 2; // 购买数量
+}
+
+message EventContentStageHistory {
+  int64 stage_unique_id = 1;
+  int64 reward_time = 2;
+  int64 last_player = 3;
 }
 
 // 竞技场信息

@@ -8,6 +8,8 @@ import (
 )
 
 type CostRegenSnapshotCollection struct {
+	Frame int64
+	Regen float32
 }
 
 func (x *CostRegenSnapshotCollection) String() string {

@@ -101,6 +101,10 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_EventContent_AdventureList:              pack.EventContentAdventureList,              // 获取活动关卡信息
 	proto.Protocol_EventContent_BoxGachaShopList:           pack.EventContentBoxGachaShopList,           // 获取活动盲盒商店列表
 	proto.Protocol_EventContent_ScenarioGroupHistoryUpdate: pack.EventContentScenarioGroupHistoryUpdate, // 活动剧情完成请求
+	proto.Protocol_EventContent_EnterStoryStage:            pack.EventContentEnterStoryStage,            // 活动进入剧情
+	proto.Protocol_EventContent_StoryStageResult:           pack.EventContentStoryStageResult,           // 活动剧情结算
+	proto.Protocol_EventContent_EnterMainGroundStage:       pack.EventContentEnterMainGroundStage,       // 活动剧情战斗开始
+	proto.Protocol_EventContent_MainGroundStageResult:      pack.EventContentMainGroundStageResult,      // 活动剧情战斗结算
 	// 咖啡馆
 	proto.Protocol_Cafe_Get:             pack.CafeGetInfo,         // 获取咖啡馆信息
 	proto.Protocol_Cafe_Ack:             pack.CafeAck,             // 确认咖啡馆

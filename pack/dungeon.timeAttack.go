@@ -80,7 +80,7 @@ func TimeAttackDungeonEndBattle(s *enter.Session, request, response mx.Message) 
 	bin := game.GetTimeAttackBin(s)
 	curBin := game.GetTimeAttackRoom(s, bin.GetCurRoom())
 	summary := req.Summary
-	if summary == nil || curBin == nil || summary.Winner != proto.GroupTag_Group01 {
+	if summary == nil || curBin == nil || summary.Winner != proto.GroupTag_Group01.String() {
 		return
 	}
 	conf := gdconf.GetTimeAttackDungeonGeasExcelTable(summary.StageId)

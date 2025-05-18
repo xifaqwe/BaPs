@@ -7,7 +7,7 @@ import (
 )
 
 type BattleNumericLog struct {
-	EntityType            BattleEntityType
+	EntityType            string
 	Category              BattleLogCategory
 	Source                BattleLogSourceType
 	CalculatedSum         int64

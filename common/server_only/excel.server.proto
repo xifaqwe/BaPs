@@ -72,7 +72,12 @@ message Excel {
   repeated ShopRefreshExcelTable ShopRefreshExcelTable = 20; // 可刷新商品配置
   repeated ArenaSeasonExcelTable ArenaSeasonExcelTable = 37; // 竞技场赛季配置
   repeated FavorLevelExcel FavorLevelExcel = 42; // 好感系统等级经验配置
+  repeated EventContentMissionExcelTable EventContentMissionExcelTable =66; // 活动关卡总表
+  repeated EventContentStageExcelTable EventContentStageExcelTable = 67; // 活动关卡详情配置
+  repeated EventContentStageRewardExcelTable EventContentStageRewardExcelTable = 68; // 活动关卡奖励配置
 }
+
+// 68
 
 message CafeInfoExcelTableInfo {
   int64 CafeId = 1;
@@ -1226,4 +1231,93 @@ message ArenaSeasonExcelTable {
 message FavorLevelExcel {
   int32 Level = 2;
   repeated int64 ExpType = 1;
+}
+
+message EventContentMissionExcelTable {
+  int64 Id = 1;
+  int64 EventContentId = 2;
+  int64 GroupId = 3;
+  string GroupName = 4;
+  string Category = 5;
+  int64 Description = 6;
+  string ResetType = 7;
+  string ToastDisplayType = 8;
+  string ToastImagePath = 9;
+  bool ViewFlag = 10;
+  int64 DisplayOrder = 11;
+  repeated int64 PreMissionId = 12;
+  string AccountType = 13;
+  int64 AccountLevel = 14;
+  repeated string ShortcutUI = 15;
+  int64 ChallengeStageShortcut = 16;
+  string CompleteConditionType = 17;
+  bool IsCompleteExtensionTime = 18;
+  int64 CompleteConditionCount = 19;
+  repeated int64 CompleteConditionParameter = 20;
+  repeated string CompleteConditionParameterTag = 21;
+  string RewardIcon = 22;
+  repeated int64 CompleteConditionMissionId = 23;
+  int64 CompleteConditionMissionCount = 24;
+  repeated string MissionRewardParcelType = 25;
+  repeated int64 MissionRewardParcelId = 26;
+  repeated int64 MissionRewardAmount = 27;
+  repeated string ConditionRewardParcelType = 28;
+  repeated int64 ConditionRewardParcelId = 29;
+  repeated int64 ConditionRewardAmount = 30;
+}
+
+message EventContentStageExcelTable {
+  int64 Id = 1;
+  string Name = 2;
+  int64 EventContentId = 3;
+  string StageDifficulty = 4;
+  string StageNumber = 5;
+  int64 StageDisplay = 6;
+  int64 PrevStageId = 7;
+  int64 OpenDate = 8;
+  int64 OpenEventPoint = 9;
+  int64 OpenConditionScenarioPermanentSubEventId = 10;
+  int64 PrevStageSubEventId = 11;
+  int64 OpenConditionScenarioId = 12;
+  string OpenConditionContentType = 13;
+  int64 OpenConditionContentId = 14;
+  int64 BattleDuration = 15;
+  string StageEnterCostType = 16;
+  int64 StageEnterCostId = 17;
+  int64 StageEnterCostAmount = 18;
+  int64 StageEnterEchelonCount = 19;
+  int64 StarConditionTacticRankSCount = 20;
+  int64 StarConditionTurnCount = 21;
+  repeated int64 EnterScenarioGroupId = 22;
+  repeated int64 ClearScenarioGroupId = 23;
+  string StrategyMap = 24;
+  string StrategyMapBG = 25;
+  int64 EventContentStageRewardId = 26;
+  int64 MaxTurn = 27;
+  string StageTopography = 28;
+  int64 RecommandLevel = 29;
+  string BgmId = 30;
+  string StrategyEnvironment = 31;
+  int64 GroundID = 32;
+  string ContentType = 33;
+//  int64 BGMId = 34;
+  bool InstantClear = 35;
+  int64 BuffContentId = 36;
+  int64 FixedEchelonId = 37;
+  bool ChallengeDisplay = 38;
+  repeated string StarGoal = 39;
+  repeated int64 StarGoalAmount = 40;
+  bool IsDefeatBattle = 41;
+  int64 StageHint = 42;
+  string EchelonExtensionType = 43;
+}
+
+message EventContentStageRewardExcelTable {
+  int64 GroupId = 1;
+  string RewardTag = 2;
+  int64 RewardProb = 3;
+  string RewardParcelType = 4;
+  int64 RewardId = 5;
+  int64 RewardAmount = 6;
+  bool  IsDisplayed = 7;
 }

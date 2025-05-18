@@ -94,6 +94,9 @@ type GPP struct {
 	MailInfoMap                         map[string]*MailInfo
 	ProdIndex                           *ProdIndex
 	ServerInfo                          *ServerInfo
+	EventContentMissionExcel            *EventContentMissionExcel
+	EventContentStageExcel              *EventContentStageExcel
+	EventContentStageRewardExcel        *EventContentStageRewardExcel
 }
 
 func LoadGameConfig(dataPath string, resPath string) *GameConfig {
@@ -183,6 +186,9 @@ func (g *GameConfig) gpp() {
 		g.gppShopRefreshExcelTable,
 		g.gppArenaSeasonExcelTable,
 		g.gppFavorLevelExcel,
+		g.gppEventContentMissionExcelTable,
+		g.gppEventContentStageExcelTable,
+		g.gppEventContentStageRewardExcelTable,
 
 		// data
 		g.loadRaidSchedule,

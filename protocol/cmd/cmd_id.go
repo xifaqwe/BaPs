@@ -365,4 +365,12 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_Arena_EnterBattlePart1, func() any { return new(proto.ArenaEnterBattlePart1Response) }, false)
 	c.regMsg(proto.Protocol_Arena_EnterBattlePart2, func() any { return new(proto.ArenaEnterBattlePart2Request) }, true)
 	c.regMsg(proto.Protocol_Arena_EnterBattlePart2, func() any { return new(proto.ArenaEnterBattlePart2Response) }, false)
+	c.regMsg(proto.Protocol_EventContent_EnterStoryStage, func() any { return new(proto.EventContentEnterStoryStageRequest) }, true)
+	c.regMsg(proto.Protocol_EventContent_EnterStoryStage, func() any { return new(proto.EventContentEnterStoryStageResponse) }, false)
+	c.regMsg(proto.Protocol_EventContent_StoryStageResult, func() any { return new(proto.EventContentStoryStageResultRequest) }, true)
+	c.regMsg(proto.Protocol_EventContent_StoryStageResult, func() any { return new(proto.EventContentStoryStageResultResponse) }, false)
+	c.regMsg(proto.Protocol_EventContent_EnterMainGroundStage, func() any { return new(proto.EventContentEnterMainGroundStageRequest) }, true)
+	c.regMsg(proto.Protocol_EventContent_EnterMainGroundStage, func() any { return new(proto.EventContentEnterMainGroundStageResponse) }, false)
+	c.regMsg(proto.Protocol_EventContent_MainGroundStageResult, func() any { return new(proto.EventContentMainGroundStageResultRequest) }, true)
+	c.regMsg(proto.Protocol_EventContent_MainGroundStageResult, func() any { return new(proto.EventContentMainGroundStageResultResponse) }, false)
 }
