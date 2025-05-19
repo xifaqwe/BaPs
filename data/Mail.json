@@ -1,6 +1,12 @@
 {
+  "TestHtml": {
+    "type": "html",
+    "header": "邮件Html模板测试",
+    "body": "./data/templates/mailCode.tmpl"
+  },
   "LoginCode": {
+    "type": "text",
     "header": "BaPs登陆验证码",
-    "body": "您的登陆验证码为:%v"
+    "body": "您的登陆验证码为:{{ .Code }}"
   }
 }

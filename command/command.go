@@ -25,6 +25,7 @@ func NewCommand(router *gin.Engine) {
 	command.ApplicationCommandGive()
 	command.ApplicationCommandGetPlayer()
 	command.ApplicationCommandGetEmailCode()
+	command.ApplicationCommandGameMail()
 	command.ApplicationCommandMail()
 	command.ApplicationCommandSet()
 	command.ApplicationCommandPing()

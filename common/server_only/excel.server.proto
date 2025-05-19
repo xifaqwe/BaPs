@@ -1296,7 +1296,7 @@ message EventContentStageExcelTable {
   int64 MaxTurn = 27;
   string StageTopography = 28;
   int64 RecommandLevel = 29;
-  string BgmId = 30;
+//  string BgmId = 30;
   string StrategyEnvironment = 31;
   int64 GroundID = 32;
   string ContentType = 33;

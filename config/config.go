@@ -61,6 +61,7 @@ type Mail struct {
 	Username string `json:"Username"`
 	Password string `json:"Password"`
 	Host     string `json:"Host"`
+	Port     int    `json:"Port"`
 }
 
 type Bot struct {

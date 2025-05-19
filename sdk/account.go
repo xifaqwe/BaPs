@@ -63,7 +63,9 @@ func (s *SDK) YostarAuthRequest(c *gin.Context) {
 				rsp.Result = 100302
 				return
 			}
-			if err = mail.SendTextMail(req.Account, mailConf.Header, fmt.Sprintf(mailConf.Body, newCode)); err != nil {
+			if err = mail.SendTemplateMail(req.Account, mailConf, struct {
+				Code int32
+			}{Code: newCode}); err != nil {
 				logger.Debug("邮箱:%s,邮件发送失败:%s", req.Account, err.Error())
 				rsp.Result = 100302
 				return

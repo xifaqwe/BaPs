@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"github.com/gin-contrib/pprof"
 	"github.com/gucooing/BaPs/common/mail"
-	"github.com/gucooing/BaPs/protocol/mx"
 	"net/http"
 	"os"
 	"os/signal"
@@ -56,8 +55,6 @@ func NewBaPs() {
 		}
 	}
 	cfg := config.GetConfig()
-	// 设置时区
-	mx.SetTZ()
 	check.GateWaySync = &sync.Mutex{}
 	logger.InitLogger("BaPs", strings.ToUpper(cfg.LogLevel))
 	logger.Info("BaPs")
