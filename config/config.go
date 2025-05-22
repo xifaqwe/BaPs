@@ -3,12 +3,14 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 )
 
 type Config struct {
 	LogLevel         string     `json:"LogLevel"`
+	Language         string     `json:"Language"`
 	ResourcesPath    string     `json:"ResourcesPath"`
 	DataPath         string     `json:"DataPath"`
 	GucooingApiKey   string     `json:"GucooingApiKey"`
@@ -105,6 +107,10 @@ func (x *OtherAddr) GetServerInfoUrl() string {
 }
 
 func (x *OtherAddr) GetManagementDataUrl() string {
+	switch x.ManagementDataUrl {
+	case "local":
+		return fmt.Sprintf("%s/prod/index.json", GetHttpNet().GetOuterAddr())
+	}
 	return x.ManagementDataUrl
 }
 
@@ -165,6 +171,7 @@ func LoadConfig(filePath string) error {
 
 var DefaultConfig = &Config{
 	LogLevel:         "Info",
+	Language:         "",
 	ResourcesPath:    "./resources",
 	DataPath:         "./data",
 	GucooingApiKey:   "123456",
