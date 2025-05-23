@@ -1,22 +1,20 @@
 package gateway
 
 import (
-	"github.com/gucooing/BaPs/common/check"
-	"github.com/gucooing/BaPs/protocol/mx"
-	"sync"
-	"sync/atomic"
-	"time"
-
 	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
+	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/db"
 	"github.com/gucooing/BaPs/game"
 	"github.com/gucooing/BaPs/gdconf"
 	"github.com/gucooing/BaPs/pkg/alg"
 	"github.com/gucooing/BaPs/pkg/logger"
+	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
 	pb "google.golang.org/protobuf/proto"
+	"sync"
+	"sync/atomic"
 )
 
 var loginNum int64              // 登录玩家数量
@@ -141,7 +139,6 @@ func AccountCheckYostar(s *enter.Session, request, response mx.Message) {
 	// 更新一次账号缓存
 	mxToken := mx.GetMxToken(tickInfo.AccountServerId, 64)
 	s.MxToken = mxToken
-	s.ActiveTime = time.Now()
 	if !enter.AddSession(s) {
 		logger.Info("AccountServerId:%v,重复上线账号,如果老客户端在线则会被离线", tickInfo.AccountServerId)
 	} else {

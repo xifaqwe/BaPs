@@ -12,6 +12,11 @@ import (
 	"github.com/gucooing/BaPs/protocol/proto"
 )
 
+const (
+	MaxEquipmentNum = 1000
+	MaxFurnitureNum = 1000
+)
+
 func NewItemList(s *enter.Session) map[int64]*sro.ItemInfo {
 	bin := GetItemBin(s)
 	if bin == nil {
@@ -488,8 +493,14 @@ func DelEquipment(s *enter.Session, serverId int64, num int64) (bool, int64) {
 
 func GetEquipmentDBs(s *enter.Session) []*proto.EquipmentDB {
 	list := make([]*proto.EquipmentDB, 0)
-	for index, bin := range GetEquipmentInfoList(s) {
-		if conf := gdconf.GetEquipmentExcelTable(bin.UniqueId); conf == nil {
+	var del bool
+	binList := GetEquipmentInfoList(s)
+	if len(binList) > MaxEquipmentNum {
+		del = true
+	}
+	for index, bin := range binList {
+		if conf := gdconf.GetEquipmentExcelTable(bin.UniqueId); conf == nil ||
+			(bin.CharacterServerId == 0 && del) {
 			delete(GetEquipmentInfoList(s), index)
 			continue
 		}
@@ -507,6 +518,9 @@ func GetEquipmentDBs(s *enter.Session) []*proto.EquipmentDB {
 				CanConsume: false,
 			},
 		})
+	}
+	if del {
+		AddMailBySystem(s, "DelMaxEquipment", nil)
 	}
 
 	return list

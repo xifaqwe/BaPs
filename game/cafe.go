@@ -365,7 +365,16 @@ func GetCafeDB(s *enter.Session, serverId int64) *proto.CafeDB {
 
 func GetFurnitureDBs(s *enter.Session) []*proto.FurnitureDB {
 	list := make([]*proto.FurnitureDB, 0)
-	for _, bin := range GetFurnitureInfoList(s) {
+	binList := GetFurnitureInfoList(s)
+	var del bool
+	if len(binList) > MaxFurnitureNum {
+		del = true
+	}
+	for index, bin := range binList {
+		if del && bin.CafeServerId == 0 {
+			delete(binList, index)
+			continue
+		}
 		info := &proto.FurnitureDB{
 			Type:               proto.ParcelType_Furniture,
 			Location:           proto.FurnitureLocation(bin.Location),
@@ -386,6 +395,9 @@ func GetFurnitureDBs(s *enter.Session) []*proto.FurnitureDB {
 			info.ItemDeploySequence = bin.ServerId
 		}
 		list = append(list, info)
+	}
+	if del {
+		AddMailBySystem(s, "DelMaxFurniture", nil)
 	}
 	return list
 }

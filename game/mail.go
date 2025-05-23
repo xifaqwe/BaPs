@@ -119,8 +119,10 @@ func AddMail(s *enter.Session, info *sro.MailInfo) bool {
 }
 
 var SystemMail = map[string]string{
-	"Attendance":     "请查收每日登录奖励",
-	"MaxActionPoint": "超出的体力",
+	"Attendance":      "请查收每日登录奖励",
+	"MaxActionPoint":  "超出的体力",
+	"DelMaxEquipment": "您获取的装备过多,已自动删除了部分多余装备",
+	"DelMaxFurniture": "您获取的家具过多,已自动删除了部分多余家具",
 }
 
 func AddMailBySystem(s *enter.Session, mailType string, parcelInfoList []*sro.ParcelInfo) bool {

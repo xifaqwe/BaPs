@@ -185,6 +185,7 @@ func AddSession(x *Session) bool {
 		return false
 	}
 	e.SessionMap[x.AccountServerId] = x
+	x.ActiveTime = time.Now()
 	atomic.AddInt64(&check.SessionNum, 1)
 	return true
 }
