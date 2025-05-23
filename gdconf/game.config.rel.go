@@ -5,6 +5,9 @@ package gdconf
 
 import (
 	"fmt"
+	"github.com/gucooing/BaPs/config"
+	"io"
+	"net/http"
 	"os"
 
 	sro "github.com/gucooing/BaPs/common/server_only"
@@ -14,6 +17,7 @@ import (
 )
 
 func (g *GameConfig) LoadExcel() {
+ty:
 	dirInfo, err := os.Stat(g.dataPath)
 	if err != nil || !dirInfo.IsDir() {
 		info := fmt.Sprintf("找不到文件夹:%s,err:%s", g.dataPath, err)
@@ -23,6 +27,14 @@ func (g *GameConfig) LoadExcel() {
 
 	file, err := os.ReadFile(g.dataPath + "Excel.bin")
 	if err != nil {
+		if os.IsNotExist(err) {
+			logger.Error("没有找到Excel.bin尝试自动下载....")
+			err := downloadExcel(g.dataPath + "Excel.bin")
+			if err == nil {
+				logger.Error("Excel.bin自动下载成功！")
+				goto ty
+			}
+		}
 		logger.Error("Excel.bin 读取失败,err:%s", err)
 		return
 	}
@@ -37,4 +49,20 @@ func (g *GameConfig) LoadExcel() {
 		panic("解析Excel失败,请检查Excel.bin版本和服务端版本是否一致")
 		return
 	}
+}
+
+func downloadExcel(path string) error {
+	resp, err := http.Get(config.GetExcelUrl())
+	if err != nil {
+		logger.Error("下载Excel.bin失败,请手动下载")
+		return err
+	}
+	defer resp.Body.Close()
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = io.Copy(file, resp.Body)
+	return err
 }

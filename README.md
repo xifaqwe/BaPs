@@ -84,6 +84,7 @@ ghcr: ghcr.io/gucooing/baps:latest
   "LogLevel": "info",
   "ResourcesPath": "./resources", // 发行版无用
   "DataPath": "./data",
+  "ExcelUrl": "https://github.com/gucooing/BaPs/raw/refs/heads/main/data/Excel.bin?download=",// 当Excel.bin不存在时，自动下载的url
   "GucooingApiKey": "123456", // 使用api时验证身份的key
   "AutoRegistration": true, // 是否自动注册
   "Tutorial": false, // 是否开启教程-不完善

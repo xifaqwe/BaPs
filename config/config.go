@@ -13,6 +13,7 @@ type Config struct {
 	Language         string     `json:"Language"`
 	ResourcesPath    string     `json:"ResourcesPath"`
 	DataPath         string     `json:"DataPath"`
+	ExcelUrl         string     `json:"ExcelUrl"`
 	GucooingApiKey   string     `json:"GucooingApiKey"`
 	AutoRegistration bool       `json:"AutoRegistration"`
 	Tutorial         bool       `json:"Tutorial"`
@@ -84,6 +85,10 @@ func GetConfig() *Config {
 		SetDefaultConfig()
 	}
 	return CONF
+}
+
+func GetExcelUrl() string {
+	return GetConfig().ExcelUrl
 }
 
 func GetGucooingApiKey() string {
@@ -174,6 +179,7 @@ var DefaultConfig = &Config{
 	Language:         "",
 	ResourcesPath:    "./resources",
 	DataPath:         "./data",
+	ExcelUrl:         "https://github.com/gucooing/BaPs/raw/refs/heads/main/data/Excel.bin?download=",
 	GucooingApiKey:   "123456",
 	AutoRegistration: true,
 	Tutorial:         false,
