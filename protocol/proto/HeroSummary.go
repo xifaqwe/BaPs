@@ -14,7 +14,7 @@ type HeroSummary struct {
 	CostumeId                         int64
 	Grade                             int32
 	Level                             int32
-	PotentialStatLevel                StatType
+	PotentialStatLevel                map[string]int64 // StatType:0
 	ExSkillLevel                      int32
 	PublicSkillLevel                  int32
 	PassiveSkillLevel                 int32
