@@ -2,6 +2,7 @@ package gdconf
 
 import (
 	"encoding/json"
+	"github.com/gucooing/BaPs/pkg"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
 )
@@ -119,7 +120,7 @@ func (g *GameConfig) loadProdIndex() {
 		logger.Error("文件:%s 解析失败,err:%s", name, err)
 		return
 	}
-
+	g.GetGPP().ProdIndex.LatestClientVersion = pkg.ClientVersion
 	logger.Info("公告配置读取成功文件:%s ", name)
 }
 

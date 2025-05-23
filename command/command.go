@@ -30,6 +30,7 @@ func NewCommand(router *gin.Engine) {
 	command.ApplicationCommandSet()
 	command.ApplicationCommandPing()
 	command.ApplicationCommandCharacter()
+	command.ApplicationCommandAccount()
 }
 
 var playerOptions = []*cdq.CommandOption{

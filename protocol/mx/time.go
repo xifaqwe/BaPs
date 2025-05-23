@@ -14,8 +14,13 @@ func (t MxTime) MarshalJSON() ([]byte, error) {
 }
 
 func (t *MxTime) UnmarshalJSON(data []byte) error {
-	parsedTime, err := time.Parse("2006-01-02T15:04:05.9999999", strings.Trim(string(data), "\""))
+	str := strings.Trim(string(data), "\"")
+	parsedTime, err := time.Parse("2006-01-02T15:04:05.9999999", str)
 	if err != nil {
+		parsedTime, err = time.Parse(time.RFC3339, str)
+		if err != nil {
+			return err
+		}
 		return err
 	}
 	*t = MxTime(parsedTime)

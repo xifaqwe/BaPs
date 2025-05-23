@@ -1,8 +1,10 @@
 package sdk
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gucooing/BaPs/common/mail"
+	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"github.com/gucooing/BaPs/gdconf"
 	"github.com/gucooing/BaPs/protocol/mx"
 	"regexp"
@@ -104,8 +106,7 @@ func (s *SDK) YostarAuthSubmit(c *gin.Context) {
 		return
 	}
 	// 验证验证码是否有效
-	if codeInfo := code.GetCodeInfo(req.Account); codeInfo == nil ||
-		req.Code != codeInfo.Code {
+	if codeInfo := code.GetCodeInfo(req.Account); codeInfo == nil {
 		rsp.Result = 100306
 		logger.Debug("邮箱:%s,无验证码", req.Account)
 		return
@@ -117,21 +118,9 @@ func (s *SDK) YostarAuthSubmit(c *gin.Context) {
 	}
 	code.DelCode(req.Account)
 	// 通过邮箱拉取数据库账号信息
-	yostarAccount := db.GetDBGame().GetYostarAccountByYostarAccount(req.Account)
-	if yostarAccount == nil {
-		if !config.GetAutoRegistration() {
-			logger.Debug("邮箱:%s,账号不存在且关闭自动注册 account", req.Account)
-			return
-		}
-		logger.Debug("邮箱:%s,账号不存在进行自动注册 account", req.Account)
-		yostarAccount, err = db.GetDBGame().AddYostarAccountByYostarAccount(req.Account)
-		if err != nil {
-			logger.Debug("自动注册sdk账号失败,数据库错误:%s account", err.Error())
-			return
-		}
-	}
-	if yostarAccount == nil {
-		logger.Debug("邮箱:%s,进行数据库操作时候有未知错误 account", req.Account)
+	yostarAccount, err := AddYostarAccount(req.Account, false)
+	if err != nil {
+		logger.Debug("邮箱:%s,进行数据库操作时候有未知错误:%s", req.Account, err.Error())
 		return
 	}
 	// 更新token
@@ -145,4 +134,19 @@ func (s *SDK) YostarAuthSubmit(c *gin.Context) {
 	rsp.YostarToken = yostarAccount.YostarToken
 	rsp.YostarAccount = yostarAccount.YostarAccount
 	logger.Debug("邮箱:%s,验证码登录成功 Code:%v,Token:%s,Uid:%v", req.Account, req.Code, yostarAccount.YostarToken, yostarAccount.YostarUid)
+}
+
+func AddYostarAccount(account string, gm bool) (yostarAccount *dbstruct.YostarAccount, err error) {
+	yostarAccount = db.GetDBGame().GetYostarAccountByYostarAccount(account)
+	if yostarAccount == nil {
+		if !config.GetAutoRegistration() && !gm {
+			return nil, errors.New("自动注册关闭")
+		}
+		logger.Debug("邮箱:%s,账号不存在进行注册 account", account)
+		yostarAccount, err = db.GetDBGame().AddYostarAccountByYostarAccount(account)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return yostarAccount, nil
 }
