@@ -51,7 +51,7 @@ func GetTicketSequence() int64 {
 
 func (g *Gateway) getEnterTicket(c *gin.Context) {
 	if !alg.CheckGateWay(c) {
-		errTokenBestHTTP(c)
+		errBestHTTP(c, proto.WebAPIErrorCode_ClientSuspectedAsCheater)
 		return
 	}
 	bin, err := mx.GetFormMx(c)
@@ -88,7 +88,7 @@ func (g *Gateway) getEnterTicket(c *gin.Context) {
 	if err = db.GetDBGame().UpdateYoStarUserLogin(yoStarUserLogin); err != nil {
 		return
 	}
-	enterTicket := mx.GetMxToken(alg.RandCodeInt64(), 15)
+	enterTicket := mx.GetMxToken(alg.RandCodeInt64(), 30)
 	if !enter.AddEnterTicket(yoStarUserLogin.AccountServerId, req.YostarUID, enterTicket) {
 		return
 	}
@@ -178,7 +178,7 @@ func newPlayerHash(s *enter.Session) {
 	}
 	// 初始化装备哈希表
 	for _, info := range game.GetEquipmentInfoList(s) {
-		conf := gdconf.GetEquipmentExcelTable(info.GetUniqueId())
+		conf := gdconf.GetEquipmentExcel(info.GetUniqueId())
 		if conf == nil || conf.MaxLevel >= 10 {
 			continue
 		}

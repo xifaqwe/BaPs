@@ -68,7 +68,8 @@ func GetAttendanceInfo(s *enter.Session, attendanceId int64) *sro.AttendanceInfo
 			info.LastReward = 0
 		}
 		info.Expired = true
-	} else if time.Unix(info.LastReward, 0).After(alg.GetLastDayH(4)) {
+	}
+	if time.Unix(info.LastReward, 0).After(alg.GetLastDayH(4)) {
 		// day
 		info.Expired = true
 	} else {

@@ -195,7 +195,7 @@ func GetTimeAttackDungeonParcelResultByScore(score, seasonId int64) (list []*Par
 	if conf == nil {
 		return
 	}
-	rewardConf := gdconf.GetTimeAttackDungeonRewardExcelTable(conf.TimeAttackDungeonRewardId)
+	rewardConf := gdconf.GetTimeAttackDungeonRewardExcel(conf.TimeAttackDungeonRewardId)
 	if rewardConf == nil {
 		return
 	}

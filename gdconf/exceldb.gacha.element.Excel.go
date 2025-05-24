@@ -6,36 +6,36 @@ import (
 	"github.com/gucooing/BaPs/protocol/mx"
 )
 
-func (g *GameConfig) loadGachaElementExcelTable() {
-	g.GetExcel().GachaElementExcelTable = make([]*sro.GachaElementExcelTable, 0)
-	name := "GachaElementExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().GachaElementExcelTable)
+func (g *GameConfig) loadGachaElementExcel() {
+	g.GetExcel().GachaElementExcel = make([]*sro.GachaElementExcel, 0)
+	name := "GachaElementExcel.json"
+	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().GachaElementExcel)
 }
 
 type GachaElementExcel struct {
-	GachaElementExcelMap    map[int64]*sro.GachaElementExcelTable
+	GachaElementExcelMap    map[int64]*sro.GachaElementExcel
 	GachaElementGroupIdList map[int64]*GachaElementGroupId // GroupId
 }
 
 type GachaElementGroupId struct {
 	GachaGroupId          int64
 	Rarity                string
-	GachaElementExcelList []*sro.GachaElementExcelTable
+	GachaElementExcelList []*sro.GachaElementExcel
 }
 
-func (g *GameConfig) gppGachaElementExcelTable() {
+func (g *GameConfig) gppGachaElementExcel() {
 	g.GetGPP().GachaElementExcel = &GachaElementExcel{
-		GachaElementExcelMap:    make(map[int64]*sro.GachaElementExcelTable),
+		GachaElementExcelMap:    make(map[int64]*sro.GachaElementExcel),
 		GachaElementGroupIdList: make(map[int64]*GachaElementGroupId),
 	}
-	for _, v := range g.GetExcel().GetGachaElementExcelTable() {
+	for _, v := range g.GetExcel().GetGachaElementExcel() {
 		g.GetGPP().GachaElementExcel.GachaElementExcelMap[v.Id] = v
 
 		if g.GetGPP().GachaElementExcel.GachaElementGroupIdList[v.GachaGroupId] == nil {
 			g.GetGPP().GachaElementExcel.GachaElementGroupIdList[v.GachaGroupId] = &GachaElementGroupId{
 				GachaGroupId:          v.GachaGroupId,
 				Rarity:                v.Rarity,
-				GachaElementExcelList: make([]*sro.GachaElementExcelTable, 0),
+				GachaElementExcelList: make([]*sro.GachaElementExcel, 0),
 			}
 		}
 		g.GetGPP().GachaElementExcel.GachaElementGroupIdList[v.GachaGroupId].GachaElementExcelList = append(
@@ -48,7 +48,7 @@ func (g *GameConfig) gppGachaElementExcelTable() {
 		len(g.GetGPP().GachaElementExcel.GachaElementExcelMap))
 }
 
-func GetGachaElementExcelTable(id int64) *sro.GachaElementExcelTable {
+func GetGachaElementExcel(id int64) *sro.GachaElementExcel {
 	return GC.GetGPP().GachaElementExcel.GachaElementExcelMap[id]
 }
 

@@ -373,4 +373,6 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_EventContent_EnterMainGroundStage, func() any { return new(proto.EventContentEnterMainGroundStageResponse) }, false)
 	c.regMsg(proto.Protocol_EventContent_MainGroundStageResult, func() any { return new(proto.EventContentMainGroundStageResultRequest) }, true)
 	c.regMsg(proto.Protocol_EventContent_MainGroundStageResult, func() any { return new(proto.EventContentMainGroundStageResultResponse) }, false)
+	c.regMsg(proto.Protocol_Billing_TransactionStartByYostar, func() any { return new(proto.BillingTransactionStartByYostarRequest) }, true)
+	c.regMsg(proto.Protocol_Billing_TransactionStartByYostar, func() any { return new(proto.BillingTransactionStartByYostarResponse) }, false)
 }

@@ -12,13 +12,13 @@ message Excel {
   repeated CharacterExcelTable CharacterExcelTable = 28; // 角色基本数据
   repeated DefaultFurnitureExcelTable DefaultFurnitureExcelTable = 9; // 默认家具
   repeated DefaultEchelonExcelTable DefaultEchelonExcelTable = 40; // 默认队伍
-  repeated ShopExcelTable ShopExcelTable = 26; // 商店数据
-  repeated ShopInfoExcelTable ShopInfoExcelTable = 16; // 商店配置
-  repeated ItemExcelTable ItemExcelTable = 43; // 物品配置
+  repeated ShopExcel ShopExcel = 26; // 商店数据
+  repeated ShopInfoExcel ShopInfoExcel = 16; // 商店配置
+  repeated ItemExcel ItemExcel = 43; // 物品配置
   repeated EmblemExcel EmblemExcel = 5; // 称号配置
   repeated AcademyFavorScheduleExcelTable AcademyFavorScheduleExcelTable = 4; // MomoTalk剧情配置
   repeated AcademyMessangerExcelTable AcademyMessangerExcelTable = 50; // MomoTalk对话配置
-  repeated GuideMissionExcelTable GuideMissionExcelTable = 36; // 成就配置
+  repeated GuideMissionExcel GuideMissionExcel = 36; // 成就配置
   repeated ScenarioModeExcel ScenarioModeExcel = 8; // 剧情配置
   repeated ScenarioModeRewardExcel ScenarioModeRewardExcel = 59; // 剧情奖励配置
   repeated CharacterWeaponExcelTable CharacterWeaponExcelTable = 55; // 角色武器配置
@@ -30,9 +30,9 @@ message Excel {
   repeated WeekDungeonExcelTable WeekDungeonExcelTable = 58; // 悬赏通缉关卡信息
   repeated SchoolDungeonStageExcel SchoolDungeonStageExcel = 7; // 学院交流会关卡信息
   repeated AccountLevelExcel AccountLevelExcel = 24; // 账号等级配置
-  repeated EquipmentExcelTable EquipmentExcelTable = 17; // 装备配置表
-  repeated EquipmentStatExcelTable EquipmentStatExcelTable = 30; // 装备详情表
-  repeated EquipmentLevelExcelTable EquipmentLevelExcelTable = 47; // 装备等级配置
+  repeated EquipmentExcel EquipmentExcel = 17; // 装备配置表
+  repeated EquipmentStatExcel EquipmentStatExcel = 30; // 装备详情表
+  repeated EquipmentLevelExcel EquipmentLevelExcel = 47; // 装备等级配置
   repeated FurnitureExcelTable FurnitureExcelTable = 32; // 家具配置
   repeated CafeRankExcelTable CafeRankExcelTable = 12; // 咖啡厅等级配置
   repeated CafeProductionExcelTable CafeProductionExcelTable = 38; // 咖啡厅生产配置
@@ -53,23 +53,23 @@ message Excel {
   repeated RaidStageExcelTable RaidStageExcelTable = 49; // 总力战关卡配置
   repeated CharacterStatExcelTable CharacterStatExcelTable = 35; // 实体属性配置
   repeated RaidStageRewardExcelTable RaidStageRewardExcelTable = 44; // 总力战关卡通过奖励配置
-  repeated MissionExcelTable MissionExcelTable = 23; // 任务配置
+  repeated MissionExcel MissionExcel = 23; // 任务配置
   repeated RaidStageSeasonRewardExcelTable RaidStageSeasonRewardExcelTable = 3; // 总力战总分奖励配置
   repeated MultiFloorRaidSeasonManageExcel MultiFloorRaidSeasonManageExcel = 13; // 制约解除决战赛季配置
   repeated MultiFloorRaidStageExcel MultiFloorRaidStageExcel = 29; // 制约解除决战关卡
   repeated MultiFloorRaidRewardExcel MultiFloorRaidRewardExcel = 65; // 制约解除决战关卡奖励
-  repeated TimeAttackDungeonSeasonManageExcelTable TimeAttackDungeonSeasonManageExcelTable = 15; // 综合战术考试排期表
+  repeated TimeAttackDungeonSeasonManageExcel TimeAttackDungeonSeasonManageExcel = 15; // 综合战术考试排期表
   repeated EliminateRaidSeasonManageExcelTable EliminateRaidSeasonManageExcelTable = 52; // 大决战赛季配置
   repeated EliminateRaidRankingRewardExcelTable EliminateRaidRankingRewardExcelTable = 61; // 大决站赛季结算奖励配置
   repeated EliminateRaidStageExcelTable EliminateRaidStageExcelTable = 63; // 大决战关卡配置
   repeated EliminateRaidStageRewardExcelTable EliminateRaidStageRewardExcelTable = 21; // 大决战关卡奖励配置
   repeated EliminateRaidStageSeasonRewardExcelTable EliminateRaidStageSeasonRewardExcelTable = 1; // 大决战总分奖励配置
-  repeated GachaElementRecursiveExcelTable GachaElementRecursiveExcelTable = 22; // 随机组配置
-  repeated GachaElementExcelTable GachaElementExcelTable = 31; // 随机组池配置
-  repeated GoodsExcelTable GoodsExcelTable = 45; // 商品配置
-  repeated TimeAttackDungeonGeasExcelTable TimeAttackDungeonGeasExcelTable = 54; // 综合战术考试关卡配置
-  repeated TimeAttackDungeonRewardExcelTable TimeAttackDungeonRewardExcelTable = 2; // 综合战术考试奖励配置
-  repeated ShopRefreshExcelTable ShopRefreshExcelTable = 20; // 可刷新商品配置
+  repeated GachaElementRecursiveExcel GachaElementRecursiveExcel = 22; // 随机组配置
+  repeated GachaElementExcel GachaElementExcel = 31; // 随机组池配置
+  repeated GoodsExcel GoodsExcel = 45; // 商品配置
+  repeated TimeAttackDungeonGeasExcel TimeAttackDungeonGeasExcel = 54; // 综合战术考试关卡配置
+  repeated TimeAttackDungeonRewardExcel TimeAttackDungeonRewardExcel = 2; // 综合战术考试奖励配置
+  repeated ShopRefreshExcel ShopRefreshExcel = 20; // 可刷新商品配置
   repeated ArenaSeasonExcelTable ArenaSeasonExcelTable = 37; // 竞技场赛季配置
   repeated FavorLevelExcel FavorLevelExcel = 42; // 好感系统等级经验配置
   repeated EventContentMissionExcelTable EventContentMissionExcelTable =66; // 活动关卡总表
@@ -147,7 +147,7 @@ message DefaultEchelonExcelTable{
   int32 ExtensionType = 4;
 }
 
-message ShopExcelTable {
+message ShopExcel {
   int64 Id = 11;
   int64 LocalizeEtcId = 1;
   string CategoryType = 9;
@@ -165,7 +165,7 @@ message ShopExcelTable {
   int64 ShopUpdateGroupId = 5;
 }
 
-message ShopInfoExcelTable {
+message ShopInfoExcel {
   string CategoryType = 5;
   bool IsRefresh = 7;
   bool IsSoldOutDimmed = 9;
@@ -196,7 +196,7 @@ message ShopInfoExcelTable {
   int64 ShopUpdateGroupId12 = 26;
 }
 
-message ItemExcelTable {
+message ItemExcel {
   int64 Id = 4;
   int64 GroupId = 7;
   string Rarity = 24;
@@ -282,7 +282,7 @@ message AcademyMessangerExcelTable {
   int64 FeedbackTimeMillisec = 10;
 }
 
-message GuideMissionExcelTable {
+message GuideMissionExcel {
   int64 SeasonId = 15;
   int64 Id = 5;
   string Category = 11;
@@ -538,7 +538,7 @@ message AccountLevelExcel {
   bool NeedReportEvent = 1;
 }
 
-message EquipmentExcelTable {
+message EquipmentExcel {
   int64 Id = 11;
   string EquipmentCategory = 18;
   string Rarity = 4;
@@ -560,7 +560,7 @@ message EquipmentExcelTable {
   int64 ShortcutTypeId = 8;
 }
 
-message EquipmentStatExcelTable {
+message EquipmentStatExcel {
   int64 EquipmentId = 11;
   string StatLevelUpType = 14;
   repeated string StatType = 13;
@@ -577,7 +577,7 @@ message EquipmentStatExcelTable {
   string DamageFactorGroupId = 7;
 }
 
-message EquipmentLevelExcelTable {
+message EquipmentLevelExcel {
   int32 Level = 3;
   repeated int64 TierLevelExp = 2;
   repeated int64 TotalExp = 1;
@@ -932,7 +932,7 @@ message RaidStageRewardExcelTable {
   int64 ClearStageRewardAmount = 6;
 }
 
-message MissionExcelTable {
+message MissionExcel {
   int64 Id = 4;
   string Category = 14;
   int64 Description = 22;
@@ -1021,7 +1021,7 @@ message MultiFloorRaidRewardExcel {
   int64 ClearStageRewardAmount = 5;
 }
 
-message TimeAttackDungeonSeasonManageExcelTable {
+message TimeAttackDungeonSeasonManageExcel {
   int64 Id = 4;
   string StartDate = 3;
   string EndNoteLabelStartDate = 9;
@@ -1131,7 +1131,7 @@ message EliminateRaidStageSeasonRewardExcelTable {
   repeated int64 SeasonRewardAmount = 2;
 }
 
-message GachaElementRecursiveExcelTable {
+message GachaElementRecursiveExcel {
   int64 Id = 7;
   int64 GachaGroupId = 5;
   string ParcelType = 4;
@@ -1142,7 +1142,7 @@ message GachaElementRecursiveExcelTable {
   int64 State = 1;
 }
 
-message GachaElementExcelTable {
+message GachaElementExcel {
   int64 Id = 1;
   int64 GachaGroupId = 3;
   string ParcelType = 7;
@@ -1154,7 +1154,7 @@ message GachaElementExcelTable {
   int64 State = 9;
 }
 
-message GoodsExcelTable {
+message GoodsExcel {
   int64 Id = 17;
   int64 Type = 4;
   string Rarity = 8;
@@ -1175,7 +1175,7 @@ message GoodsExcelTable {
   repeated int64 ParcelAmount = 16;
 }
 
-message TimeAttackDungeonGeasExcelTable {
+message TimeAttackDungeonGeasExcel {
   int64 Id = 13;
   string TimeAttackDungeonType = 7;
   int64 LocalizeEtcKey = 16;
@@ -1194,7 +1194,7 @@ message TimeAttackDungeonGeasExcelTable {
   repeated int64 GeasLocalizeEtcKey = 2;
 }
 
-message TimeAttackDungeonRewardExcelTable {
+message TimeAttackDungeonRewardExcel {
   int64 Id = 6;
   int64 RewardMaxPoint = 3;
   repeated string RewardType = 2;
@@ -1205,7 +1205,7 @@ message TimeAttackDungeonRewardExcelTable {
   repeated int64 RewardParcelMaxAmount = 8;
 }
 
-message ShopRefreshExcelTable {
+message ShopRefreshExcel {
   int64 Id = 2;
   int64 LocalizeEtcId = 4;
   bool IsLegacy = 6;

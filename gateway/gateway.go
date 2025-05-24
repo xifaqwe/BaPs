@@ -13,6 +13,7 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 	"github.com/gucooing/BaPs/protocol"
 	"github.com/gucooing/BaPs/protocol/mx"
+	"github.com/gucooing/BaPs/protocol/proto"
 	"net/http"
 )
 
@@ -73,7 +74,7 @@ func (g *Gateway) gateWay(c *gin.Context) {
 	}
 	packet, base, err := protocol.UnmarshalRequest(bin)
 	if err != nil {
-		errBestHTTP(c, 15022)
+		errBestHTTP(c, proto.WebAPIErrorCode_MailBoxFull) // 临时解决方案-避免客户端被弹出
 		logger.Debug("unmarshal c--->s err:%s,json:%s", err, string(bin))
 		return
 	}
@@ -81,17 +82,10 @@ func (g *Gateway) gateWay(c *gin.Context) {
 	g.registerMessage(c, packet, base)
 }
 
-func errBestHTTP(c *gin.Context, errorCode int32) {
+func errBestHTTP(c *gin.Context, errorCode proto.WebAPIErrorCode) {
 	msg := &protocol.NetworkProtocolResponse{
 		Packet:   fmt.Sprintf("{\"Protocol\":-1,\"ErrorCode\":%d}", errorCode),
 		Protocol: "Error",
 	}
 	c.JSON(200, msg)
-}
-
-func errTokenBestHTTP(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"protocol": "Error",
-		"packet":   "{\"Protocol\":-1,\"ErrorCode\":402}",
-	})
 }

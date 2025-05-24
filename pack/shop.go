@@ -73,7 +73,7 @@ func ShopBuyEligma(s *enter.Session, request, response mx.Message) {
 		UsedEquipmentServerIdAndRemainingCounts: make(map[int64]int64),
 		UsedFurnitureServerIdAndRemainingCounts: make(map[int64]int64),
 	}
-	conf := gdconf.GetShopExcelTable(req.ShopUniqueId)
+	conf := gdconf.GetShopExcel(req.ShopUniqueId)
 	rsp.ShopProductDB = &proto.ShopProductDB{
 		EventContentId:     0,
 		ShopExcelId:        conf.GetId(),
@@ -108,7 +108,7 @@ func ShopBuyMerchandise(s *enter.Session, request, response mx.Message) {
 			}
 		}
 	}
-	addGoodsExcel := func(goodsInfo *sro.GoodsExcelTable) {
+	addGoodsExcel := func(goodsInfo *sro.GoodsExcel) {
 		if goodsInfo == nil {
 			return
 		}
@@ -140,16 +140,16 @@ func ShopBuyMerchandise(s *enter.Session, request, response mx.Message) {
 		purchaseCountLimit = 1
 		displayOrder = conf.GetDisplayOrder()
 
-		addGoodsExcel(gdconf.GetGoodsExcelTable(conf.GoodsId))
+		addGoodsExcel(gdconf.GetGoodsExcel(conf.GoodsId))
 	} else {
-		conf := gdconf.GetShopExcelTable(req.ShopUniqueId)
+		conf := gdconf.GetShopExcel(req.ShopUniqueId)
 		productType = proto.ShopProductType_General
 		category = proto.ShopCategoryType_General.Value(conf.GetCategoryType())
 		purchaseCountLimit = conf.GetPurchaseCountLimit()
 		displayOrder = conf.GetDisplayOrder()
 
 		for _, goodsId := range conf.GoodsId {
-			addGoodsExcel(gdconf.GetGoodsExcelTable(goodsId))
+			addGoodsExcel(gdconf.GetGoodsExcel(goodsId))
 		}
 	}
 

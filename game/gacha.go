@@ -54,7 +54,7 @@ func GetBeforehandGachaSnapshotDB(s *enter.Session) *proto.BeforehandGachaSnapsh
 
 func GenGachaResults(goodsId int64) []*ParcelResult {
 	results := make([]*ParcelResult, 0)
-	goods := gdconf.GetGoodsExcelTable(goodsId)
+	goods := gdconf.GetGoodsExcel(goodsId)
 	addDef := func() {
 		results = append(results, &ParcelResult{
 			ParcelType: proto.ParcelType_Character,

@@ -9,32 +9,32 @@ import (
 	"github.com/gucooing/BaPs/protocol/mx"
 )
 
-func (g *GameConfig) loadItemExcelTable() {
-	g.GetExcel().ItemExcelTable = make([]*sro.ItemExcelTable, 0)
-	name := "ItemExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().ItemExcelTable)
+func (g *GameConfig) loadItemExcel() {
+	g.GetExcel().ItemExcel = make([]*sro.ItemExcel, 0)
+	name := "ItemExcel.json"
+	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().ItemExcel)
 }
 
 type ItemExcel struct {
 	RecruitCoin          *RecruitCoin
 	recruitCoinSync      sync.Mutex
-	ItemExcelMap         map[int64]*sro.ItemExcelTable
-	ItemExcelCategoryMap map[string][]*sro.ItemExcelTable
+	ItemExcelMap         map[int64]*sro.ItemExcel
+	ItemExcelCategoryMap map[string][]*sro.ItemExcel
 }
 
 type RecruitCoin struct {
-	Item   *sro.ItemExcelTable
+	Item   *sro.ItemExcel
 	EnTime time.Time
 }
 
-func (g *GameConfig) gppItemExcelTable() {
+func (g *GameConfig) gppItemExcel() {
 	g.GetGPP().ItemExcel = &ItemExcel{
-		ItemExcelMap:         make(map[int64]*sro.ItemExcelTable),
-		ItemExcelCategoryMap: make(map[string][]*sro.ItemExcelTable),
+		ItemExcelMap:         make(map[int64]*sro.ItemExcel),
+		ItemExcelCategoryMap: make(map[string][]*sro.ItemExcel),
 		recruitCoinSync:      sync.Mutex{},
 	}
 
-	for _, v := range g.GetExcel().GetItemExcelTable() {
+	for _, v := range g.GetExcel().GetItemExcel() {
 		if v.ExpirationDateTime != "" {
 			enTime, err := time.Parse("2006-01-02 15:04:05", v.ExpirationDateTime)
 			if err != nil {
@@ -46,7 +46,7 @@ func (g *GameConfig) gppItemExcelTable() {
 		}
 		g.GetGPP().ItemExcel.ItemExcelMap[v.Id] = v
 		if g.GetGPP().ItemExcel.ItemExcelCategoryMap[v.ItemCategory] == nil {
-			g.GetGPP().ItemExcel.ItemExcelCategoryMap[v.ItemCategory] = make([]*sro.ItemExcelTable, 0)
+			g.GetGPP().ItemExcel.ItemExcelCategoryMap[v.ItemCategory] = make([]*sro.ItemExcel, 0)
 		}
 		g.GetGPP().ItemExcel.ItemExcelCategoryMap[v.ItemCategory] = append(
 			g.GetGPP().ItemExcel.ItemExcelCategoryMap[v.ItemCategory], v)
@@ -57,7 +57,7 @@ func (g *GameConfig) gppItemExcelTable() {
 }
 
 // 弃用,已经有更好的方法了
-// func GetRecruitCoin() *sro.ItemExcelTable {
+// func GetRecruitCoin() *sro.ItemExcel {
 // 	bin := GC.GetGPP().ItemExcel
 // 	bin.recruitCoinSync.Lock()
 // 	defer bin.recruitCoinSync.Unlock()
@@ -86,11 +86,11 @@ func (g *GameConfig) gppItemExcelTable() {
 // 	return nil
 // }
 
-func GetItemExcelCategoryMap(itemCategory string) []*sro.ItemExcelTable {
+func GetItemExcelCategoryMap(itemCategory string) []*sro.ItemExcel {
 	return GC.GetGPP().ItemExcel.ItemExcelCategoryMap[itemCategory]
 }
 
-func GetItemExcelTable(id int64) *sro.ItemExcelTable {
+func GetItemExcel(id int64) *sro.ItemExcel {
 	return GC.GetGPP().ItemExcel.ItemExcelMap[id]
 }
 

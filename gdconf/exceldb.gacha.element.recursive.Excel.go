@@ -6,26 +6,26 @@ import (
 	"github.com/gucooing/BaPs/protocol/mx"
 )
 
-func (g *GameConfig) loadGachaElementRecursiveExcelTable() {
-	g.GetExcel().GachaElementRecursiveExcelTable = make([]*sro.GachaElementRecursiveExcelTable, 0)
-	name := "GachaElementRecursiveExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().GachaElementRecursiveExcelTable)
+func (g *GameConfig) loadGachaElementRecursiveExcel() {
+	g.GetExcel().GachaElementRecursiveExcel = make([]*sro.GachaElementRecursiveExcel, 0)
+	name := "GachaElementRecursiveExcel.json"
+	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().GachaElementRecursiveExcel)
 }
 
 type GachaElementRecursiveExcel struct {
-	GachaElementRecursiveExcelMap  map[int64]*sro.GachaElementRecursiveExcelTable
-	GachaElementRecursiveExcelList map[int64][]*sro.GachaElementRecursiveExcelTable // GroupId
+	GachaElementRecursiveExcelMap  map[int64]*sro.GachaElementRecursiveExcel
+	GachaElementRecursiveExcelList map[int64][]*sro.GachaElementRecursiveExcel // GroupId
 }
 
-func (g *GameConfig) gppGachaElementRecursiveExcelTable() {
+func (g *GameConfig) gppGachaElementRecursiveExcel() {
 	g.GetGPP().GachaElementRecursiveExcel = &GachaElementRecursiveExcel{
-		GachaElementRecursiveExcelMap:  make(map[int64]*sro.GachaElementRecursiveExcelTable),
-		GachaElementRecursiveExcelList: make(map[int64][]*sro.GachaElementRecursiveExcelTable),
+		GachaElementRecursiveExcelMap:  make(map[int64]*sro.GachaElementRecursiveExcel),
+		GachaElementRecursiveExcelList: make(map[int64][]*sro.GachaElementRecursiveExcel),
 	}
-	for _, v := range g.GetExcel().GetGachaElementRecursiveExcelTable() {
+	for _, v := range g.GetExcel().GetGachaElementRecursiveExcel() {
 		g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelMap[v.Id] = v
 		if g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelList[v.GachaGroupId] == nil {
-			g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelList[v.GachaGroupId] = make([]*sro.GachaElementRecursiveExcelTable, 0)
+			g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelList[v.GachaGroupId] = make([]*sro.GachaElementRecursiveExcel, 0)
 		}
 		g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelList[v.GachaGroupId] = append(
 			g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelList[v.GachaGroupId],
@@ -37,7 +37,7 @@ func (g *GameConfig) gppGachaElementRecursiveExcelTable() {
 		len(g.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelMap))
 }
 
-func GetGachaElementRecursiveExcelTable(id int64) *sro.GachaElementRecursiveExcelTable {
+func GetGachaElementRecursiveExcel(id int64) *sro.GachaElementRecursiveExcel {
 	return GC.GetGPP().GachaElementRecursiveExcel.GachaElementRecursiveExcelMap[id]
 }
 

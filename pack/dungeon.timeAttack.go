@@ -83,7 +83,7 @@ func TimeAttackDungeonEndBattle(s *enter.Session, request, response mx.Message) 
 	if summary == nil || curBin == nil || summary.Winner != proto.GroupTag_Group01.String() {
 		return
 	}
-	conf := gdconf.GetTimeAttackDungeonGeasExcelTable(summary.StageId)
+	conf := gdconf.GetTimeAttackDungeonGeasExcel(summary.StageId)
 	if conf == nil {
 		return
 	}

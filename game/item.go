@@ -425,7 +425,7 @@ func AddEquipment(s *enter.Session, equipmentId int64, num int64) (list []int64)
 	if bin == nil {
 		return
 	}
-	conf := gdconf.GetEquipmentExcelTable(equipmentId)
+	conf := gdconf.GetEquipmentExcel(equipmentId)
 	if conf == nil {
 		return
 	}
@@ -475,8 +475,8 @@ func DelEquipment(s *enter.Session, serverId int64, num int64) (bool, int64) {
 	if !ok {
 		return false, 0
 	}
-	conf := gdconf.GetEquipmentExcelTable(info.UniqueId)
-	statConf := gdconf.GetEquipmentStatExcelTable(info.UniqueId)
+	conf := gdconf.GetEquipmentExcel(info.UniqueId)
+	statConf := gdconf.GetEquipmentStatExcel(info.UniqueId)
 	if conf == nil || statConf == nil {
 		return false, 0
 	}
@@ -499,7 +499,7 @@ func GetEquipmentDBs(s *enter.Session) []*proto.EquipmentDB {
 		del = true
 	}
 	for index, bin := range binList {
-		if conf := gdconf.GetEquipmentExcelTable(bin.UniqueId); conf == nil ||
+		if conf := gdconf.GetEquipmentExcel(bin.UniqueId); conf == nil ||
 			(bin.CharacterServerId == 0 && del) {
 			delete(GetEquipmentInfoList(s), index)
 			continue

@@ -19,7 +19,6 @@ type handlerFunc func(s *enter.Session, request, response mx.Message)
 
 var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_Craft_List:                           pack.CraftInfoList,                       // 获取制造信息
-	proto.Protocol_Billing_PurchaseListByYostar:         pack.BillingPurchaseListByYostar,         // Yostar采购清单??
 	proto.Protocol_EventContent_PermanentList:           pack.EventContentPermanentList,           // 获取永久时间列表?
 	proto.Protocol_Sticker_Login:                        pack.StickerLogin,                        // 登录获取贴纸信息??
 	proto.Protocol_ContentSweep_MultiSweepPresetList:    pack.ContentSweepMultiSweepPresetList,    // ????
@@ -158,6 +157,9 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_Shop_BuyRefreshMerchandise: pack.ShopBuyRefreshMerchandise, // 每日刷新商店购买
 	proto.Protocol_Shop_BuyEligma:             pack.ShopBuyEligma,             // 角色碎片购买
 	proto.Protocol_Shop_BuyMerchandise:        pack.ShopBuyMerchandise,        // 商店购买
+	// 付费商店
+	proto.Protocol_Billing_PurchaseListByYostar:     pack.BillingPurchaseListByYostar,     // 付费商店信息
+	proto.Protocol_Billing_TransactionStartByYostar: pack.BillingTransactionStartByYostar, // 支付购买-牢房预定
 	// 卡池
 	proto.Protocol_Shop_GachaRecruitList:    pack.ShopGachaRecruitList,    // 获取卡池历史数据
 	proto.Protocol_Shop_BeforehandGachaGet:  pack.ShopBeforehandGachaGet,  // 获取新手免费十连信息
@@ -227,7 +229,7 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 	// panic捕获
 	defer func() {
 		if err := recover(); err != nil {
-			errBestHTTP(c, 15022)
+			errBestHTTP(c, proto.WebAPIErrorCode_ServerFailedToHandleRequest)
 			logger.Error("@LogTag(player_panic)cmdId:%s json:%s\nerr:%s\nstack:%s", base.Protocol.String(),
 				request.String(), err, logger.Stack())
 			return
@@ -236,14 +238,13 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 
 	handler, ok := funcRouteMap[base.Protocol]
 	if !ok {
-
-		errBestHTTP(c, 15022)
+		errBestHTTP(c, proto.WebAPIErrorCode_ClientSendBadRequest)
 		logPlayerMsg(NoRoute, request)
 		return
 	}
 	response := cmd.Get().GetResponsePacketByCmdId(base.Protocol)
 	if response == nil {
-		errBestHTTP(c, 15022)
+		errBestHTTP(c, proto.WebAPIErrorCode_ClientSendBadRequest)
 		logger.Debug("response unknown cmd id: %v\n", base.Protocol.String())
 		return
 	}
@@ -251,13 +252,13 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 	var s *enter.Session
 	if sessionKey == nil &&
 		base.Protocol != proto.Protocol_Account_CheckYostar {
-		errTokenBestHTTP(c) // TODO 异常请求
+		errBestHTTP(c, proto.WebAPIErrorCode_InvalidSession) // TODO 异常请求-未登录
 		logger.Debug("get request sessionKey nil")
 		return
 	} else if base.Protocol != proto.Protocol_Account_CheckYostar {
 		s = enter.GetSessionBySessionKey(sessionKey)
 		if s == nil {
-			errTokenBestHTTP(c) // TODO 异常请求
+			errBestHTTP(c, proto.WebAPIErrorCode_InvalidSession) // TODO 异常请求-未过验证
 			logger.Debug("get session nil,SessionKey:%s", sessionKey.String())
 			return
 		}
@@ -278,7 +279,7 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 	atomic.AddInt64(&check.TPS, 1)
 	time1 := time.Now()
 	handler(s, request, response)
-	atomic.AddInt64(&check.RT, int64(time.Now().Sub(time1)/time.Nanosecond))
+	atomic.AddInt64((*int64)(&check.RT), int64(time.Now().Sub(time1)))
 
 	// 函数执行完毕
 	responsePacket.ServerTimeTicks = game.GetServerTime()

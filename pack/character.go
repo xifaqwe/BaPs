@@ -229,7 +229,7 @@ func CharacterExpGrowth(s *enter.Session, request, response mx.Message) {
 		if itemInfo == nil {
 			continue
 		}
-		itemConf := gdconf.GetItemExcelTable(itemInfo.UniqueId)
+		itemConf := gdconf.GetItemExcel(itemInfo.UniqueId)
 		if itemConf == nil {
 			continue
 		}

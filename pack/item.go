@@ -57,7 +57,7 @@ func EquipmentLevelUp(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	conf := gdconf.GetEquipmentExcelTable(bin.UniqueId)
+	conf := gdconf.GetEquipmentExcel(bin.UniqueId)
 	if conf == nil {
 		return
 	}
@@ -81,7 +81,7 @@ func EquipmentLevelUp(s *enter.Session, request, response mx.Message) {
 		if equipInfo == nil {
 			continue
 		}
-		equipConf := gdconf.GetEquipmentExcelTable(equipInfo.UniqueId)
+		equipConf := gdconf.GetEquipmentExcel(equipInfo.UniqueId)
 		if equipConf.MaxLevel < 10 {
 			consumeResultDB.UsedEquipmentServerIdAndRemainingCounts[serverId] = equipInfo.StackCount
 		} else {
@@ -91,7 +91,7 @@ func EquipmentLevelUp(s *enter.Session, request, response mx.Message) {
 	}
 	// 该计算可以升到几级了
 	for {
-		levelConf := gdconf.GetEquipmentLevelExcelTable(bin.Level)
+		levelConf := gdconf.GetEquipmentLevelExcel(bin.Level)
 		if levelConf == nil {
 			break
 		}
@@ -115,7 +115,7 @@ func EquipmentTierUp(s *enter.Session, request, response mx.Message) {
 	if bin == nil {
 		return
 	}
-	conf := gdconf.GetEquipmentExcelTable(bin.UniqueId)
+	conf := gdconf.GetEquipmentExcel(bin.UniqueId)
 	if conf == nil || conf.NextTierEquipment == 0 {
 		return
 	}
@@ -156,7 +156,7 @@ func EquipmentBatchGrowth(s *enter.Session, request, response mx.Message) {
 		if bin == nil {
 			continue
 		}
-		conf := gdconf.GetEquipmentExcelTable(bin.UniqueId)
+		conf := gdconf.GetEquipmentExcel(bin.UniqueId)
 		if conf == nil {
 			continue
 		}
@@ -178,7 +178,7 @@ func EquipmentBatchGrowth(s *enter.Session, request, response mx.Message) {
 					ParcelType: proto.ParcelType_Equipment,
 					ParcelId:   equipInfo.UniqueId,
 				})
-				equipConf := gdconf.GetEquipmentExcelTable(equipInfo.UniqueId)
+				equipConf := gdconf.GetEquipmentExcel(equipInfo.UniqueId)
 				if equipConf.MaxLevel < 10 {
 					consumeResultDB.UsedEquipmentServerIdAndRemainingCounts[serverId] = equipInfo.StackCount
 				} else {
@@ -193,7 +193,7 @@ func EquipmentBatchGrowth(s *enter.Session, request, response mx.Message) {
 			bin.Exp = equipmentBatch.AfterExp
 		}
 		for {
-			newConf := gdconf.GetEquipmentExcelTable(bin.UniqueId)
+			newConf := gdconf.GetEquipmentExcel(bin.UniqueId)
 			if newConf == nil || newConf.NextTierEquipment == 0 ||
 				bin.Level < newConf.MaxLevel || int32(equipmentBatch.AfterTier) <= newConf.TierInit {
 				break

@@ -158,7 +158,7 @@ func GiveAllCharacter(req *ApiGiveAll) []*sro.ParcelInfo {
 
 func GiveAllEquipment(req *ApiGiveAll) []*sro.ParcelInfo {
 	list := make([]*sro.ParcelInfo, 0)
-	for _, conf := range gdconf.GetEquipmentExcelTableMap() {
+	for _, conf := range gdconf.GetEquipmentExcelMap() {
 		num := req.Num
 		if conf.MaxLevel < 10 {
 			num = alg.MinInt64(req.Num, 9999)

@@ -1,7 +1,6 @@
 package check
 
 import (
-	"math"
 	"net/http"
 	"sync"
 	"sync/atomic"
@@ -12,9 +11,9 @@ import (
 )
 
 var TPS int64
-var RT int64
+var RT time.Duration
 var OLDTPS int64
-var OLDRT float64
+var OLDRT time.Duration
 var SessionNum int64
 
 func GinNetInfo() {
@@ -22,18 +21,19 @@ func GinNetInfo() {
 	for {
 		<-ticker.C
 		tps := atomic.LoadInt64(&TPS)
-		rt := float64(atomic.LoadInt64(&RT)) / (float64(tps) * 1000 * 1000)
 		OLDTPS = tps
-		OLDRT = rt
-		if tps == 0 || math.IsNaN(rt) {
+		rt := atomic.LoadInt64((*int64)(&RT))
+		if tps == 0 || rt == 0 {
 			OLDRT = 0
 			continue
+		} else {
+			OLDRT = time.Duration(rt / tps)
 		}
 		logger.Info("SessionNum: %v", SessionNum)
 		logger.Info("TPS: %v", tps/60)
-		logger.Info("RT: %.6f ms", rt)
+		logger.Info("RT: %s", OLDRT)
 		atomic.StoreInt64(&TPS, 0)
-		atomic.StoreInt64(&RT, 0)
+		atomic.StoreInt64((*int64)(&RT), 0)
 	}
 }
 
