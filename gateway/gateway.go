@@ -25,7 +25,7 @@ func NewGateWay(router *gin.Engine) *Gateway {
 	g := &Gateway{
 		router: router,
 	}
-	enter.MaxCachePlayerTime = alg.MaxInt(config.GetGateWay().MaxCachePlayerTime, 30)
+	enter.MaxCachePlayerTime = alg.MinInt(config.GetGateWay().MaxCachePlayerTime, 30)
 	enter.MaxPlayerNum = config.GetGateWay().MaxPlayerNum
 	g.initRouter()
 
@@ -36,7 +36,7 @@ func (g *Gateway) initRouter() {
 	g.router.POST("/getEnterTicket/gateway", check.GateSync(), g.getEnterTicket) // 这个地方要加个限速器,不然会被dos
 	api := g.router.Group("/api")
 	{
-		api.POST("/gateway", check.GateSync(), g.gateWay)
+		api.POST("/gateway", g.gateWay)
 	}
 }
 

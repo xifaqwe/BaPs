@@ -438,6 +438,7 @@ const (
 	Protocol_MultiFloorRaid_EndBattle                  Protocol = 49002
 	Protocol_MultiFloorRaid_ReceiveReward              Protocol = 49003
 	Protocol_Queuing_GetTicket                         Protocol = 50000
+	Protocol_GmTalk                                    Protocol = 90000
 )
 
 var (
@@ -876,6 +877,7 @@ var (
 		49002: "MultiFloorRaid_EndBattle",
 		49003: "MultiFloorRaid_ReceiveReward",
 		50000: "Queuing_GetTicket",
+		90000: "GmTalk",
 	}
 	Protocol_value = map[string]int32{
 		"Common_Cheat":          -9999,
@@ -1312,6 +1314,7 @@ var (
 		"MultiFloorRaid_EndBattle":                  49002,
 		"MultiFloorRaid_ReceiveReward":              49003,
 		"Queuing_GetTicket":                         50000,
+		"GmTalk":                                    90000,
 	}
 )
 

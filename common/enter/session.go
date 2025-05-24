@@ -57,6 +57,7 @@ func (e *EnterSet) checkSession() {
 	if len(yostarGameList) == 0 {
 		return
 	}
+
 	if db.GetDBGame().UpAllYostarGame(yostarGameList) != nil {
 		logger.Error("玩家数据保存失败")
 	} else {
@@ -217,14 +218,14 @@ func UpAllPlayerBin() {
 	}
 	if len(yostarGameList) != 0 {
 		if db.GetDBGame().UpAllYostarGame(yostarGameList) != nil {
-			logger.Error("玩家数据保存失败")
+			logger.Error("全部玩家数据保存失败")
 		} else {
-			logger.Info("玩家数据保存完毕,num:%v", len(yostarGameList))
+			logger.Info("全部玩家数据保存完毕,num:%v", len(yostarGameList))
 		}
 		if db.GetDBGame().UpAllYostarFriend(yostarFriendList) != nil {
-			logger.Error("好友数据保存失败")
+			logger.Error("全部好友数据保存失败")
 		} else {
-			logger.Info("好友数据保存完毕,num:%v", len(yostarFriendList))
+			logger.Info("全部好友数据保存完毕,num:%v", len(yostarFriendList))
 		}
 	}
 
@@ -241,9 +242,9 @@ func UpAllPlayerBin() {
 	}
 	if len(yostarClanList) != 0 {
 		if db.GetDBGame().UpAllYostarClan(yostarClanList) != nil {
-			logger.Error("社团数据保存失败")
+			logger.Error("全部社团数据保存失败")
 		} else {
-			logger.Info("社团数据保存完毕,num:%v", len(yostarClanList))
+			logger.Info("全部社团数据保存完毕,num:%v", len(yostarClanList))
 		}
 	}
 }

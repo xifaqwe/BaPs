@@ -51,7 +51,7 @@ func MaxInt(a, b int) int {
 	return b
 }
 
-func MainInt(a, b int) int {
+func MinInt(a, b int) int {
 	if a > b {
 		return b
 	}

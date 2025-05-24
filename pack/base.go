@@ -1,12 +1,15 @@
 package pack
 
 import (
+	"github.com/gucooing/BaPs/command"
 	"github.com/gucooing/BaPs/common/enter"
+	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/game"
 	"github.com/gucooing/BaPs/gdconf"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
+	"time"
 )
 
 func EventContentPermanentList(s *enter.Session, request, response mx.Message) {
@@ -123,5 +126,28 @@ func ContentSweepRequest(s *enter.Session, request, response mx.Message) {
 		rsp.ClearParcels = clearParcels
 	default:
 		logger.Warn("未处理的扫荡类型:%s", req.Content.String())
+	}
+}
+
+func GmTalk(s *enter.Session, request, response mx.Message) {
+	req := request.(*proto.GmTalkRequest)
+	//rsp := response.(*proto.GmTalkResponse)
+	mail := &sro.MailInfo{
+		Sender:         "gucooing",
+		Comment:        "GmTalk",
+		SendDate:       time.Now().Unix(),
+		ExpireDate:     time.Now().Add(10 * time.Minute).Unix(),
+		ParcelInfoList: make([]*sro.ParcelInfo, 0),
+	}
+	defer game.AddMail(s, mail)
+	switch req.TestType {
+	case 1:
+		mail.ParcelInfoList = command.GiveAllJsonToProtobuf(&command.ApiGiveAll{
+			Type: "All",
+			Num:  999,
+		})
+	case 2:
+	case 3:
+
 	}
 }

@@ -375,4 +375,6 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_EventContent_MainGroundStageResult, func() any { return new(proto.EventContentMainGroundStageResultResponse) }, false)
 	c.regMsg(proto.Protocol_Billing_TransactionStartByYostar, func() any { return new(proto.BillingTransactionStartByYostarRequest) }, true)
 	c.regMsg(proto.Protocol_Billing_TransactionStartByYostar, func() any { return new(proto.BillingTransactionStartByYostarResponse) }, false)
+	c.regMsg(proto.Protocol_GmTalk, func() any { return new(proto.GmTalkRequest) }, true)
+	c.regMsg(proto.Protocol_GmTalk, func() any { return new(proto.GmTalkResponse) }, false)
 }

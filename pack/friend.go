@@ -75,7 +75,7 @@ func FriendSearch(s *enter.Session, request, response mx.Message) {
 	}
 
 	allSession := enter.GetAllSessionList()
-	maxNum := alg.MainInt(30, len(allSession)-1)
+	maxNum := alg.MinInt(30, len(allSession)-1)
 	uidlist := make(map[int64]bool, 0)
 	for i := 0; i < maxNum; i++ {
 		friendS := allSession[rand.Intn(len(allSession))]

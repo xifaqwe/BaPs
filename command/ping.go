@@ -3,26 +3,24 @@ package command
 import (
 	"fmt"
 	"github.com/bytedance/sonic"
-	"runtime"
-	"sync/atomic"
-	"time"
-
 	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/pkg"
 	"github.com/gucooing/cdq"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
+	"runtime"
+	"sync/atomic"
 )
 
 type Ping struct {
-	PlayerNum     int64         `json:"playerNum"`     // 在线玩家数量
-	Tps           int64         `json:"tps"`           // 上一分钟请求量
-	Rt            time.Duration `json:"rt"`            // 上一分钟每一个请求平均处理时间
-	ClientVersion string        `json:"clientVersion"` // 客户端版本
-	ServerVersion string        `json:"serverVersion"` // 服务端版本
-	CpuOc         float64       `json:"cpuOc"`         // cpu占用
-	MemoryOc      string        `json:"memoryOc"`      // 内存占用
-	BaPsMemoryOc  string        `json:"baPsMemoryOc"`  // BaPs内存占用
+	PlayerNum     int64   `json:"playerNum"`     // 在线玩家数量
+	Tps           int64   `json:"tps"`           // 上一分钟请求量
+	Rt            string  `json:"rt"`            // 上一分钟每一个请求平均处理时间
+	ClientVersion string  `json:"clientVersion"` // 客户端版本
+	ServerVersion string  `json:"serverVersion"` // 服务端版本
+	CpuOc         float64 `json:"cpuOc"`         // cpu占用
+	MemoryOc      string  `json:"memoryOc"`      // 内存占用
+	BaPsMemoryOc  string  `json:"baPsMemoryOc"`  // BaPs内存占用
 }
 
 func (c *Command) ApplicationCommandPing() {
@@ -41,7 +39,7 @@ func (c *Command) ping(options map[string]*cdq.CommandOption) (string, error) {
 	response := Ping{
 		PlayerNum:     atomic.LoadInt64(&check.SessionNum),
 		Tps:           check.OLDTPS,
-		Rt:            check.OLDRT,
+		Rt:            check.OLDRT.String(),
 		ClientVersion: pkg.ClientVersion,
 		ServerVersion: pkg.ServerVersion,
 		CpuOc:         GetCpuOc(),

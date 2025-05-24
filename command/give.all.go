@@ -18,7 +18,6 @@ type ApiGiveAll struct {
 	Uid  int64  `json:"uid"`
 	Type string `json:"type"`
 	Num  int64  `json:"num"`
-	Test int    `json:"test"`
 }
 
 func (c *Command) ApplicationCommandGiveAll() {
@@ -36,11 +35,6 @@ func (c *Command) ApplicationCommandGiveAll() {
 			{
 				Name:        "num",
 				Description: "需要给予物品的数量 默认值:1",
-				Required:    false,
-			},
-			{
-				Name:        "test",
-				Description: "测试指令",
 				Required:    false,
 			},
 		}...),
@@ -74,26 +68,11 @@ func (c *Command) giveALL(options map[string]*cdq.CommandOption) (string, error)
 
 	// 执行
 	parcelInfoList := make([]*sro.ParcelInfo, 0)
-	test, ok := options["test"]
-	if ok && alg.S2I64(test.Option) == 1 {
-		set := &ApiGiveAll{
-			Uid:  uid,
-			Type: typeOption.Option,
-			Num:  9000,
-		}
-		parcelInfoList = append(parcelInfoList, GiveAllMaterial(set)...)
-		parcelInfoList = append(parcelInfoList, GiveAllCharacter(set)...)
-		parcelInfoList = append(parcelInfoList, GiveAllEquipment(set)...)
-		parcelInfoList = append(parcelInfoList, GiveAllFurniture(set)...)
-		parcelInfoList = append(parcelInfoList, GiveAllFavor(set)...)
-		parcelInfoList = append(parcelInfoList, GiveAllEmblem(set)...)
-	} else {
-		parcelInfoList = GiveAllJsonToProtobuf(&ApiGiveAll{
-			Uid:  uid,
-			Type: typeOption.Option,
-			Num:  num,
-		})
-	}
+	parcelInfoList = GiveAllJsonToProtobuf(&ApiGiveAll{
+		Uid:  uid,
+		Type: typeOption.Option,
+		Num:  num,
+	})
 
 	if len(parcelInfoList) == 0 {
 		return "", errors.New(fmt.Sprintf("不存在此物品类型 Type:%s", typeOption.Option))
@@ -126,8 +105,22 @@ func GiveAllJsonToProtobuf(req *ApiGiveAll) []*sro.ParcelInfo {
 		return GiveAllFavor(req)
 	case "Emblem": // 称号
 		return GiveAllEmblem(req)
+	case "All":
+		return GiveAllType(req)
 	}
 	return nil
+}
+
+func GiveAllType(req *ApiGiveAll) []*sro.ParcelInfo {
+	parcelInfoList := make([]*sro.ParcelInfo, 0)
+	parcelInfoList = append(parcelInfoList, GiveAllMaterial(req)...)
+	parcelInfoList = append(parcelInfoList, GiveAllCharacter(req)...)
+	parcelInfoList = append(parcelInfoList, GiveAllEquipment(req)...)
+	parcelInfoList = append(parcelInfoList, GiveAllFurniture(req)...)
+	parcelInfoList = append(parcelInfoList, GiveAllFavor(req)...)
+	parcelInfoList = append(parcelInfoList, GiveAllEmblem(req)...)
+
+	return parcelInfoList
 }
 
 func GiveAllMaterial(req *ApiGiveAll) []*sro.ParcelInfo {

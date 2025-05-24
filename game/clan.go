@@ -68,7 +68,7 @@ func GetDefaultExposedClanDBs(s *enter.Session) []*proto.ClanDB {
 		return nil
 	}
 	allClanInfo := enter.GetAllYostarClanList()
-	maxNum := alg.MainInt(30, len(allClanInfo)-1)
+	maxNum := alg.MinInt(30, len(allClanInfo)-1)
 	clanList := make(map[int64]*enter.YostarClan, 0)
 	for i := 0; i < maxNum; i++ {
 		clanInfo := allClanInfo[rand.Intn(len(allClanInfo))]

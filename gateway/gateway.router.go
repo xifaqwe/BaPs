@@ -18,6 +18,7 @@ import (
 type handlerFunc func(s *enter.Session, request, response mx.Message)
 
 var funcRouteMap = map[proto.Protocol]handlerFunc{
+	proto.Protocol_GmTalk:                               pack.GmTalk,                              // GmTalk
 	proto.Protocol_Craft_List:                           pack.CraftInfoList,                       // 获取制造信息
 	proto.Protocol_EventContent_PermanentList:           pack.EventContentPermanentList,           // 获取永久时间列表?
 	proto.Protocol_Sticker_Login:                        pack.StickerLogin,                        // 登录获取贴纸信息??
@@ -248,18 +249,21 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 		logger.Debug("response unknown cmd id: %v\n", base.Protocol.String())
 		return
 	}
+	check.GateWaySync.Lock()
 	sessionKey := base.SessionKey
 	var s *enter.Session
 	if sessionKey == nil &&
 		base.Protocol != proto.Protocol_Account_CheckYostar {
 		errBestHTTP(c, proto.WebAPIErrorCode_InvalidSession) // TODO 异常请求-未登录
 		logger.Debug("get request sessionKey nil")
+		check.GateWaySync.Unlock()
 		return
 	} else if base.Protocol != proto.Protocol_Account_CheckYostar {
 		s = enter.GetSessionBySessionKey(sessionKey)
 		if s == nil {
 			errBestHTTP(c, proto.WebAPIErrorCode_InvalidSession) // TODO 异常请求-未过验证
 			logger.Debug("get session nil,SessionKey:%s", sessionKey.String())
+			check.GateWaySync.Unlock()
 			return
 		}
 		s.ActiveTime = time.Now()
@@ -288,6 +292,7 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 	logPlayerMsg(Client, request)
 	logPlayerMsg(Server, response)
 	if s != nil && s.Error != 0 {
+		check.GateWaySync.Unlock()
 		errorPacket := &proto.ErrorPacket{
 			ResponsePacket: responsePacket,
 			Reason:         "",
@@ -296,6 +301,7 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 		g.send(c, errorPacket)
 		return
 	}
+	check.GateWaySync.Unlock()
 	g.send(c, response)
 	return
 }

@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	MaxEquipmentNum = 1000
-	MaxFurnitureNum = 1000
+	MaxEquipmentNum = 3000
+	MaxFurnitureNum = 3000
 )
 
 func NewItemList(s *enter.Session) map[int64]*sro.ItemInfo {

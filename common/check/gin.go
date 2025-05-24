@@ -21,7 +21,7 @@ func GinNetInfo() {
 	for {
 		<-ticker.C
 		tps := atomic.LoadInt64(&TPS)
-		OLDTPS = tps
+		OLDTPS = tps / 60
 		rt := atomic.LoadInt64((*int64)(&RT))
 		if tps == 0 || rt == 0 {
 			OLDRT = 0
@@ -30,7 +30,7 @@ func GinNetInfo() {
 			OLDRT = time.Duration(rt / tps)
 		}
 		logger.Info("SessionNum: %v", SessionNum)
-		logger.Info("TPS: %v", tps/60)
+		logger.Info("TPS: %v", OLDTPS)
 		logger.Info("RT: %s", OLDRT)
 		atomic.StoreInt64(&TPS, 0)
 		atomic.StoreInt64((*int64)(&RT), 0)

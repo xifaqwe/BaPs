@@ -20,10 +20,11 @@ type Mail struct {
 
 func NewMail() {
 	conf := config.GetMail()
-	if conf == nil {
+	if conf == nil || !conf.Enable {
+		logger.Info("不启用邮件服务配置")
 		return
 	}
-	logger.Info("检测到邮件服务配置,正在尝试连接")
+	logger.Info("启用邮件服务配置,正在尝试连接")
 
 	client, err := mail.NewClient(
 		conf.Host,
@@ -46,6 +47,9 @@ func NewMail() {
 }
 
 func SendTextMail(header, body string, usernames ...string) error {
+	if !enableMail() {
+		return nil
+	}
 	var messages []*mail.Msg
 	for _, username := range usernames {
 		message, err := newMailMessage(username)
@@ -60,6 +64,9 @@ func SendTextMail(header, body string, usernames ...string) error {
 }
 
 func SendTemplateMail(username string, conf *gdconf.MailInfo, data interface{}) error {
+	if !enableMail() {
+		return nil
+	}
 	switch conf.Type {
 	case "text":
 		return sendTextTemplateMail(username, conf, data)
@@ -105,4 +112,11 @@ func newMailMessage(username string) (*mail.Msg, error) {
 		return nil, errors.New("收件人不合法")
 	}
 	return message, nil
+}
+
+func enableMail() bool {
+	if mc == nil {
+		return false
+	}
+	return config.GetMail().Enable
 }

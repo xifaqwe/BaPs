@@ -61,6 +61,7 @@ type Irc struct {
 }
 
 type Mail struct {
+	Enable   bool   `json:"Enable"`
 	Username string `json:"Username"`
 	Password string `json:"Password"`
 	Host     string `json:"Host"`
@@ -214,5 +215,12 @@ var DefaultConfig = &Config{
 		HostAddress: "127.0.0.1",
 		Port:        16666,
 		Password:    "mx123",
+	},
+	Mail: &Mail{
+		Enable:   false,
+		Username: "gucooing@BaPs.com",
+		Password: "gucooing",
+		Host:     "BaPs.com",
+		Port:     587,
 	},
 }
