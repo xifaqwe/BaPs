@@ -37,5 +37,5 @@ func (x *DbGorm) UpdateYostarAccount(data *dbstruct.YostarAccount) error {
 	if data == nil || data.YostarUid == 0 {
 		return errors.New("YostarAccountData Nil")
 	}
-	return x.sql.Model(&dbstruct.YostarAccount{}).Where("yostar_uid = ?", data.YostarUid).Updates(data).Error
+	return x.sql.Model(&dbstruct.YostarAccount{}).Where("yostar_uid = ?", data.YostarUid).Select("*").Updates(data).Error
 }

@@ -1,9 +1,10 @@
 package command
 
 import (
-	"encoding/hex"
+	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/gucooing/BaPs/game"
 
 	"github.com/bytedance/sonic"
 	"github.com/gucooing/BaPs/common/enter"
@@ -13,42 +14,54 @@ import (
 
 func (c *Command) ApplicationCommandGetPlayer() {
 	getPlayer := &cdq.Command{
-		Name:        "getplayer",
-		AliasList:   []string{"getplayer", "gp"},
+		Name:        "getPlayer",
+		AliasList:   []string{"getPlayer", "gp"},
 		Description: "获取指定玩家的db数据",
 		Permissions: cdq.Admin,
-		Options: append(playerOptions,
-			&cdq.CommandOption{
-				Name:        "bin",
-				Description: "是否输出二进制pb数据,默认:0",
+		Options: []*cdq.CommandOption{
+			{
+				Name:        "uid",
+				Description: "玩家游戏id",
+				Required:    true,
+			},
+			{
+				Name:        "json",
+				Description: "输出为json或base64",
 				Required:    false,
-			}),
+			},
+			{
+				Name:        "basis",
+				Description: "获取玩家基础数据",
+				Required:    false,
+			},
+		},
 		CommandFunc: c.getPlayer,
 	}
 
 	c.c.ApplicationCommand(getPlayer)
 }
 
-func (c *Command) getPlayer(options map[string]*cdq.CommandOption) (string, error) {
-	uidOption, ok := options["uid"]
-	if !ok {
-		return "", errors.New("缺少参数 uid")
-	}
-	isBin := int64(0)
-	isBinOption, ok := options["bin"]
-	if ok {
-		isBin = alg.MaxInt64(alg.S2I64(isBinOption.Option), 0)
-	}
-
-	uid := alg.S2I64(uidOption.Option)
+func (c *Command) getPlayer(options map[string]string) (string, error) {
+	uid := alg.S2I64(options["uid"])
 	session := enter.GetSessionByUid(uid)
 	if session == nil {
 		return "", errors.New(fmt.Sprintf("玩家未注册 UID:%v", uid))
 	}
-
-	if isBin == 0 {
-		return sonic.MarshalString(session.PlayerBin)
+	var info any
+	if alg.S2I64(options["basis"]) != 0 {
+		info = game.GetPlayerBin(session).GetBaseBin()
 	} else {
-		return hex.EncodeToString(session.GetPbBinData()), nil
+		info = game.GetPlayerBin(session)
+	}
+
+	jsonInfo, err := sonic.Marshal(info)
+	if err != nil {
+		return "", err
+	}
+
+	if alg.S2I64(options["json"]) != 0 {
+		return string(jsonInfo), nil
+	} else {
+		return base64.RawStdEncoding.EncodeToString(jsonInfo), nil
 	}
 }

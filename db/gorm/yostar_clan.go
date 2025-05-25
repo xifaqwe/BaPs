@@ -39,7 +39,7 @@ func (x *DbGorm) UpdateYostarClan(data *dbstruct.YostarClan) error {
 	if data == nil || data.ServerId == 0 {
 		return errors.New("YostarClan Nil")
 	}
-	return x.sql.Model(&dbstruct.YostarClan{}).Where("server_id = ?", data.ServerId).Updates(data).Error
+	return x.sql.Model(&dbstruct.YostarClan{}).Where("server_id = ?", data.ServerId).Select("*").Updates(data).Error
 }
 
 func (x *DbGorm) UpAllYostarClan(list []*dbstruct.YostarClan) error {

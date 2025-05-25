@@ -22,7 +22,12 @@ func (c *Command) ApplicationCommandSet() {
 		AliasList:   []string{"set"},
 		Description: "直接设置一个值",
 		Permissions: cdq.User,
-		Options: append(playerOptions, []*cdq.CommandOption{
+		Options: []*cdq.CommandOption{
+			{
+				Name:        "uid",
+				Description: "玩家游戏id",
+				Required:    true,
+			},
 			{
 				Name:        "type",
 				Description: "设置类型",
@@ -33,29 +38,16 @@ func (c *Command) ApplicationCommandSet() {
 				Description: "设置参数1",
 				Required:    true,
 			},
-		}...),
+		},
 		CommandFunc: c.set,
 	}
 
 	c.c.ApplicationCommand(set)
 }
 
-func (c *Command) set(options map[string]*cdq.CommandOption) (string, error) {
-	uidOption, ok := options["uid"]
-	if !ok {
-		return "", errors.New("缺少参数 uid")
-	}
-	typeOption, ok := options["type"]
-	if !ok {
-		return "", errors.New("缺少参数 type")
-	}
-	sub1Option, ok := options["sub1"]
-	if !ok {
-		return "", errors.New("缺少参数 sub1")
-	}
-
+func (c *Command) set(options map[string]string) (string, error) {
 	// 玩家验证
-	uid := alg.S2I64(uidOption.Option)
+	uid := alg.S2I64(options["uid"])
 	s := enter.GetSessionByAccountServerId(uid)
 	if s == nil {
 		return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
@@ -63,8 +55,8 @@ func (c *Command) set(options map[string]*cdq.CommandOption) (string, error) {
 
 	req := &ApiSet{
 		s:    s,
-		Type: typeOption.Option,
-		Sub1: sub1Option.Option,
+		Type: options["type"],
+		Sub1: options["sub1"],
 	}
 
 	return req.parseSet()

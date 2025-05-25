@@ -78,18 +78,26 @@ func (g *Gateway) getEnterTicket(c *gin.Context) {
 
 	yoStarUserLogin := db.GetDBGame().GetYoStarUserLoginByYostarUid(req.YostarUID)
 	if yoStarUserLogin == nil {
+		errBestHTTP(c, proto.WebAPIErrorCode_DBError)
 		return
 	}
 	if yoStarUserLogin.YostarLoginToken != req.YostarToken ||
 		yoStarUserLogin.YostarLoginToken == "" {
+		errBestHTTP(c, proto.WebAPIErrorCode_InvalidToken)
+		return
+	}
+	if yoStarUserLogin.Ban {
+		errBestHTTP(c, proto.WebAPIErrorCode_AccountBanned)
 		return
 	}
 	yoStarUserLogin.YostarLoginToken = ""
 	if err = db.GetDBGame().UpdateYoStarUserLogin(yoStarUserLogin); err != nil {
+		errBestHTTP(c, proto.WebAPIErrorCode_DBError)
 		return
 	}
 	enterTicket := mx.GetMxToken(alg.RandCodeInt64(), 30)
 	if !enter.AddEnterTicket(yoStarUserLogin.AccountServerId, req.YostarUID, enterTicket) {
+		errBestHTTP(c, proto.WebAPIErrorCode_DBError)
 		return
 	}
 	rsp.EnterTicket = enterTicket
@@ -113,6 +121,7 @@ func AccountCheckYostar(s *enter.Session, request, response mx.Message) {
 	if tickInfo == nil {
 		rsp.ResultMessag = "EnterTicket验证失败"
 		logger.Debug("EnterTicket验证失败")
+		s.Error = proto.WebAPIErrorCode_InvalidToken
 		return
 	}
 	enter.DelEnterTicket(req.EnterTicket)
@@ -123,6 +132,7 @@ func AccountCheckYostar(s *enter.Session, request, response mx.Message) {
 			// new Game Player
 			yostarGame, err = db.GetDBGame().AddYostarGameByYostarUid(tickInfo.AccountServerId)
 			if err != nil {
+				s.Error = proto.WebAPIErrorCode_DBError
 				logger.Debug("账号创建失败:%s", err.Error())
 				return
 			}

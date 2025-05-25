@@ -22,21 +22,12 @@ func NewCommand(router *gin.Engine) {
 
 	// 注册指令
 	command.ApplicationCommandGiveAll()
-	command.ApplicationCommandGive()
 	command.ApplicationCommandGetPlayer()
-	command.ApplicationCommandGetEmailCode()
+	command.ApplicationCommandEmailCode()
 	command.ApplicationCommandGameMail()
 	command.ApplicationCommandMail()
 	command.ApplicationCommandSet()
 	command.ApplicationCommandPing()
 	command.ApplicationCommandCharacter()
 	command.ApplicationCommandAccount()
-}
-
-var playerOptions = []*cdq.CommandOption{
-	{
-		Name:        "uid",
-		Description: "玩家游戏id",
-		Required:    true,
-	},
 }

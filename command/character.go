@@ -3,6 +3,7 @@ package command
 import (
 	"errors"
 	"fmt"
+	"github.com/gucooing/BaPs/gdconf"
 
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
@@ -16,7 +17,12 @@ func (c *Command) ApplicationCommandCharacter() {
 		AliasList:   []string{"character", "c"},
 		Description: "直接设置角色,角色不存在时将添加角色",
 		Permissions: cdq.User,
-		Options: append(playerOptions, []*cdq.CommandOption{
+		Options: []*cdq.CommandOption{
+			{
+				Name:        "uid",
+				Description: "玩家游戏id",
+				Required:    true,
+			},
 			{
 				Name:        "id",
 				Description: "角色id",
@@ -42,56 +48,51 @@ func (c *Command) ApplicationCommandCharacter() {
 				Description: "角色属性设置满级",
 				Required:    false,
 			},
-		}...),
+		},
 		CommandFunc: c.character,
 	}
 
 	c.c.ApplicationCommand(character)
 }
 
-func (c *Command) character(options map[string]*cdq.CommandOption) (string, error) {
-	uidOption, ok := options["uid"]
-	if !ok {
-		return "", errors.New("缺少参数 uid")
-	}
-	idOption, ok := options["id"]
-	if !ok {
-		return "", errors.New("缺少参数 id")
-	}
-
+func (c *Command) character(options map[string]string) (string, error) {
 	// 玩家验证
-	uid := alg.S2I64(uidOption.Option)
+	uid := alg.S2I64(options["uid"])
 	s := enter.GetSessionByAccountServerId(uid)
 	if s == nil {
 		return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
 	}
+	characterId := alg.S2I64(options["id"])
+	if gdconf.GetCharacterExcel(characterId) == nil {
+		return "", errors.New(fmt.Sprintf("角色不存在 CharacterId:%v", characterId))
+	}
 	respMsg := ""
 
-	characterInfo := game.GetCharacterInfo(s, alg.S2I64(idOption.Option))
+	characterInfo := game.GetCharacterInfo(s, characterId)
 	if characterInfo == nil {
-		if game.AddCharacter(s, alg.S2I64(idOption.Option)) {
-			characterInfo = game.GetCharacterInfo(s, alg.S2I64(idOption.Option))
+		if game.AddCharacter(s, characterId) {
+			characterInfo = game.GetCharacterInfo(s, characterId)
 		} else {
 			return "", errors.New("角色id错误")
 		}
 	}
-	if _, ok := options["max"]; ok {
+	if alg.S2I64(options["max"]) != 0 {
 		if game.SetMaxCharacter(characterInfo) {
 			return "已设置角色满级", nil
 		}
 	}
-	if option, ok := options["level"]; ok {
-		if game.SetCharacterLevel(characterInfo, alg.S2I32(option.Option)) {
+	if level := alg.S2I32(options["level"]); level != 0 {
+		if game.SetCharacterLevel(characterInfo, level) {
 			respMsg += "角色等级设置成功|"
 		}
 	}
-	if option, ok := options["starGrade"]; ok {
-		if game.SetCharacterStarGrade(characterInfo, alg.S2I32(option.Option)) {
+	if starGrade := alg.S2I32(options["starGrade"]); starGrade != 0 {
+		if game.SetCharacterStarGrade(characterInfo, starGrade) {
 			respMsg += "角色星级设置成功|"
 		}
 	}
-	if option, ok := options["favorRank"]; ok {
-		if game.SetCharacterFavorRank(characterInfo, alg.S2I32(option.Option)) {
+	if favorRank := alg.S2I32(options["favorRank"]); favorRank != 0 {
+		if game.SetCharacterFavorRank(characterInfo, favorRank) {
 			respMsg += "角色好感度等级设置成功|"
 		}
 	}

@@ -1,7 +1,6 @@
 package command
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gucooing/BaPs/common/mail"
 	"github.com/gucooing/cdq"
@@ -37,21 +36,9 @@ func (c *Command) ApplicationCommandMail() {
 	c.c.ApplicationCommand(apiMail)
 }
 
-func (c *Command) mail(options map[string]*cdq.CommandOption) (string, error) {
-	headerOption, ok := options["header"]
-	if !ok {
-		return "", errors.New("缺少参数 header")
-	}
-	bodyOption, ok := options["body"]
-	if !ok {
-		return "", errors.New("缺少参数 body")
-	}
-	usernamesOption, ok := options["usernames"]
-	if !ok {
-		return "", errors.New("缺少参数 usernames")
-	}
-	usernames := strings.Split(usernamesOption.Option, ";")
-	err := mail.SendTextMail(headerOption.Option, bodyOption.Option, usernames...)
+func (c *Command) mail(options map[string]string) (string, error) {
+	usernames := strings.Split(options["usernames"], ";")
+	err := mail.SendTextMail(options["header"], options["body"], usernames...)
 	if err != nil {
 		return "", fmt.Errorf("邮件发送失败err:%s", err)
 	}

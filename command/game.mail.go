@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
+	"strconv"
 	"time"
 
 	"github.com/gucooing/BaPs/common/enter"
@@ -17,11 +18,16 @@ import (
 
 func (c *Command) ApplicationCommandGameMail() {
 	mail := &cdq.Command{
-		Name:        "gamemail",
-		AliasList:   []string{"gamemail", "gm"},
-		Description: "发送一封邮件,对象可以是全局或单个玩家",
+		Name:        "gameMail",
+		AliasList:   []string{"gameMail", "gm"},
+		Description: "发送一封游戏邮件,对象可以是全局或单个玩家",
 		Permissions: cdq.Admin,
 		Options: []*cdq.CommandOption{
+			{
+				Name:        "uid",
+				Description: "玩家游戏id",
+				Required:    false,
+			},
 			{
 				Name:        "player",
 				Description: "是否为玩家邮件,0为全局邮件",
@@ -38,12 +44,12 @@ func (c *Command) ApplicationCommandGameMail() {
 				Required:    true,
 			},
 			{
-				Name:        "send_date",
+				Name:        "sendDate",
 				Description: "领取开始时间",
 				Required:    true,
 			},
 			{
-				Name:        "expire_date",
+				Name:        "expireDate",
 				Description: "邮件有效截至时间",
 				Required:    true,
 			},
@@ -53,7 +59,7 @@ func (c *Command) ApplicationCommandGameMail() {
 				Required:    false,
 			},
 			{
-				Name:        "parcel_info_list",
+				Name:        "parcelInfoList",
 				Description: "附件 json格式",
 				Required:    false,
 			},
@@ -64,43 +70,19 @@ func (c *Command) ApplicationCommandGameMail() {
 	c.c.ApplicationCommand(mail)
 }
 
-func (c *Command) gameMail(options map[string]*cdq.CommandOption) (string, error) {
-	playerOption, ok := options["player"]
-	if !ok {
-		return "", errors.New("缺少参数 player")
-	}
-	senderOption, ok := options["sender"]
-	if !ok {
-		return "", errors.New("缺少参数 sender")
-	}
-	commentOption, ok := options["comment"]
-	if !ok {
-		return "", errors.New("缺少参数 comment")
-	}
-	sendDateOption, ok := options["send_date"]
-	if !ok {
-		return "", errors.New("缺少参数 send_date")
-	}
-	expireDateOption, ok := options["expire_date"]
-	if !ok {
-		return "", errors.New("缺少参数 expire_date")
-	}
+func (c *Command) gameMail(options map[string]string) (string, error) {
+	parcelInfoListOption := options["parcelInfoList"]
 
-	str := ""
-	if parcelInfoListOption, ok := options["parcel_info_list"]; ok {
-		str = parcelInfoListOption.Option
-	}
-
-	if alg.S2I32(playerOption.Option) == 0 {
-		parcelInfoList, err := genParcelInfo[dbstruct.ParcelInfo](str)
+	if player, _ := strconv.ParseBool(options["player"]); !player {
+		parcelInfoList, err := genParcelInfo[dbstruct.ParcelInfo](parcelInfoListOption)
 		if err != nil {
 			return "", errors.New(fmt.Sprintf("解析邮件附件失败:%s", err.Error()))
 		}
 		sendMail := &dbstruct.YostarMail{
-			Sender:         senderOption.Option,
-			Comment:        commentOption.Option,
-			SendDate:       sql.NullTime{Time: time.Unix(alg.S2I64(sendDateOption.Option), 0), Valid: true},
-			ExpireDate:     sql.NullTime{Time: time.Unix(alg.S2I64(expireDateOption.Option), 0), Valid: true},
+			Sender:         options["sender"],
+			Comment:        options["comment"],
+			SendDate:       sql.NullTime{Time: time.Unix(alg.S2I64(options["sendDate"]), 0), Valid: true},
+			ExpireDate:     sql.NullTime{Time: time.Unix(alg.S2I64(options["expireDate"]), 0), Valid: true},
 			ParcelInfoList: parcelInfoList,
 		}
 		if enter.AddYostarMail(sendMail) {
@@ -108,26 +90,22 @@ func (c *Command) gameMail(options map[string]*cdq.CommandOption) (string, error
 		}
 		return "", errors.New("全局邮件发送失败")
 	} else {
-		parcelInfoList, err := genParcelInfo[sro.ParcelInfo](str)
+		// 玩家验证
+		uid := alg.S2I64(options["uid"])
+		s := enter.GetSessionByAccountServerId(uid)
+		if s == nil {
+			return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
+		}
+		parcelInfoList, err := genParcelInfo[sro.ParcelInfo](parcelInfoListOption)
 		if err != nil {
 			return "", errors.New(fmt.Sprintf("解析邮件附件失败:%s", err.Error()))
 		}
 		sendMail := &sro.MailInfo{
-			Sender:         senderOption.Option,
-			Comment:        commentOption.Option,
-			SendDate:       alg.S2I64(sendDateOption.Option),
-			ExpireDate:     alg.S2I64(expireDateOption.Option),
+			Sender:         options["sender"],
+			Comment:        options["comment"],
+			SendDate:       alg.S2I64(options["sendDate"]),
+			ExpireDate:     alg.S2I64(options["expireDate"]),
 			ParcelInfoList: parcelInfoList,
-		}
-		uidOption, ok := options["uid"]
-		if !ok {
-			return "", errors.New("缺少参数 uid")
-		}
-		// 玩家验证
-		uid := alg.S2I64(uidOption.Option)
-		s := enter.GetSessionByAccountServerId(uid)
-		if s == nil {
-			return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
 		}
 		if game.AddMail(s, sendMail) {
 			return "请查询游戏内邮箱获取结果", nil

@@ -118,7 +118,7 @@ func (s *SDK) YostarAuthSubmit(c *gin.Context) {
 	}
 	code.DelCode(req.Account)
 	// 通过邮箱拉取数据库账号信息
-	yostarAccount, err := AddYostarAccount(req.Account, false)
+	yostarAccount, err := GetORAddYostarAccount(req.Account, false)
 	if err != nil {
 		logger.Debug("邮箱:%s,进行数据库操作时候有未知错误:%s", req.Account, err.Error())
 		return
@@ -136,7 +136,7 @@ func (s *SDK) YostarAuthSubmit(c *gin.Context) {
 	logger.Debug("邮箱:%s,验证码登录成功 Code:%v,Token:%s,Uid:%v", req.Account, req.Code, yostarAccount.YostarToken, yostarAccount.YostarUid)
 }
 
-func AddYostarAccount(account string, gm bool) (yostarAccount *dbstruct.YostarAccount, err error) {
+func GetORAddYostarAccount(account string, gm bool) (yostarAccount *dbstruct.YostarAccount, err error) {
 	yostarAccount = db.GetDBGame().GetYostarAccountByYostarAccount(account)
 	if yostarAccount == nil {
 		if !config.GetAutoRegistration() && !gm {
@@ -149,4 +149,12 @@ func AddYostarAccount(account string, gm bool) (yostarAccount *dbstruct.YostarAc
 		}
 	}
 	return yostarAccount, nil
+}
+
+func GetYostarUserLoginByAccount(account string) *dbstruct.YostarUserLogin {
+	ya := db.GetDBGame().GetYostarAccountByYostarAccount(account)
+	if ya == nil {
+		return nil
+	}
+	return db.GetDBGame().GetYoStarUserLoginByYostarUid(ya.YostarUid)
 }

@@ -35,7 +35,7 @@ func (c *Command) ApplicationCommandPing() {
 	c.c.ApplicationCommand(ping)
 }
 
-func (c *Command) ping(options map[string]*cdq.CommandOption) (string, error) {
+func (c *Command) ping(options map[string]string) (string, error) {
 	response := Ping{
 		PlayerNum:     atomic.LoadInt64(&check.SessionNum),
 		Tps:           check.OLDTPS,

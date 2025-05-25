@@ -22,11 +22,16 @@ type ApiGiveAll struct {
 
 func (c *Command) ApplicationCommandGiveAll() {
 	giveAll := &cdq.Command{
-		Name:        "giveall",
-		AliasList:   []string{"giveall", "ga"},
+		Name:        "giveAll",
+		AliasList:   []string{"giveAll", "ga"},
 		Description: "获取某个类型的全部物品",
 		Permissions: cdq.User,
-		Options: append(playerOptions, []*cdq.CommandOption{
+		Options: []*cdq.CommandOption{
+			{
+				Name:        "uid",
+				Description: "玩家游戏id",
+				Required:    true,
+			},
 			{
 				Name:        "t",
 				Description: "需要给予物品的类型",
@@ -37,30 +42,16 @@ func (c *Command) ApplicationCommandGiveAll() {
 				Description: "需要给予物品的数量 默认值:1",
 				Required:    false,
 			},
-		}...),
+		},
 		CommandFunc: c.giveALL,
 	}
 
 	c.c.ApplicationCommand(giveAll)
 }
 
-func (c *Command) giveALL(options map[string]*cdq.CommandOption) (string, error) {
-	uidOption, ok := options["uid"]
-	if !ok {
-		return "", errors.New("缺少参数 uid")
-	}
-	typeOption, ok := options["t"]
-	if !ok {
-		return "", errors.New("缺少参数 t")
-	}
-	num := int64(1)
-	itemNum, ok := options["num"]
-	if ok {
-		num = alg.MaxInt64(alg.S2I64(itemNum.Option), 1)
-	}
-
+func (c *Command) giveALL(options map[string]string) (string, error) {
 	// 玩家验证
-	uid := alg.S2I64(uidOption.Option)
+	uid := alg.S2I64(options["uid"])
 	s := enter.GetSessionByAccountServerId(uid)
 	if s == nil {
 		return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
@@ -70,12 +61,12 @@ func (c *Command) giveALL(options map[string]*cdq.CommandOption) (string, error)
 	parcelInfoList := make([]*sro.ParcelInfo, 0)
 	parcelInfoList = GiveAllJsonToProtobuf(&ApiGiveAll{
 		Uid:  uid,
-		Type: typeOption.Option,
-		Num:  num,
+		Type: options["t"],
+		Num:  alg.MaxInt64(alg.S2I64(options["num"]), 1),
 	})
 
 	if len(parcelInfoList) == 0 {
-		return "", errors.New(fmt.Sprintf("不存在此物品类型 Type:%s", typeOption.Option))
+		return "", errors.New(fmt.Sprintf("不存在此物品类型 Type:%s", options["t"]))
 	}
 
 	mail := &sro.MailInfo{
