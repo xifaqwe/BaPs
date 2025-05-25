@@ -89,6 +89,7 @@ func NewBaPs() {
 	go func() {
 		logger.Info("ClientVersion:%s", pkg.ClientVersion)
 		logger.Info("ServerVersion:%s", pkg.ServerVersion)
+		logger.Info("Commit:%s", pkg.Commit)
 		logger.Info("BaPs启动成功!")
 		if err = Run(cfg.HttpNet, server); err != nil {
 			if !errors.Is(http.ErrServerClosed, err) {

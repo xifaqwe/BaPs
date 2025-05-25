@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gucooing/BaPs/common/check"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
+	"github.com/gucooing/BaPs/protocol/mx"
 	"os"
 	"path/filepath"
 	"strings"
@@ -32,10 +33,16 @@ type Session struct {
 	Actions         map[proto.ServerNotificationFlag]bool
 	AccountFriend   *AccountFriend
 	Mission         *Mission
-	Toast           []string
+	Toast           []*Toast
 	PlayerHash      map[int64]any
 	arenaInfo       *ArenaInfo // 竞技场临时数据
 	Error           proto.WebAPIErrorCode
+}
+
+type Toast struct {
+	Text      string
+	BeginDate mx.MxTime
+	EndDate   mx.MxTime
 }
 
 // 定时检查一次是否有用户长时间离线

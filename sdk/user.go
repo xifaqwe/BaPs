@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"github.com/gucooing/BaPs/protocol/mx"
 	"strconv"
 	"time"
 
@@ -18,6 +19,7 @@ type YostarCreateloginRequest struct {
 	YostarUsername string `form:"yostar_username"`
 	YostarUid      int64  `form:"yostar_uid"`
 	ChannelId      string `form:"channelId"`
+	Key            string `form:"key"`
 }
 
 type YostarCreateloginResponse struct {
@@ -56,7 +58,7 @@ func (s *SDK) YostarCreatelogin(c *gin.Context) {
 	// 拉取YostarUser
 	yostarUser := db.GetDBGame().GetYostarUserByYostarUid(req.YostarUid)
 	if yostarUser == nil {
-		if !config.GetAutoRegistration() {
+		if !config.GetAutoRegistration() && req.Key != mx.Key {
 			logger.Debug("邮箱:%s,账号不存在且关闭自动注册  user", req.YostarUsername)
 			return
 		}
@@ -100,6 +102,7 @@ type YostarLoginRequest struct {
 	CaptchaId     string `form:"captcha_id"`
 	LotNumber     string `form:"lot_number"`
 	PassToken     string `form:"pass_token"`
+	Key           string `form:"key"`
 }
 
 type YostarLoginResponse struct {
@@ -150,7 +153,7 @@ func (s *SDK) YostarLogin(c *gin.Context) {
 	// 拉取YoStarUserLogin
 	yoStarUserLogin := db.GetDBGame().GetYoStarUserLoginByYostarUid(yostarAccount.YostarUid)
 	if yoStarUserLogin == nil {
-		if !config.GetAutoRegistration() {
+		if !config.GetAutoRegistration() && req.Key != mx.Key {
 			logger.Debug("邮箱:%s,账号不存在且关闭自动注册  login", yostarAccount.YostarAccount)
 			return
 		}

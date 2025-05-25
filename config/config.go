@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/bytedance/sonic"
 	"log"
 	"os"
 )
@@ -86,6 +87,11 @@ func GetConfig() *Config {
 		SetDefaultConfig()
 	}
 	return CONF
+}
+
+func (c *Config) String() string {
+	str, _ := sonic.MarshalString(c)
+	return str
 }
 
 func GetExcelUrl() string {

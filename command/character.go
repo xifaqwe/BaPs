@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gucooing/BaPs/gdconf"
+	"github.com/gucooing/BaPs/protocol/mx"
+	"time"
 
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
@@ -97,7 +99,11 @@ func (c *Command) character(options map[string]string) (string, error) {
 		}
 	}
 
-	game.AddToast(s, respMsg)
+	game.AddToast(s, &enter.Toast{
+		Text:      respMsg,
+		BeginDate: mx.Now(),
+		EndDate:   mx.Now().Add(30 * time.Second),
+	})
 
 	return respMsg, nil
 }

@@ -36,3 +36,4 @@ common/server_only/*.py
 /mx
 /protocol/proto2
 buildGetClientRes.bat
+buildBaBot.bat

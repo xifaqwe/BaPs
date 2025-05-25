@@ -1,16 +1,15 @@
 package pack
 
 import (
-	"github.com/gucooing/BaPs/protocol/mx"
-	"strconv"
-	"time"
-
 	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"github.com/gucooing/BaPs/protocol/cmd"
+	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
+	"strconv"
+	"time"
 )
 
 func AccountAuth(s *enter.Session, request, response mx.Message) {
@@ -39,7 +38,11 @@ func AccountAuth(s *enter.Session, request, response mx.Message) {
 	s.AccountState = proto.AccountState_Normal
 	game.SetLastConnectTime(s)
 
-	game.AddToast(s, "欢迎游玩BaPs,这是一个半开源的免费服务器")
+	game.AddToast(s, &enter.Toast{
+		Text:      "欢迎游玩BaPs,这是一个半开源的免费服务器",
+		BeginDate: mx.Now().Add(-24 * time.Hour),
+		EndDate:   mx.Now().Add(24 * time.Hour),
+	})
 	// 任务二次处理
 	mission := game.GetMissionBin(s)
 	for t, info := range mission.GetCategoryMissionInfo() {
@@ -213,13 +216,13 @@ func ScenarioLobbyStudentChange(s *enter.Session, request, response mx.Message) 
 func ToastList(s *enter.Session, request, response mx.Message) {
 	rsp := response.(*proto.ToastListResponse)
 
-	for _, str := range game.GetToast(s) {
+	for _, toast := range game.GetToast(s) {
 		rsp.ToastDBs = append(rsp.ToastDBs, &proto.ToastDB{
 			UniqueId:  0,
-			Text:      str,
-			ToastId:   str,
-			BeginDate: mx.Now(),
-			EndDate:   mx.Now().Add(30 * time.Second),
+			Text:      toast.Text,
+			ToastId:   toast.Text,
+			BeginDate: toast.BeginDate,
+			EndDate:   toast.EndDate,
 			LifeTime:  3000, // ms
 			Delay:     0})
 	}

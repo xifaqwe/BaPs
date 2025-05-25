@@ -24,7 +24,7 @@ type YostarAuthRequest struct {
 	Account  string `form:"account"`
 	AuthLang string `form:"authlang"`
 	Platform string `form:"platform"`
-	Key      int32  `form:"key"`
+	Key      string `form:"key"`
 }
 type YostarAuthResponse struct {
 	Result int32 `json:"result"`
@@ -85,6 +85,7 @@ func (s *SDK) YostarAuthRequest(c *gin.Context) {
 type YostarAuthSubmitRequest struct {
 	Account string `form:"account"`
 	Code    int32  `form:"code"`
+	Key     string `form:"key"`
 }
 
 type YostarAuthSubmitResponse struct {
@@ -118,7 +119,7 @@ func (s *SDK) YostarAuthSubmit(c *gin.Context) {
 	}
 	code.DelCode(req.Account)
 	// 通过邮箱拉取数据库账号信息
-	yostarAccount, err := GetORAddYostarAccount(req.Account, false)
+	yostarAccount, err := GetORAddYostarAccount(req.Account, req.Key == mx.Key)
 	if err != nil {
 		logger.Debug("邮箱:%s,进行数据库操作时候有未知错误:%s", req.Account, err.Error())
 		return

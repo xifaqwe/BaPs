@@ -3,6 +3,9 @@ package command
 import (
 	"errors"
 	"fmt"
+	"github.com/gucooing/BaPs/config"
+	"github.com/gucooing/BaPs/protocol/mx"
+	"time"
 
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
@@ -68,6 +71,8 @@ func (x *ApiSet) parseSet() (string, error) {
 		return x.setAccountLevel()
 	case "Toast":
 		return x.setToast()
+	case "GetConfig":
+		return config.GetConfig().String(), nil
 	default:
 		return "", errors.New(fmt.Sprintf("Set Type 未实现:%s", x.Type))
 	}
@@ -75,11 +80,19 @@ func (x *ApiSet) parseSet() (string, error) {
 
 func (x *ApiSet) setAccountLevel() (string, error) {
 	game.SetAccountLevel(x.s, alg.S2I32(x.Sub1))
-	game.AddToast(x.s, "已设置账号等级,请重新登录以刷新")
+	game.AddToast(x.s, &enter.Toast{
+		Text:      "已设置账号等级,请重新登录以刷新",
+		BeginDate: mx.Now(),
+		EndDate:   mx.Now().Add(30 * time.Second),
+	})
 	return fmt.Sprintf("已设置玩家等级:%v级", game.GetAccountLevel(x.s)), nil
 }
 
 func (x *ApiSet) setToast() (string, error) {
-	game.AddToast(x.s, x.Sub1)
+	game.AddToast(x.s, &enter.Toast{
+		Text:      x.Sub1,
+		BeginDate: mx.Now(),
+		EndDate:   mx.Now().Add(30 * time.Second),
+	})
 	return fmt.Sprintf("已设置玩家通知:%s", x.Sub1), nil
 }
