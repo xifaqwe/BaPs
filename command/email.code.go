@@ -35,7 +35,7 @@ func (c *Command) ApplicationCommandEmailCode() {
 		CommandFunc: c.emailCode,
 	}
 
-	c.c.ApplicationCommand(getEmailCode)
+	c.C.ApplicationCommand(getEmailCode)
 }
 
 // 通过邮箱拉取验证码

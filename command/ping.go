@@ -33,7 +33,7 @@ func (c *Command) ApplicationCommandPing() {
 		Options:     nil,
 		CommandFunc: c.ping,
 	}
-	c.c.ApplicationCommand(ping)
+	c.C.ApplicationCommand(ping)
 }
 
 func (c *Command) ping(options map[string]string) (string, error) {

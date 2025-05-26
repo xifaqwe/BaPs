@@ -20,6 +20,19 @@ type ApiGiveAll struct {
 	Num  int64  `json:"num"`
 }
 
+type giveAllFunc func(req *ApiGiveAll) []*sro.ParcelInfo
+
+var GiveAllType = map[string]giveAllFunc{
+	"Material":    GiveAllMaterial,
+	"Character":   GiveAllCharacter,
+	"Equipment":   GiveAllEquipment,
+	"Furniture":   GiveAllFurniture,
+	"Favor":       GiveAllFavor,
+	"Emblem":      GiveAllEmblem,
+	"Sticker":     GiveAllSticker,
+	"MemoryLobby": GiveAllMemoryLobby,
+}
+
 func (c *Command) ApplicationCommandGiveAll() {
 	giveAll := &cdq.Command{
 		Name:        "giveAll",
@@ -46,7 +59,7 @@ func (c *Command) ApplicationCommandGiveAll() {
 		CommandFunc: c.giveALL,
 	}
 
-	c.c.ApplicationCommand(giveAll)
+	c.C.ApplicationCommand(giveAll)
 }
 
 func (c *Command) giveALL(options map[string]string) (string, error) {
@@ -83,33 +96,21 @@ func (c *Command) giveALL(options map[string]string) (string, error) {
 }
 
 func GiveAllJsonToProtobuf(req *ApiGiveAll) []*sro.ParcelInfo {
-	switch req.Type {
-	case "Material": // 材料
-		return GiveAllMaterial(req)
-	case "Character": // 角色
-		return GiveAllCharacter(req)
-	case "Equipment": // 装备
-		return GiveAllEquipment(req)
-	case "Furniture": // 家具
-		return GiveAllFurniture(req)
-	case "Favor": // 礼物
-		return GiveAllFavor(req)
-	case "Emblem": // 称号
-		return GiveAllEmblem(req)
-	case "All":
-		return GiveAllType(req)
+	if req.Type == "All" {
+		return GiveAllTypes(req)
+	}
+	v, ok := GiveAllType[req.Type]
+	if ok {
+		return v(req)
 	}
 	return nil
 }
 
-func GiveAllType(req *ApiGiveAll) []*sro.ParcelInfo {
+func GiveAllTypes(req *ApiGiveAll) []*sro.ParcelInfo {
 	parcelInfoList := make([]*sro.ParcelInfo, 0)
-	parcelInfoList = append(parcelInfoList, GiveAllMaterial(req)...)
-	parcelInfoList = append(parcelInfoList, GiveAllCharacter(req)...)
-	parcelInfoList = append(parcelInfoList, GiveAllEquipment(req)...)
-	parcelInfoList = append(parcelInfoList, GiveAllFurniture(req)...)
-	parcelInfoList = append(parcelInfoList, GiveAllFavor(req)...)
-	parcelInfoList = append(parcelInfoList, GiveAllEmblem(req)...)
+	for _, v := range GiveAllType {
+		parcelInfoList = append(parcelInfoList, v(req)...)
+	}
 
 	return parcelInfoList
 }
@@ -117,7 +118,7 @@ func GiveAllType(req *ApiGiveAll) []*sro.ParcelInfo {
 func GiveAllMaterial(req *ApiGiveAll) []*sro.ParcelInfo {
 	list := make([]*sro.ParcelInfo, 0)
 	num := alg.MinInt64(req.Num, 9999)
-	for _, conf := range gdconf.GetItemExcelCategoryMap("Material") {
+	for _, conf := range gdconf.GetItemExcelCategoryMapByCategory("Material") {
 		list = append(list, &sro.ParcelInfo{
 			Type: int32(proto.ParcelType_Item),
 			Id:   conf.Id,
@@ -179,7 +180,7 @@ func GiveAllFavor(req *ApiGiveAll) []*sro.ParcelInfo {
 	list := make([]*sro.ParcelInfo, 0)
 	num := req.Num
 	num = alg.MinInt64(req.Num, 9999)
-	for _, conf := range gdconf.GetItemExcelCategoryMap("Favor") {
+	for _, conf := range gdconf.GetItemExcelCategoryMapByCategory("Favor") {
 		list = append(list, &sro.ParcelInfo{
 			Type: int32(proto.ParcelType_Item),
 			Id:   conf.Id,
@@ -196,6 +197,30 @@ func GiveAllEmblem(req *ApiGiveAll) []*sro.ParcelInfo {
 		list = append(list, &sro.ParcelInfo{
 			Type: int32(proto.ParcelType_Emblem),
 			Id:   conf.Id,
+		})
+	}
+	return list
+}
+
+func GiveAllSticker(req *ApiGiveAll) []*sro.ParcelInfo {
+	list := make([]*sro.ParcelInfo, 0)
+	for _, conf := range gdconf.GetStickerPageContentExcelList() {
+		list = append(list, &sro.ParcelInfo{
+			Type: int32(proto.ParcelType_Sticker),
+			Id:   conf.Id,
+			Num:  1,
+		})
+	}
+	return list
+}
+
+func GiveAllMemoryLobby(req *ApiGiveAll) []*sro.ParcelInfo {
+	list := make([]*sro.ParcelInfo, 0)
+	for _, conf := range gdconf.GetMemoryLobbyExcelList() {
+		list = append(list, &sro.ParcelInfo{
+			Type: int32(proto.ParcelType_MemoryLobby),
+			Id:   conf.Id,
+			Num:  1,
 		})
 	}
 	return list

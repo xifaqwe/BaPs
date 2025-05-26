@@ -35,7 +35,7 @@ func (c *Command) ApplicationCommandAccount() {
 		CommandFunc: c.account,
 	}
 
-	c.c.ApplicationCommand(account)
+	c.C.ApplicationCommand(account)
 }
 
 func (c *Command) account(options map[string]string) (string, error) {

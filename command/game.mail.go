@@ -67,7 +67,7 @@ func (c *Command) ApplicationCommandGameMail() {
 		CommandFunc: c.gameMail,
 	}
 
-	c.c.ApplicationCommand(mail)
+	c.C.ApplicationCommand(mail)
 }
 
 func (c *Command) gameMail(options map[string]string) (string, error) {

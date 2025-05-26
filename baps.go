@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-contrib/pprof"
+	"github.com/gucooing/BaPs/common/handbook"
 	"github.com/gucooing/BaPs/common/mail"
 	"net/http"
 	"os"
@@ -83,6 +84,8 @@ func NewBaPs() {
 	mail.NewMail()
 	// 初始化资源文件
 	gdconf.LoadGameConfig(cfg.DataPath, cfg.ResourcesPath)
+	// 生成handbook
+	handbook.NewHandbook()
 	// 初始化排名数据
 	rankInfo := rank.NewRank()
 	// 输出孤儿

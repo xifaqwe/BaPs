@@ -33,7 +33,7 @@ func (c *Command) ApplicationCommandMail() {
 		CommandFunc: c.mail,
 	}
 
-	c.c.ApplicationCommand(apiMail)
+	c.C.ApplicationCommand(apiMail)
 }
 
 func (c *Command) mail(options map[string]string) (string, error) {

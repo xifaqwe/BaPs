@@ -25,6 +25,8 @@ message PlayerBin {
     RaidEliminateBin raid_eliminate_bin = 18; // 大决战
     EventContentBin event_content_bin = 19; // 活动信息
     ArenaBin arena_bin = 20; //  竞技场信息
+    MemoryLobbyBin memory_lobby_bin = 21; // 记忆大厅信息
+    StickerBin sticker_bin = 22; // 贴纸信息
 }
 
 // 基础信息
@@ -369,7 +371,6 @@ message EmblemInfo {
 
 message MomoTalkBin {
   map<int64,FavorScheduleInfo> favor_schedule_info_list = 1; // 角色 MomoTalk剧情信息
-  map<int64,MemoryLobbyInfo> memory_lobby_info_list = 2; // 已获取的记忆大厅
 }
 
 message FavorScheduleInfo {
@@ -382,6 +383,12 @@ message MomoTalkInfo {
   int64 message_group_id = 1;
   int64 chosen_message_id = 2;
   int64 chosen_date = 3;
+}
+
+// 记忆大厅信息
+
+message MemoryLobbyBin {
+  map<int64,MemoryLobbyInfo> memory_lobby_info_list = 1; // 已获取的记忆大厅
 }
 
 message MemoryLobbyInfo {
@@ -605,4 +612,15 @@ message ArenaBin {
   int64 all_time_record = 4; // 全部赛季最高排名
   int64 battle_enter_time = 5; // 最后一次战斗结束时间
   int64 auto_refresh_time = 6; // 最后一次竞技场刷新时间
+}
+
+// 贴纸信息
+
+message StickerBin {
+ map<int64,StickerInfo> sticker_map = 1;// 贴纸集合
+}
+
+message StickerInfo {
+  int64 sticker_id = 1; // 贴纸id
+  bool used = 2; // 是否使用
 }

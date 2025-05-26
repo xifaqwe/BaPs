@@ -75,6 +75,8 @@ message Excel {
   repeated EventContentMissionExcelTable EventContentMissionExcelTable =66; // 活动关卡总表
   repeated EventContentStageExcelTable EventContentStageExcelTable = 67; // 活动关卡详情配置
   repeated EventContentStageRewardExcelTable EventContentStageRewardExcelTable = 68; // 活动关卡奖励配置
+  repeated StickerPageContentExcel StickerPageContentExcel = 69;// 贴纸配置
+  repeated MemoryLobbyExcel MemoryLobbyExcel = 70; // 记忆大厅配置
 }
 
 // 68
@@ -1320,4 +1322,35 @@ message EventContentStageRewardExcelTable {
   int64 RewardId = 5;
   int64 RewardAmount = 6;
   bool  IsDisplayed = 7;
+}
+
+message StickerPageContentExcel {
+  int64 Id = 1;
+  int64 StickerGroupId = 2;
+  int64 StickerPageId = 3;
+  int64 StickerSlot = 4;
+  string StickerGetConditionType = 5;
+  string StickerCheckPassType = 6;
+  string GetStickerConditionType = 7;
+  int64 StickerGetConditionCount = 8;
+  repeated int64 StickerGetConditionParameter = 9;
+  repeated string StickerGetConditionParameterTag = 10;
+  int64 PackedStickerIconLocalizeEtcId = 11;
+  string PackedStickerIconPath = 12;
+  string IconPath = 13;
+  string StickerDetailPath = 14;
+}
+
+message MemoryLobbyExcel {
+  int64 Id = 1;
+  string ProductionStep = 2;
+  int64 LocalizeEtcId = 3;
+  int64 CharacterId = 4;
+  string PrefabName = 5;
+  string MemoryLobbyCategory = 6;
+  string SlotTextureName = 7;
+  string RewardTextureName = 8;
+  int64 BGMId = 9;
+  string AudioClipJp = 10;
+  string AudioClipKr = 11;
 }

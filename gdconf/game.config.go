@@ -97,6 +97,8 @@ type GPP struct {
 	EventContentMissionExcel            *EventContentMissionExcel
 	EventContentStageExcel              *EventContentStageExcel
 	EventContentStageRewardExcel        *EventContentStageRewardExcel
+	StickerPageContentExcel             *StickerPageContentExcel
+	MemoryLobbyExcel                    *MemoryLobbyExcel
 }
 
 func LoadGameConfig(dataPath string, resPath string) *GameConfig {
@@ -189,6 +191,8 @@ func (g *GameConfig) gpp() {
 		g.gppEventContentMissionExcelTable,
 		g.gppEventContentStageExcelTable,
 		g.gppEventContentStageRewardExcelTable,
+		g.gppStickerPageContentExcel,
+		g.gppMemoryLobbyExcel,
 
 		// data
 		g.loadRaidSchedule,

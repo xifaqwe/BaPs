@@ -45,7 +45,7 @@ func (c *Command) ApplicationCommandSet() {
 		CommandFunc: c.set,
 	}
 
-	c.c.ApplicationCommand(set)
+	c.C.ApplicationCommand(set)
 }
 
 func (c *Command) set(options map[string]string) (string, error) {

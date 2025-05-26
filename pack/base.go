@@ -26,16 +26,6 @@ func EventContentPermanentList(s *enter.Session, request, response mx.Message) {
 	}
 }
 
-func StickerLogin(s *enter.Session, request, response mx.Message) {
-	rsp := response.(*proto.StickerLoginResponse)
-
-	rsp.StickerBookDB = &proto.StickerBookDB{
-		AccountId:        s.AccountServerId,
-		UnusedStickerDBs: make([]*proto.StickerDB, 0),
-		UsedStickerDBs:   make([]*proto.StickerDB, 0),
-	}
-}
-
 func EventRewardIncrease(s *enter.Session, request, response mx.Message) {
 	rsp := response.(*proto.EventRewardIncreaseResponse)
 

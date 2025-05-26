@@ -9,17 +9,20 @@ import (
 	cdqlog "github.com/gucooing/cdq/logger"
 )
 
+var C *Command
+
 type Command struct {
-	c *cdq.CDQ
+	C *cdq.CDQ
 }
 
 func NewCommand(router *gin.Engine) {
 	command := new(Command)
-	command.c = cdq.New(&cdq.CDQ{Log: cdqlog.NewLog(cdqlog.LevelInfo, nil)})
-	ginApi := cdq.NewGinApi(command.c, check.GateWaySync)
+	C = command
+	command.C = cdq.New(&cdq.CDQ{Log: cdqlog.NewLog(cdqlog.LevelInfo, nil)})
+	ginApi := cdq.NewGinApi(command.C, check.GateWaySync)
 	ginApi.SetRouter(router)
 	ginApi.SetApiKey(config.GetGucooingApiKey(), mx.Key)
-	command.c.AddCommandRun(ginApi)
+	command.C.AddCommandRun(ginApi)
 
 	// 注册指令
 	command.ApplicationCommandGiveAll()

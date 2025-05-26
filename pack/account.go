@@ -40,8 +40,8 @@ func AccountAuth(s *enter.Session, request, response mx.Message) {
 
 	game.AddToast(s, &enter.Toast{
 		Text:      "欢迎游玩BaPs,这是一个半开源的免费服务器",
-		BeginDate: mx.Now().Add(-24 * time.Hour),
-		EndDate:   mx.Now().Add(24 * time.Hour),
+		BeginDate: mx.Now().Add(-24 * time.Second),
+		EndDate:   mx.Now().Add(24 * time.Second),
 	})
 	// 任务二次处理
 	mission := game.GetMissionBin(s)
@@ -192,7 +192,7 @@ func ContentSaveGet(s *enter.Session, request, response mx.Message) {
 }
 
 func ProofTokenSubmit(s *enter.Session, request, response mx.Message) {
-
+	s.MxToken = mx.GetMxToken(time.Now().Unix()|s.AccountServerId, 64)
 }
 
 func AccountSetRepresentCharacterAndComment(s *enter.Session, request, response mx.Message) {

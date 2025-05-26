@@ -668,13 +668,13 @@ func ParcelResultDB(s *enter.Session, parcelResultList []*ParcelResult) *proto.P
 		AcademyLocationDBs:   make([]*proto.AcademyLocationDB, 0),
 		AdditionalAccountExp: 0,
 		BaseAccountExp:       GetAccountExp(s),
+		StickerDBs:           make([]*proto.StickerDB, 0),
 
 		CostumeDBs:                      nil,
 		TSSCharacterDBs:                 nil,
 		RemovedEquipmentIds:             nil,
 		RemovedItemIds:                  nil,
 		RemovedFurnitureIds:             nil,
-		StickerDBs:                      nil,
 		CharacterNewUniqueIds:           nil,
 		SecretStoneCharacterIdAndCounts: nil,
 		ParcelResultStepInfoList:        nil,
@@ -693,9 +693,14 @@ func ParcelResultDB(s *enter.Session, parcelResultList []*ParcelResult) *proto.P
 			UpCurrency(s, proto.CurrencyTypes(parcelResult.ParcelId), parcelResult.Amount)
 			info.AccountCurrencyDB = GetAccountCurrencyDB(s)
 		case proto.ParcelType_MemoryLobby: // 记忆大厅
-			UpMemoryLobbyInfo(s, parcelResult.ParcelId)
-			info.MemoryLobbyDBs = append(info.MemoryLobbyDBs,
-				GetMemoryLobbyDB(s, parcelResult.ParcelId))
+			if AddMemoryLobby(s, parcelResult.ParcelId) == nil {
+				info.MemoryLobbyDBs = append(info.MemoryLobbyDBs,
+					GetMemoryLobbyDB(s, parcelResult.ParcelId))
+			}
+		case proto.ParcelType_Sticker: // 贴纸
+			if AddSticker(s, parcelResult.ParcelId) == nil {
+				info.StickerDBs = append(info.StickerDBs, GetStickerDBById(s, parcelResult.ParcelId))
+			}
 		case proto.ParcelType_Emblem: // 称号
 			UpEmblemInfoList(s, []int64{parcelResult.ParcelId})
 			info.EmblemDBs = append(info.EmblemDBs,

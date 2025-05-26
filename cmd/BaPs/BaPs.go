@@ -11,7 +11,7 @@ import (
 
 func main() {
 	exit := func() {
-		log.Printf("\n执行结束请输入任何键退出程序....")
+		log.Printf("执行结束请输入任何键退出程序....")
 		scanner := bufio.NewScanner(os.Stdin)
 		for {
 			scanner.Scan()

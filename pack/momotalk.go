@@ -7,12 +7,6 @@ import (
 	"github.com/gucooing/BaPs/protocol/proto"
 )
 
-func MemoryLobbyList(s *enter.Session, request, response mx.Message) {
-	rsp := response.(*proto.MemoryLobbyListResponse)
-
-	rsp.MemoryLobbyDBs = game.GetMemoryLobbyDBs(s)
-}
-
 func MomoTalkOutLine(s *enter.Session, request, response mx.Message) {
 	rsp := response.(*proto.MomoTalkOutLineResponse)
 

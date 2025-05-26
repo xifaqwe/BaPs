@@ -38,7 +38,7 @@ func (c *Command) ApplicationCommandGetPlayer() {
 		CommandFunc: c.getPlayer,
 	}
 
-	c.c.ApplicationCommand(getPlayer)
+	c.C.ApplicationCommand(getPlayer)
 }
 
 func (c *Command) getPlayer(options map[string]string) (string, error) {

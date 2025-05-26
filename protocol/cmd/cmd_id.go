@@ -377,4 +377,8 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_Billing_TransactionStartByYostar, func() any { return new(proto.BillingTransactionStartByYostarResponse) }, false)
 	c.regMsg(proto.Protocol_GmTalk, func() any { return new(proto.GmTalkRequest) }, true)
 	c.regMsg(proto.Protocol_GmTalk, func() any { return new(proto.GmTalkResponse) }, false)
+	c.regMsg(proto.Protocol_Sticker_Lobby, func() any { return new(proto.StickerLobbyRequest) }, true)
+	c.regMsg(proto.Protocol_Sticker_Lobby, func() any { return new(proto.StickerLobbyResponse) }, false)
+	c.regMsg(proto.Protocol_Sticker_UseSticker, func() any { return new(proto.StickerUseStickerRequest) }, true)
+	c.regMsg(proto.Protocol_Sticker_UseSticker, func() any { return new(proto.StickerUseStickerResponse) }, false)
 }

@@ -86,7 +86,11 @@ func (g *GameConfig) gppItemExcel() {
 // 	return nil
 // }
 
-func GetItemExcelCategoryMap(itemCategory string) []*sro.ItemExcel {
+func GetItemExcelCategoryMap() map[string][]*sro.ItemExcel {
+	return GC.GetGPP().ItemExcel.ItemExcelCategoryMap
+}
+
+func GetItemExcelCategoryMapByCategory(itemCategory string) []*sro.ItemExcel {
 	return GC.GetGPP().ItemExcel.ItemExcelCategoryMap[itemCategory]
 }
 

@@ -49,8 +49,9 @@ func (s *SDK) YostarAuthRequest(c *gin.Context) {
 	}
 	logger.Debug("邮箱:%s,语言:%s,平台:%s 发起邮箱验证码登录", req.Account, req.AuthLang, req.Platform)
 	// 验证请求间隔是否过短
+	var mailCode int32
 	if codeInfo := code.GetCodeInfo(req.Account); codeInfo != nil {
-		rsp.Code = codeInfo.Code
+		mailCode = codeInfo.Code
 		logger.Debug("邮箱:%s,验证码还 未过期/使用 不刷新", req.Account)
 	} else {
 		newCode := alg.RandCode()
@@ -74,11 +75,12 @@ func (s *SDK) YostarAuthRequest(c *gin.Context) {
 			}
 			logger.Info("邮箱:%s,验证码送达成功", req.Account)
 		}
-		if req.Key == mx.Key {
-			rsp.Code = newCode //留给bot的
-		}
+		mailCode = newCode
 	}
-	logger.Debug("邮箱:%s,验证码:%v", req.Account, rsp.Code)
+	if req.Key == mx.Key {
+		rsp.Code = mailCode //留给bot的
+	}
+	logger.Debug("邮箱:%s,验证码:%v", req.Account, mailCode)
 	rsp.Result = 0
 }
 

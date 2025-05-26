@@ -19,9 +19,7 @@ type handlerFunc func(s *enter.Session, request, response mx.Message)
 
 var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_GmTalk:                               pack.GmTalk,                              // GmTalk
-	proto.Protocol_Craft_List:                           pack.CraftInfoList,                       // 获取制造信息
 	proto.Protocol_EventContent_PermanentList:           pack.EventContentPermanentList,           // 获取永久时间列表?
-	proto.Protocol_Sticker_Login:                        pack.StickerLogin,                        // 登录获取贴纸信息??
 	proto.Protocol_ContentSweep_MultiSweepPresetList:    pack.ContentSweepMultiSweepPresetList,    // ????
 	proto.Protocol_ContentSave_Get:                      pack.ContentSaveGet,                      // ???
 	proto.Protocol_Event_RewardIncrease:                 pack.EventRewardIncrease,                 // ???
@@ -50,11 +48,12 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	// 登录奖励
 	proto.Protocol_Attendance_Reward: pack.AttendanceReward, // 领取奖励
 	// MomoTalk
-	proto.Protocol_MemoryLobby_List:       pack.MemoryLobbyList,       // 获取记忆大厅列表
 	proto.Protocol_MomoTalk_OutLine:       pack.MomoTalkOutLine,       // 获取MomoTalk信息
 	proto.Protocol_MomoTalk_MessageList:   pack.MomoTalkMessageList,   // 获取单个角色的MomoTalk信息
 	proto.Protocol_MomoTalk_Read:          pack.MomoTalkRead,          // MomoTalk对话选择
 	proto.Protocol_MomoTalk_FavorSchedule: pack.MomoTalkFavorSchedule, // 完成MomoTalk剧情
+	// 记忆大厅
+	proto.Protocol_MemoryLobby_List: pack.MemoryLobbyList, // 获取记忆大厅列表
 	// 邮箱
 	proto.Protocol_Mail_Check:   pack.MailCheck,   // 邮件检查
 	proto.Protocol_Mail_List:    pack.MailList,    // 获取邮件列表
@@ -168,6 +167,12 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_Shop_BeforehandGachaSave: pack.ShopBeforehandGachaSave, // 缓存新手免费十连结果
 	proto.Protocol_Shop_BeforehandGachaPick: pack.ShopBeforehandGachaPick, // 确定新手卡池免费十连结果
 	proto.Protocol_Shop_BuyGacha3:           pack.ShopBuyGacha3,           // 卡池3抽卡请求
+	// 制造
+	proto.Protocol_Craft_List: pack.CraftInfoList, // 获取制造信息
+	// 贴纸
+	proto.Protocol_Sticker_Login:      pack.StickerLogin,      // 登录获取贴纸信息
+	proto.Protocol_Sticker_Lobby:      pack.StickerLobby,      // 获取贴纸信息
+	proto.Protocol_Sticker_UseSticker: pack.StickerUseSticker, // 使用贴纸
 	// 任务
 	proto.Protocol_Campaign_List:                        pack.CampaignList,                        // 获取任务信息
 	proto.Protocol_Campaign_EnterMainStage:              pack.CampaignEnterMainStage,              // 进入任务
@@ -287,19 +292,23 @@ func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *prot
 
 	// 函数执行完毕
 	responsePacket.ServerTimeTicks = game.GetServerTime()
-	responsePacket.MissionProgressDBs = game.GetMissionProgressDBs(s)
-	responsePacket.ServerNotification = game.GetServerNotification(s)
 	logPlayerMsg(Client, request)
 	logPlayerMsg(Server, response)
-	if s != nil && s.Error != 0 {
-		check.GateWaySync.Unlock()
-		errorPacket := &proto.ErrorPacket{
-			ResponsePacket: responsePacket,
-			Reason:         "",
-			ErrorCode:      0,
+	if s != nil {
+		if s.Error != 0 {
+			check.GateWaySync.Unlock()
+			errorPacket := &proto.ErrorPacket{
+				ResponsePacket: responsePacket,
+				Reason:         "",
+				ErrorCode:      s.Error,
+			}
+			g.send(c, errorPacket)
+			return
 		}
-		g.send(c, errorPacket)
-		return
+
+		responsePacket.MissionProgressDBs = game.GetMissionProgressDBs(s)
+		responsePacket.ServerNotification = game.GetServerNotification(s)
+		responsePacket.BasePacket.SessionKey.MxToken = s.MxToken
 	}
 	check.GateWaySync.Unlock()
 	g.send(c, response)
