@@ -85,6 +85,8 @@ func NewBaPs() {
 	gdconf.LoadGameConfig(cfg.DataPath, cfg.ResourcesPath)
 	// 初始化排名数据
 	rankInfo := rank.NewRank()
+	// 输出孤儿
+	logOrphan()
 	// 启动服务器
 	go func() {
 		logger.Info("ClientVersion:%s", pkg.ClientVersion)
@@ -108,6 +110,7 @@ func NewBaPs() {
 		rankInfo.Close()
 		enter.Close()
 		logger.Info("BaPs Close")
+		logger.CloseLogger()
 		os.Exit(0)
 	}
 
