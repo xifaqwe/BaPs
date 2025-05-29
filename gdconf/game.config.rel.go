@@ -1,5 +1,5 @@
-//go:build !dev
-// +build !dev
+//go:build !debug
+// +build !debug
 
 package gdconf
 
