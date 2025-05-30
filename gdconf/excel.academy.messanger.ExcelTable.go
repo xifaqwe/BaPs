@@ -3,7 +3,6 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadAcademyMessangerExcelTable() {
@@ -12,7 +11,7 @@ func (g *GameConfig) loadAcademyMessangerExcelTable() {
 		"AcademyMessanger3ExcelTable.json", "AcademyMessangerExcelTable.json"}
 	for _, name := range nameList {
 		list := make([]*sro.AcademyMessangerExcelTable, 0)
-		mx.LoadExcelJson(g.excelPath+name, &list)
+		loadExcelFile(excelPath+name, &list)
 		g.GetExcel().AcademyMessangerExcelTable = append(g.GetExcel().AcademyMessangerExcelTable, list...)
 	}
 }

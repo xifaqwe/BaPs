@@ -15,12 +15,10 @@ type RaidEliminateSchedule struct {
 }
 
 type RaidEliminateScheduleInfo struct {
-	SeasonId        int64
-	SeasonStartData string    `json:"SeasonStartData"`
-	StartTime       time.Time `json:"-"`
-	SeasonEndData   string    `json:"SeasonEndData"`
-	EndTime         time.Time `json:"-"`
-	NextSeasonId    int64
+	SeasonId     int64
+	StartTime    Time `json:"SeasonStartData"`
+	EndTime      Time `json:"SeasonEndData"`
+	NextSeasonId int64
 }
 
 func (g *GameConfig) loadRaidEliminateSchedule() {
@@ -42,13 +40,8 @@ func (g *GameConfig) loadRaidEliminateSchedule() {
 			g.GetGPP().RaidEliminateSchedule.RaidEliminateScheduleMap[v.NextSeasonId] == nil {
 			panic(fmt.Sprintf("缺少下一个大决战排期,NextSeasonId:%v", v.NextSeasonId))
 		}
-		v.StartTime, err = time.Parse("2006-01-02 15:04:05", v.SeasonStartData)
-		v.EndTime, err = time.Parse("2006-01-02 15:04:05", v.SeasonEndData)
-		if err != nil {
-			panic(fmt.Sprintf("大决战排期时间格式错误,SeasonId:%v", v.SeasonId))
-		}
 		// 检查排期时间是否满足7天以上
-		if v.StartTime.Add(7 * 24 * time.Hour).After(v.EndTime) {
+		if v.StartTime.Time().Add(7 * 24 * time.Hour).After(v.EndTime.Time()) {
 			panic(fmt.Sprintf("大决战排期时间错误 排期不足7天,SeasonId:%v", v.SeasonId))
 		}
 	}
@@ -58,23 +51,23 @@ func (g *GameConfig) loadRaidEliminateSchedule() {
 func GetCurRaidEliminateSchedule() *RaidEliminateScheduleInfo {
 	cur := GC.GetGPP().RaidEliminateSchedule.CurRaidEliminateSchedule
 	if cur != nil {
-		if cur.EndTime.After(time.Now()) {
+		if cur.EndTime.Time().After(time.Now()) {
 			return GC.GetGPP().RaidEliminateSchedule.CurRaidEliminateSchedule
 		}
 		next := GC.GetGPP().RaidEliminateSchedule.RaidEliminateScheduleMap[cur.NextSeasonId]
-		if next != nil && next.StartTime.After(time.Now()) {
+		if next != nil && next.StartTime.Time().After(time.Now()) {
 			return GC.GetGPP().RaidEliminateSchedule.CurRaidEliminateSchedule
 		}
 	}
 	cur = nil
 	for _, v := range GC.GetGPP().RaidEliminateSchedule.RaidEliminateScheduleMap {
 		// 排期中
-		if v.EndTime.After(time.Now()) && time.Now().After(v.StartTime) {
+		if v.EndTime.Time().After(time.Now()) && time.Now().After(v.StartTime.Time()) {
 			cur = v
 		} else { // 排期间隔中
 			next := GC.GetGPP().RaidEliminateSchedule.RaidEliminateScheduleMap[v.NextSeasonId]
 			if next != nil &&
-				time.Now().After(v.EndTime) && next.StartTime.After(time.Now()) {
+				time.Now().After(v.EndTime.Time()) && next.StartTime.Time().After(time.Now()) {
 				cur = v
 			}
 		}

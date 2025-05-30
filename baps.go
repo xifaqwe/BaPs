@@ -83,7 +83,7 @@ func NewBaPs() {
 	// 初始化邮件
 	mail.NewMail()
 	// 初始化资源文件
-	gdconf.LoadGameConfig(cfg.DataPath, cfg.ResourcesPath)
+	gdconf.LoadGameConfig()
 	// 生成handbook
 	handbook.NewHandbook()
 	// 初始化排名数据

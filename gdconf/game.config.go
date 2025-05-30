@@ -1,9 +1,12 @@
 package gdconf
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/gucooing/BaPs/config"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	sro "github.com/gucooing/BaPs/common/server_only"
@@ -13,14 +16,10 @@ import (
 var GC *GameConfig
 
 type GameConfig struct {
-	dataPath    string
-	resPath     string
-	excelPath   string
-	excelDbPath string
-	loadFunc    []func()
-	gppFunc     []func()
-	Excel       *sro.Excel
-	GPP         *GPP
+	dataPath string
+	gppFunc  []func()
+	Excel    *sro.Excel
+	GPP      *GPP
 }
 
 type GPP struct {
@@ -101,11 +100,10 @@ type GPP struct {
 	MemoryLobbyExcel                    *MemoryLobbyExcel
 }
 
-func LoadGameConfig(dataPath string, resPath string) *GameConfig {
+func LoadGameConfig() *GameConfig {
 	gc := new(GameConfig)
 	GC = gc
-	gc.dataPath = dataPath
-	gc.resPath = resPath
+	gc.dataPath = config.GetDataPath()
 	logger.Info("开始读取资源文件")
 	startTime := time.Now()
 	gc.LoadExcel()
@@ -222,4 +220,28 @@ func (g *GameConfig) GetGPP() *GPP {
 		return nil
 	}
 	return g.GPP
+}
+
+type Time time.Time
+
+func (t Time) MarshalJSON() ([]byte, error) {
+	return json.Marshal(time.Time(t).Format("2006-01-02 15:04:05"))
+}
+
+func (t *Time) UnmarshalJSON(data []byte) (err error) {
+	str := strings.Trim(string(data), "\"")
+	parsedTime, err := time.Parse("2006-01-02 15:04:05", str)
+	if err != nil {
+		parsedTime, err = time.Parse(time.RFC3339, str)
+		if err != nil {
+			return err
+		}
+		return err
+	}
+	*t = Time(parsedTime)
+	return nil
+}
+
+func (t *Time) Time() time.Time {
+	return time.Time(*t)
 }

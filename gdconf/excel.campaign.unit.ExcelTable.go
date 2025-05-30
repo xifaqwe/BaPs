@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadCampaignUnitExcelTable() {
 	g.GetExcel().CampaignUnitExcelTable = make([]*sro.CampaignUnitExcelTable, 0)
 	name := "CampaignUnitExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().CampaignUnitExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().CampaignUnitExcelTable)
 }
 
 type CampaignUnitExcel struct {

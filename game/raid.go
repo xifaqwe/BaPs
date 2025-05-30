@@ -18,8 +18,8 @@ func GetRaidSeasonType() proto.RaidSeasonType {
 	if cur == nil {
 		return proto.RaidSeasonType_Close
 	}
-	if cur.StartTime.Before(time.Now()) &&
-		cur.EndTime.After(time.Now()) {
+	if cur.StartTime.Time().Before(time.Now()) &&
+		cur.EndTime.Time().After(time.Now()) {
 		return proto.RaidSeasonType_Open
 	}
 	return proto.RaidSeasonType_Settlement
@@ -49,7 +49,7 @@ func GetCurRaidInfo(s *enter.Session) *sro.RaidInfo {
 		}
 	}
 	// 如果赛季已经进入结算期
-	if time.Now().After(conf.EndTime) {
+	if time.Now().After(conf.EndTime.Time()) {
 		bin.CurRaidInfo.Ranking = rank.GetRaidRank(conf.SeasonId, s.AccountServerId)
 		bin.CurRaidInfo.Tier = gdconf.GetRaidTier(bin.CurRaidInfo.SeasonId,
 			bin.CurRaidInfo.Ranking)
@@ -199,7 +199,7 @@ func GetRaidLobbyInfoDB(s *enter.Session) *proto.RaidLobbyInfoDB {
 		info.BestRankingPoint = bin.GetBestScore()   // 最高分
 		info.TotalRankingPoint = bin.GetTotalScore() // 总分
 		info.CanReceiveRankingReward = GetCanReceiveRankingReward(
-			time.Now().After(cur.EndTime), bin.GetIsRankingReward())
+			time.Now().After(cur.EndTime.Time()), bin.GetIsRankingReward())
 	}
 	if next := gdconf.GetNextRaidSchedule(); next != nil {
 		info.NextSeasonId = next.SeasonId

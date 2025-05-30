@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadRecipeIngredientExcelTable() {
 	g.GetExcel().RecipeIngredientExcelTable = make([]*sro.RecipeIngredientExcelTable, 0)
 	name := "RecipeIngredientExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().RecipeIngredientExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().RecipeIngredientExcelTable)
 }
 
 type RecipeIngredientExcel struct {

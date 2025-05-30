@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadEventContentStageExcelTable() {
 	g.GetExcel().EventContentStageExcelTable = make([]*sro.EventContentStageExcelTable, 0)
 	name := "EventContentStageExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().EventContentStageExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().EventContentStageExcelTable)
 }
 
 type EventContentStageExcel struct {

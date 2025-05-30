@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadFavorLevelExcel() {
 	g.GetExcel().FavorLevelExcel = make([]*sro.FavorLevelExcel, 0)
 	name := "FavorLevelExcel.json"
-	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().FavorLevelExcel)
+	loadExcelFile(excelDbPath+name, &g.GetExcel().FavorLevelExcel)
 }
 
 type FavorLevel struct {

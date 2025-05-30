@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadTimeAttackDungeonGeasExcel() {
 	g.GetExcel().TimeAttackDungeonGeasExcel = make([]*sro.TimeAttackDungeonGeasExcel, 0)
 	name := "TimeAttackDungeonGeasExcel.json"
-	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().TimeAttackDungeonGeasExcel)
+	loadExcelFile(excelDbPath+name, &g.GetExcel().TimeAttackDungeonGeasExcel)
 }
 
 type TimeAttackDungeonGeasExcel struct {

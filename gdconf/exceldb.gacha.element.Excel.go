@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadGachaElementExcel() {
 	g.GetExcel().GachaElementExcel = make([]*sro.GachaElementExcel, 0)
 	name := "GachaElementExcel.json"
-	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().GachaElementExcel)
+	loadExcelFile(excelDbPath+name, &g.GetExcel().GachaElementExcel)
 }
 
 type GachaElementExcel struct {

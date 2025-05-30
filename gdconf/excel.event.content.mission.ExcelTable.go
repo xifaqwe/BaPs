@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadEventContentMissionExcelTable() {
 	g.GetExcel().EventContentMissionExcelTable = make([]*sro.EventContentMissionExcelTable, 0)
 	name := "EventContentMissionExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().EventContentMissionExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().EventContentMissionExcelTable)
 }
 
 type EventContentMissionExcel struct {

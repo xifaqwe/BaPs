@@ -769,3 +769,7 @@ func ParcelResultDB(s *enter.Session, parcelResultList []*ParcelResult) *proto.P
 
 	return info
 }
+
+func DelCheckParcelResult() bool {
+	return true
+}

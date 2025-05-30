@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadAcademyFavorScheduleExcelTable() {
 	g.GetExcel().AcademyFavorScheduleExcelTable = make([]*sro.AcademyFavorScheduleExcelTable, 0)
 	name := "AcademyFavorScheduleExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().AcademyFavorScheduleExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().AcademyFavorScheduleExcelTable)
 }
 
 type AcademyFavorScheduleExcel struct {

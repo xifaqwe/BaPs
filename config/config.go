@@ -94,6 +94,14 @@ func (c *Config) String() string {
 	return str
 }
 
+func GetResourcesPath() string {
+	return GetConfig().ResourcesPath
+}
+
+func GetDataPath() string {
+	return GetConfig().DataPath
+}
+
 func GetExcelUrl() string {
 	return GetConfig().ExcelUrl
 }

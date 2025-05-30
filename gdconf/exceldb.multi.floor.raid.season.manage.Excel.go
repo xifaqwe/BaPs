@@ -5,13 +5,12 @@ import (
 
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadMultiFloorRaidSeasonManageExcel() {
 	g.GetExcel().MultiFloorRaidSeasonManageExcel = make([]*sro.MultiFloorRaidSeasonManageExcel, 0)
 	name := "MultiFloorRaidSeasonManageExcel.json"
-	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().MultiFloorRaidSeasonManageExcel)
+	loadExcelFile(excelDbPath+name, &g.GetExcel().MultiFloorRaidSeasonManageExcel)
 }
 
 type MultiFloorRaidSeasonManage struct {

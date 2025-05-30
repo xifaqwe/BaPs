@@ -32,11 +32,11 @@ func GetAttendanceList(s *enter.Session) map[int64]*sro.AttendanceInfo {
 	}
 	for id, conf := range gdconf.GetAttendanceMap() {
 		// 结束开始 不添加新的
-		if time.Now().After(conf.StartableEndTime) {
+		if time.Now().After(conf.StartableEndTime.Time()) {
 			continue
 		}
 		// 开始,添加数据
-		if time.Now().After(conf.StartTime) &&
+		if time.Now().After(conf.StartTime.Time()) &&
 			bin.AttendanceList[id] == nil {
 			bin.AttendanceList[id] = &sro.AttendanceInfo{
 				AttendanceId: id,
@@ -60,7 +60,7 @@ func GetAttendanceInfo(s *enter.Session, attendanceId int64) *sro.AttendanceInfo
 		delete(bin, attendanceId)
 		return nil
 	}
-	if int64(len(info.AttendedDay)) >= conf.BookSize || time.Now().After(conf.EndTime) {
+	if int64(len(info.AttendedDay)) >= conf.BookSize || time.Now().After(conf.EndTime.Time()) {
 		// stop
 		switch conf.Type {
 		case "Basic":

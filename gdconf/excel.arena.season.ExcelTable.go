@@ -5,13 +5,12 @@ import (
 
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadArenaSeasonExcelTable() {
 	g.GetExcel().ArenaSeasonExcelTable = make([]*sro.ArenaSeasonExcelTable, 0)
 	name := "ArenaSeasonExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().ArenaSeasonExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().ArenaSeasonExcelTable)
 }
 
 type ArenaSeasonExcel struct {

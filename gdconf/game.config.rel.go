@@ -66,3 +66,7 @@ func downloadExcel(path string) error {
 	_, err = io.Copy(file, resp.Body)
 	return err
 }
+
+func loadExcelFile[T any](path string, table *[]*T) {
+	*table = make([]*T, 0)
+}

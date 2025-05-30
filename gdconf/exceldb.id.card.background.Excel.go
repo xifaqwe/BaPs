@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadIdCardBackgroundExcel() {
 	g.GetExcel().IdCardBackgroundExcel = make([]*sro.IdCardBackgroundExcel, 0)
 	name := "IdCardBackgroundExcel.json"
-	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().IdCardBackgroundExcel)
+	loadExcelFile(excelDbPath+name, &g.GetExcel().IdCardBackgroundExcel)
 }
 
 type IdCardBackground struct {

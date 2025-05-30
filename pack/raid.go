@@ -20,7 +20,7 @@ func RaidLogin(s *enter.Session, request, response mx.Message) {
 	bin := game.GetCurRaidInfo(s)
 	if cur := gdconf.GetCurRaidSchedule(); cur != nil && bin != nil {
 		rsp.CanReceiveRankingReward = game.GetCanReceiveRankingReward(
-			time.Now().After(cur.EndTime), bin.GetIsRankingReward())
+			time.Now().After(cur.EndTime.Time()), bin.GetIsRankingReward())
 		rsp.LastSettledRanking = game.GetLastRaidInfo(s).GetRanking()
 		rsp.LastSettledTier = game.GetLastRaidInfo(s).GetTier()
 	}

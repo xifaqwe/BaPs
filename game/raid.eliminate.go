@@ -18,8 +18,8 @@ func GetEliminateRaidSeasonType() proto.RaidSeasonType {
 	if cur == nil {
 		return proto.RaidSeasonType_Close
 	}
-	if cur.StartTime.Before(time.Now()) &&
-		cur.EndTime.After(time.Now()) {
+	if cur.StartTime.Time().Before(time.Now()) &&
+		cur.EndTime.Time().After(time.Now()) {
 		return proto.RaidSeasonType_Open
 	}
 	return proto.RaidSeasonType_Close // proto.RaidSeasonType_Settlement
@@ -52,7 +52,7 @@ func GetCurRaidEliminateInfo(s *enter.Session) *sro.RaidEliminateInfo {
 	}
 
 	// 如果赛季已经进入结算期
-	if time.Now().After(conf.EndTime) {
+	if time.Now().After(conf.EndTime.Time()) {
 		// 上面已经抛弃无效数据了,这里不需要处理
 		bin.CurRaidEliminate.Ranking = rank.GetRaidEliminateRank(conf.SeasonId, s.AccountServerId)
 		bin.CurRaidEliminate.Tier = gdconf.GetEliminateRaidTier(
@@ -171,7 +171,7 @@ func GetEliminateRaidLobbyInfoDB(s *enter.Session) *proto.EliminateRaidLobbyInfo
 		info.Tier = gdconf.GetEliminateRaidTier(cur.SeasonId, info.Ranking)
 		info.TotalRankingPoint = bin.GetTotalScore()
 		info.CanReceiveRankingReward = GetCanReceiveRankingReward(
-			time.Now().After(cur.EndTime), bin.GetIsRankingReward())
+			time.Now().After(cur.EndTime.Time()), bin.GetIsRankingReward())
 		info.BestRankingPointPerBossGroup = GetBestRankingPointPerBossGroup(s)
 	}
 	if next := gdconf.GetNextRaidEliminateSchedule(); next != nil {

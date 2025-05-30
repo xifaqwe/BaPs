@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadGachaElementRecursiveExcel() {
 	g.GetExcel().GachaElementRecursiveExcel = make([]*sro.GachaElementRecursiveExcel, 0)
 	name := "GachaElementRecursiveExcel.json"
-	mx.LoadExcelJson(g.excelDbPath+name, &g.GetExcel().GachaElementRecursiveExcel)
+	loadExcelFile(excelDbPath+name, &g.GetExcel().GachaElementRecursiveExcel)
 }
 
 type GachaElementRecursiveExcel struct {

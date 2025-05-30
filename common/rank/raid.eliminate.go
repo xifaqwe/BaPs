@@ -31,9 +31,9 @@ func (x *RankInfo) NewRaidEliminateRank(seasonId int64) {
 		logger.Warn("大决战缺少下一个赛季配置")
 		return
 	}
-	if conf.StartTime.After(time.Now()) {
+	if conf.StartTime.Time().After(time.Now()) {
 		go func() {
-			d := nextConf.StartTime.Add(1 * time.Hour).Sub(time.Now())
+			d := nextConf.StartTime.Time().Add(1 * time.Hour).Sub(time.Now())
 			ticker := time.NewTimer(d)
 			logger.Debug("离下一个大决战赛季开始还有:%s", d.String())
 			select {

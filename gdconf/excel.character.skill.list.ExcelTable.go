@@ -3,13 +3,12 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 func (g *GameConfig) loadCharacterSkillListExcelTable() {
 	g.GetExcel().CharacterSkillListExcelTable = make([]*sro.CharacterSkillListExcelTable, 0)
 	name := "CharacterSkillListExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().CharacterSkillListExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().CharacterSkillListExcelTable)
 }
 
 type CharacterSkillListExcel struct {

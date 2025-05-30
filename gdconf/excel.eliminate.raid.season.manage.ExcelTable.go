@@ -3,14 +3,13 @@ package gdconf
 import (
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
 )
 
 func (g *GameConfig) loadEliminateRaidSeasonManageExcelTable() {
 	g.GetExcel().EliminateRaidSeasonManageExcelTable = make([]*sro.EliminateRaidSeasonManageExcelTable, 0)
 	name := "EliminateRaidSeasonManageExcelTable.json"
-	mx.LoadExcelJson(g.excelPath+name, &g.GetExcel().EliminateRaidSeasonManageExcelTable)
+	loadExcelFile(excelPath+name, &g.GetExcel().EliminateRaidSeasonManageExcelTable)
 }
 
 type EliminateRaidSeasonManageExcel struct {
