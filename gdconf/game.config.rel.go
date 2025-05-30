@@ -16,6 +16,9 @@ import (
 	pb "google.golang.org/protobuf/proto"
 )
 
+var excelPath string
+var excelDbPath string
+
 func (g *GameConfig) LoadExcel() {
 ty:
 	dirInfo, err := os.Stat(g.dataPath)
