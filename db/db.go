@@ -38,6 +38,8 @@ type DBGame interface {
 	GetAllYostarMail() []*dbstruct.YostarMail                          //拉取全部邮件
 	AddYostarMailBySender(sender string) (*dbstruct.YostarMail, error) // 指定Sender创建数据
 	UpdateYostarMail(data *dbstruct.YostarMail) error                  // 更新邮件数据
+	DeleteYostarMailById(id int64) error                               // 删除指定全局邮件
+	DeleteAllYostarMail() error                                        // 删除全部全局邮件
 	// YostarUser
 	GetYostarUserByUid(uid int64) *dbstruct.YostarUser                      // 使用Uid拉取数据
 	GetYostarUserByYostarUid(yostarUid int64) *dbstruct.YostarUser          // 使用YostarUid拉取数据

@@ -60,3 +60,15 @@ func AddYostarMail(mail *dbstruct.YostarMail) bool {
 	e.MailMap[mail.MailIndex] = mail
 	return true
 }
+
+func DelYostarMail(mailId int64) error {
+	e := getEnterSet()
+	delete(e.MailMap, mailId)
+	return db.GetDBGame().DeleteYostarMailById(mailId)
+}
+
+func DelAllYostarMail() error {
+	e := getEnterSet()
+	e.MailMap = make(map[int64]*dbstruct.YostarMail)
+	return db.GetDBGame().DeleteAllYostarMail()
+}

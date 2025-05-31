@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
-	"strconv"
 	"time"
 
 	"github.com/gucooing/BaPs/common/enter"
@@ -24,13 +23,8 @@ func (c *Command) ApplicationCommandGameMail() {
 		Permissions: cdq.Admin,
 		Options: []*cdq.CommandOption{
 			{
-				Name:        "uid",
-				Description: "玩家游戏id",
-				Required:    false,
-			},
-			{
-				Name:        "player",
-				Description: "是否为玩家邮件,0为全局邮件",
+				Name:        "recipient",
+				Description: "玩家游戏id或all全局对象",
 				Required:    true,
 			},
 			{
@@ -54,13 +48,13 @@ func (c *Command) ApplicationCommandGameMail() {
 				Required:    true,
 			},
 			{
-				Name:        "uid",
-				Description: "如果是玩家邮件,则此选项必写",
+				Name:        "parcelInfoList",
+				Description: "附件 json格式",
 				Required:    false,
 			},
 			{
-				Name:        "parcelInfoList",
-				Description: "附件 json格式",
+				Name:        "del",
+				Description: "删除邮件 可传入邮件id或all",
 				Required:    false,
 			},
 		},
@@ -71,10 +65,29 @@ func (c *Command) ApplicationCommandGameMail() {
 }
 
 func (c *Command) gameMail(options map[string]string) (string, error) {
-	parcelInfoListOption := options["parcelInfoList"]
+	switch options["recipient"] {
+	case "all", "All": // 全局邮件操作
+		return gmYostarMail(options)
+	default:
+		return gmPlayerMail(options)
+	}
+}
 
-	if player, _ := strconv.ParseBool(options["player"]); !player {
-		parcelInfoList, err := genParcelInfo[dbstruct.ParcelInfo](parcelInfoListOption)
+func gmYostarMail(options map[string]string) (string, error) {
+	if strDel := options["del"]; strDel == "all" || strDel == "All" {
+		if enter.DelAllYostarMail() != nil {
+			return "", errors.New("删除所有全局邮件失败")
+		} else {
+			return "删除所有全局邮件成功", nil
+		}
+	} else if delId := alg.S2I64(strDel); delId != 0 {
+		if enter.DelYostarMail(delId) != nil {
+			return "", errors.New("删除全局邮件失败")
+		} else {
+			return "删除全局邮件成功", nil
+		}
+	} else {
+		parcelInfoList, err := genParcelInfo[dbstruct.ParcelInfo](options["parcelInfoList"])
 		if err != nil {
 			return "", errors.New(fmt.Sprintf("解析邮件附件失败:%s", err.Error()))
 		}
@@ -89,14 +102,29 @@ func (c *Command) gameMail(options map[string]string) (string, error) {
 			return "全局邮件发送成功", nil
 		}
 		return "", errors.New("全局邮件发送失败")
-	} else {
-		// 玩家验证
-		uid := alg.S2I64(options["uid"])
-		s := enter.GetSessionByAccountServerId(uid)
-		if s == nil {
-			return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
+	}
+}
+
+func gmPlayerMail(options map[string]string) (string, error) {
+	uid := alg.S2I64(options["recipient"])
+	s := enter.GetSessionByAccountServerId(uid)
+	if s == nil {
+		return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
+	}
+	if strDel := options["del"]; strDel == "all" || strDel == "All" {
+		if game.DelAllMail(s) {
+			return "删除玩家全部邮件成功", nil
+		} else {
+			return "", errors.New("删除玩家全部邮件失败,这是一个神奇的bug")
 		}
-		parcelInfoList, err := genParcelInfo[sro.ParcelInfo](parcelInfoListOption)
+	} else if delId := alg.S2I64(strDel); delId != 0 {
+		if game.DelMail(s, delId) {
+			return "删除玩家邮件成功", nil
+		} else {
+			return "", errors.New("删除玩家邮件失败,邮件可能不存在")
+		}
+	} else {
+		parcelInfoList, err := genParcelInfo[sro.ParcelInfo](options["parcelInfoList"])
 		if err != nil {
 			return "", errors.New(fmt.Sprintf("解析邮件附件失败:%s", err.Error()))
 		}

@@ -27,3 +27,14 @@ func (x *DbGorm) UpdateYostarMail(data *dbstruct.YostarMail) error {
 	}
 	return x.sql.Model(&dbstruct.YostarMail{}).Where("mail_index = ?", data.MailIndex).Updates(data).Error
 }
+
+func (x *DbGorm) DeleteYostarMailById(id int64) error {
+	if id == 0 {
+		return errors.New("YostarMail Nil")
+	}
+	return x.sql.Delete(&dbstruct.YostarMail{MailIndex: id}, id).Error
+}
+
+func (x *DbGorm) DeleteAllYostarMail() error {
+	return x.sql.Delete(&dbstruct.YostarMail{}).Error
+}

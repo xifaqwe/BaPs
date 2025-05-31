@@ -160,6 +160,15 @@ func DelMail(s *enter.Session, id int64) bool {
 	return false
 }
 
+func DelAllMail(s *enter.Session) bool {
+	bin := GetMailBin(s)
+	if bin == nil {
+		return false
+	}
+	bin.MailInfoList = make(map[int64]*sro.MailInfo)
+	return true
+}
+
 func GetMailDBs(s *enter.Session, IsReadMail bool) []*proto.MailDB {
 	list := make([]*proto.MailDB, 0)
 	for _, bin := range GetMailInfoList(s) {
