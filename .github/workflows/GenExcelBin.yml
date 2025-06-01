@@ -25,10 +25,43 @@ jobs:
           repository: BanterSR/BaData
           ref: 'main'
           token: ${{ secrets.TOKEN }}
-          path: './app/baps'
+          path: './app/baps/resources'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.2"
+          check-latest: true
+
+      - name: Sync Src
+        run: |
+          wget ${{ secrets.EXCEL_URL }} --quiet -O ./app/src/protocol/mx/excel.go
+          wget ${{ secrets.GDCONF_DEV }} --quiet -O ./app/src/gdconf/game.config.dev.go
+          wget ${{ secrets.GENEXCEL }} --quiet -O ./app/src/main.go
+
+      - name: Build Proto
+        run: |
+          cd ./common/server_only
+          chmod 777 ./protoc ./protoc-gen-go
+          ./protoc --proto_path=. --plugin=protoc-gen-go=./protoc-gen-go --go_out=. *.proto
+
+      - name: Build GenExcelBin
+        run: |
+          cd ./app/src
+          go build "-tags=debug" -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1" -o ${{github.workspace}}/app/baps/main ./main.go
+
+      - name: Run GenExcelBin
+        run: |
+          cd ./app/baps
+          chmod 777 ./main && ./main
 
       - name: Check
         run: |
-            cd ./app/src && ls
-            cd ../../
-            cd ./app/baps && ls
+          cd ./app/baps/data
+          ls
+
+#      - name: Upload Excel.bin
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: 'Excel.bin.zip'
+#          path: ./app/baps/data/*
