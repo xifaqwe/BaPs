@@ -91,6 +91,7 @@ jobs:
         with:
           repository: gucooing/BaPs
           ref: "main"
+          lfs: true
           fetch-depth: 0
 
       - name: Upload data

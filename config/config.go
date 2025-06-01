@@ -190,6 +190,7 @@ func LoadConfig(filePath string) error {
 			return err
 		}
 	}
+	log.Printf("env:%s\n\n", os.Environ())
 	overrideWithEnv(reflect.ValueOf(CONF).Elem(), "Config")
 	return nil
 }
