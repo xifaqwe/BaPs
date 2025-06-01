@@ -53,6 +53,7 @@ jobs:
       - name: Run GenExcelBin
         run: |
           cd ./app/baps
+          mkdir -m 775 ./data
           chmod 777 ./main && ./main
 
       - name: Check
