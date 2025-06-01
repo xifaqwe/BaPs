@@ -14,21 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sync BaPs
-        uses: https://github.com/actions/checkout@v4
-        with:
-          repository: gucooing/BaPs
-          ref: "main"
-          fetch-depth: '1'
-          token: ${{ secrets.TOKEN }}
-          path: './app/src'
+        run: |
+          target_dir='./app/src'
+          rm -rf "$target_dir"
+          git clone --depth 1 --branch main \
+            "https://${{ secrets.TOKEN }}@github.com/gucooing/BaPs.git" \
+            "$target_dir"
+        shell: bash
 
       - name: Sync BaData
-        uses: https://github.com/actions/checkout@v4
-        with:
-          repository: BanterSR/BaData
-          ref: 'main'
-          token: ${{ secrets.TOKEN }}
-          path: './app/baps/resources'
+        run: |
+          target_dir='./app/baps/resources'
+          rm -rf "$target_dir"
+          git clone --depth 1 --branch main \
+            "https://${{ secrets.TOKEN }}@github.com/BanterSR/BaData.git" \
+            "$target_dir"
+        shell: bash
 
       - name: Set up Go
         uses: actions/setup-go@v5
