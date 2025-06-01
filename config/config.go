@@ -9,7 +9,6 @@ import (
 	"os"
 	"reflect"
 	"strconv"
-	"strings"
 )
 
 type Config struct {
@@ -264,7 +263,7 @@ func overrideWithEnv(val reflect.Value, nestKey string) {
 		if envKey != "" {
 			envKey += "."
 		}
-		envKey += strings.ToUpper(jsonTag)
+		envKey += jsonTag
 		if field.Kind() == reflect.Struct {
 			overrideWithEnv(field, envKey)
 			continue
