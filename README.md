@@ -54,7 +54,7 @@
 1. 前往[Releases](https://github.com/gucooing/BaPs/releases/latest)下载最新的发行版本并拷贝到运行目录（请根据自己的系统进行下载）
 2. 拷贝仓库的data文件夹到运行目录
 3. 下载[Releases](https://github.com/gucooing/BaPs/releases/latest)中的Excel.bin文件,并替换到data文件夹中
-4. 直接运行一次将会自动生成config.json文件,打开并编辑config.json文件
+4. 使用参数```-g true```运行一次将会自动生成config.json文件,打开并编辑config.json文件
 5. 运行
 ##### tips 也可以前往[Build Action](https://github.com/gucooing/BaPs/actions/workflows/Build.yml)下载最新的版本
 
@@ -62,11 +62,13 @@
 ---
 
 ### 🐳 Docker部署
+#### 请修改http:127.0.0.1:5000为实际服务器地址
 ```bash
 docker run -d \
   -p 5000:5000 \
   -v /data/baps/config:/usr/ba/config \
   -v /data/baps/sqlite:/usr/ba/sqlite \
+  -e Config.HttpNet.OuterAddr=http:127.0.0.1:5000 \
   ghcr.io/gucooing/baps:latest
 ``` 
 ## 更多的镜像站

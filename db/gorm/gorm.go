@@ -3,6 +3,8 @@ package db_gorm
 import (
 	"errors"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
+	"os"
+	"path/filepath"
 	"time"
 
 	_ "github.com/ncruces/go-sqlite3/embed"
@@ -77,6 +79,9 @@ func (x *DbGorm) NewMysql(dsn string) error {
 }
 
 func (x *DbGorm) NewSqlite(dsn string) error {
+	if _, err := os.Stat(filepath.Dir(dsn)); os.IsNotExist(err) {
+		os.MkdirAll(filepath.Dir(dsn), 0777)
+	}
 	db, err := gorm.Open(gormlite.Open(dsn), &gorm.Config{
 		Logger: gromlogger.Default.LogMode(gromlogger.Silent),
 		NamingStrategy: schema.NamingStrategy{

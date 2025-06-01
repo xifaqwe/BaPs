@@ -18,6 +18,7 @@ type Ping struct {
 	Rt            string  `json:"rt"`            // 上一分钟每一个请求平均处理时间
 	ClientVersion string  `json:"clientVersion"` // 客户端版本
 	ServerVersion string  `json:"serverVersion"` // 服务端版本
+	ApiVersion    string  `json:"apiVersion"`    // api版本
 	Commit        string  `json:"commit"`        // git Commit
 	CpuOc         float64 `json:"cpuOc"`         // cpu占用
 	MemoryOc      string  `json:"memoryOc"`      // 内存占用
@@ -43,6 +44,7 @@ func (c *Command) ping(options map[string]string) (string, error) {
 		Rt:            check.OLDRT.String(),
 		ClientVersion: pkg.ClientVersion,
 		ServerVersion: pkg.ServerVersion,
+		ApiVersion:    apiVersion,
 		Commit:        pkg.Commit,
 		CpuOc:         GetCpuOc(),
 		MemoryOc:      MemoryOc(),

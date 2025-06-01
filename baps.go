@@ -10,6 +10,7 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gucooing/BaPs/common/handbook"
 	"github.com/gucooing/BaPs/common/mail"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,26 +35,27 @@ import (
 
 func NewBaPs() {
 	var filePath string
+	var genConfig bool
 	flag.StringVar(&filePath, "c", "./config.json", "配置文件路径")
+	flag.BoolVar(&genConfig, "g", false, "是否生成默认配置文件")
 	flag.Parse()
+	if genConfig {
+		log.Printf("生成默认配置文件\n")
+		p, _ := json.MarshalIndent(config.DefaultConfig, "", "  ")
+		cf, _ := os.Create(filePath)
+		_, err := cf.Write(p)
+		cf.Close()
+		if err != nil {
+			log.Printf("生成默认配置文件失败 %s \n请检查是否有权限\n", err.Error())
+			return
+		} else {
+			log.Printf("生成默认配置文件成功 \n请修改后重新启动")
+			return
+		}
+	}
 	err := config.LoadConfig(filePath)
 	if err != nil {
-		if err == config.FileNotExist {
-			fmt.Printf("找不到配置文件准备生成默认配置文件\n")
-			p, _ := json.MarshalIndent(config.DefaultConfig, "", "  ")
-			cf, _ := os.Create(filePath)
-			_, err := cf.Write(p)
-			cf.Close()
-			if err != nil {
-				fmt.Printf("生成默认配置文件失败 %s \n请检查是否有权限\n", err.Error())
-				return
-			} else {
-				fmt.Printf("生成默认配置文件成功 \n请修改后重新启动")
-				return
-			}
-		} else {
-			panic(err)
-		}
+		panic(err)
 	}
 	cfg := config.GetConfig()
 	check.GateWaySync = &sync.Mutex{}
@@ -71,7 +73,7 @@ func NewBaPs() {
 	// 检查数据库内容
 	enter.InitEnterSet()
 	// 初始化gin
-	router, server := newGin(cfg.HttpNet)
+	router, server := newGin(config.GetHttpNet())
 	pprof.Register(router)
 	go check.GinNetInfo()
 	// 初始化sdk
@@ -96,7 +98,7 @@ func NewBaPs() {
 		logger.Info("ServerVersion:%s", pkg.ServerVersion)
 		logger.Info("Commit:%s", pkg.Commit)
 		logger.Info("BaPs启动成功!")
-		if err = Run(cfg.HttpNet, server); err != nil {
+		if err = Run(config.GetHttpNet(), server); err != nil {
 			if !errors.Is(http.ErrServerClosed, err) {
 				logger.Error("服务器错误:%s", err.Error())
 				done <- syscall.SIGTERM
