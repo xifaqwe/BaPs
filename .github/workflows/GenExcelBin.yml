@@ -17,7 +17,7 @@ jobs:
           ref: "main"
           fetch-depth: '1'
           token: ${{ secrets.TOKEN }}
-          path: '/app/src'
+          path: './app/src'
 
       - name: Sync BaData
         uses: actions/checkout@v4
@@ -25,9 +25,10 @@ jobs:
           repository: BanterSR/BaData
           ref: 'main'
           token: ${{ secrets.TOKEN }}
-          path: '/app/baps'
+          path: './app/baps'
 
       - name: Check
         run: |
-            cd /app/src && ls
-            cd /app/baps && ls
+            cd ./app/src && ls
+            cd ../../
+            cd ./app/baps && ls
