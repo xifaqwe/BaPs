@@ -1,0 +1,33 @@
+name: GenExcelBin.yml
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync BaPs
+        uses: actions/checkout@v4
+        with:
+          repository: gucooing/BaPs
+          ref: "main"
+          fetch-depth: '1'
+          token: ${{ secrets.TOKEN }}
+          path: '/app/src'
+
+      - name: Sync BaData
+        uses: actions/checkout@v4
+        with:
+          repository: BanterSR/BaData
+          ref: 'main'
+          token: ${{ secrets.TOKEN }}
+          path: '/app/baps'
+
+      - name: Check
+        run: |
+            cd /app/src && ls
+            cd /app/baps && ls
