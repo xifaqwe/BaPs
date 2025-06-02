@@ -142,19 +142,9 @@ https://yostar-serverinfo.bluearchiveyostar.com → http://127.0.0.1:5000
 ---
 
 ## ⌨️ GM工具
-前往下方仓库下载GM工具以方便使用
 
-- [BlueArchiveGM](https://github.com/PrimeStudentCouncil/BlueArchiveGM/releases/latest)
-
-免下载在线版GM菜单
-
-- [BlueArchiveGM Web](https://gm.bluearchive.cc)
-
-默认连接地址：http://127.0.0.1:5000 
-默认密钥：123456 (可前往config.json进行更改)
-
-**GM更新可能会不及时，若需要在本地使用请使用本地版**
-**GM在线版不支持http使用哦~**
+1. 需要注意的是此GM已近乎不可用 [BlueArchiveGM](https://github.com/PrimeStudentCouncil/BlueArchiveGM/releases/latest);web版: [BlueArchiveGM Web](https://gm.bluearchive.cc)
+2. 我们欢迎更多开发者开发适用于BaPs的GM
 
 ---
 ## 🤝 参与贡献
