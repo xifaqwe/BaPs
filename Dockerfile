@@ -10,12 +10,13 @@ WORKDIR /app
 COPY . .
 
 RUN --mount=type=secret,id=excel_url,env=EXCEL_URL \
+    --mount=type=secret,id=sha,env=SHA \
     wget "$EXCEL_URL" --quiet -O ./protocol/mx/excel.go
 RUN cd ./common/server_only && \
     protoc --proto_path=. --go_out=. --go_opt=paths=source_relative *.proto && \
     cd ../../
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
-    -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1" \
+    -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1 -X github.com/gucooing/BaPs/pkg.Commit=$SHA" \
     -o /app/BaPs \
     ./cmd/BaPs/BaPs.go
 
