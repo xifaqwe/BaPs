@@ -19,7 +19,7 @@ COPY ./data/ /usr/ba/data/
 COPY ./resources/ /usr/ba/resources/
 
 RUN --mount=type=secret,id=sha,env=SHA \
-    GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
+    GOOS=$TARGETOS GOARCH=$TARGETARCH go build "-tags=debug" \
     -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1 -X github.com/gucooing/BaPs/pkg.Commit=$SHA" \
     -o /usr/ba/GenExcelBin \
     ./cmd/GenExcelBin/main.go
