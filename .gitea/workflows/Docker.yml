@@ -41,7 +41,7 @@ jobs:
         run: |
           wget ${{ secrets.EXCEL_URL }} --quiet -O ./app/src/protocol/mx/excel.go
           wget ${{ secrets.GDCONF_DEV }} --quiet -O ./app/src/gdconf/game.config.dev.go
-          wget ${{ secrets.GENEXCEL }} --quiet -O ./app/src/main.go
+          wget ${{ secrets.GENEXCEL }} --quiet -O ./app/src/cmd/GenExcelBin/main.go
 
       - name: Build Proto
         run: |

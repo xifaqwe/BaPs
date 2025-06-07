@@ -5,11 +5,9 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+#RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 WORKDIR /app
 COPY . .
-
-RUN ls
 
 RUN --mount=type=secret,id=sha,env=SHA \
     GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
@@ -24,7 +22,7 @@ RUN --mount=type=secret,id=sha,env=SHA \
     GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
     -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1 -X github.com/gucooing/BaPs/pkg.Commit=$SHA" \
     -o /usr/ba/GenExcelBin \
-    ./main.go
+    ./cmd/GenExcelBin/main.go
 
 RUN cd /usr/ba/ && chmod 777 ./GenExcelBin && ./GenExcelBin
 
