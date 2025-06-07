@@ -131,7 +131,7 @@ jobs:
         run: |
           cd ./app/baps
           mkdir -m 775 ./data
-          cp -r ${{github.workspace}}/app/src/data ./data/
+          cp -r ${{github.workspace}}/app/src/data .
           chmod 777 ./main && ./main
 
       - name: Upload data
