@@ -76,24 +76,24 @@ jobs:
         GOOS=$GOOS GOARCH=$GOARCH \
         go build -ldflags="-s -w -X github.com/gucooing/BaPs/pkg.Commit=${{ env.SHA }}" -o ./bin/$OUTPUT_NAME ./cmd/BaPs/BaPs.go
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: BaPs_${{ env.SHA }}_${{ matrix.target }}
-        path: bin/*
+#    - name: Upload artifact
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: BaPs_${{ env.SHA }}_${{ matrix.target }}
+#        path: bin/*
 
-  upload-data:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          repository: gucooing/BaPs
-          ref: "main"
-          lfs: true
-          fetch-depth: 0
-
+#  upload-data:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          repository: gucooing/BaPs
+#          ref: "main"
+#          lfs: true
+#          fetch-depth: 0
+#
 #      - name: Upload data
 #        uses: actions/upload-artifact@v4
 #        with:
