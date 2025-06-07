@@ -12,23 +12,23 @@ jobs:
       matrix:
         platform: [ubuntu-latest]
         target:
-          - darwin-amd64
-          - darwin-arm64
           - windows-amd64
           - windows-arm64
           - linux-amd64
           - linux-arm64
-          - linux-loong64
-          - linux-mips64
-          - linux-mips64le
-          - linux-ppc64
-          - linux-ppc64le
-          - linux-riscv64
-          - linux-s390x
-          - aix-ppc64
-          - dragonfly-amd64
-          - netbsd-amd64
-          - netbsd-arm64
+#          - darwin-amd64
+#          - darwin-arm64
+#          - linux-loong64
+#          - linux-mips64
+#          - linux-mips64le
+#          - linux-ppc64
+#          - linux-ppc64le
+#          - linux-riscv64
+#          - linux-s390x
+#          - aix-ppc64
+#          - dragonfly-amd64
+#          - netbsd-amd64
+#          - netbsd-arm64
     name: Build
     runs-on: ${{ matrix.platform }}
     env:
@@ -86,15 +86,56 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Sync BaPs
+        run: |
+          target_dir='./app/src'
+          rm -rf "$target_dir"
+          git clone --depth 1 --branch main \
+            "https://${{ secrets.TOKEN }}@github.com/gucooing/BaPs.git" \
+            "$target_dir"
+        shell: bash
+
+      - name: Sync BaData
+        run: |
+          target_dir='./app/baps/resources'
+          rm -rf "$target_dir"
+          git clone --depth 1 --branch main \
+            "https://${{ secrets.TOKEN }}@github.com/BanterSR/BaData.git" \
+            "$target_dir"
+        shell: bash
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          repository: gucooing/BaPs
-          ref: "main"
-          fetch-depth: 0
+          go-version: "1.23.2"
+          check-latest: true
+
+      - name: Sync Src
+        run: |
+          wget ${{ secrets.EXCEL_URL }} --quiet -O ./app/src/protocol/mx/excel.go
+          wget ${{ secrets.GDCONF_DEV }} --quiet -O ./app/src/gdconf/game.config.dev.go
+          wget ${{ secrets.GENEXCEL }} --quiet -O ./app/src/main.go
+
+      - name: Build Proto
+        run: |
+          cd ./app/src/common/server_only
+          chmod 777 ./protoc ./protoc-gen-go
+          ./protoc --proto_path=. --plugin=protoc-gen-go=./protoc-gen-go --go_out=. *.proto
+
+      - name: Build GenExcelBin
+        run: |
+          cd ./app/src
+          go build "-tags=debug" -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1" -o ${{github.workspace}}/app/baps/main ./main.go
+
+      - name: Run GenExcelBin
+        run: |
+          cd ./app/baps
+          mkdir -m 775 ./data
+          cp -r ${{github.workspace}}/app/src/data/ ./data/
+          chmod 777 ./main && ./main
 
       - name: Upload data
         uses: https://gitea.com/actions/gitea-upload-artifact@v4
         with:
           name: data.zip
-          path: data/*
+          path: ./app/baps/data/*
