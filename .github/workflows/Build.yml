@@ -94,8 +94,8 @@ jobs:
           lfs: true
           fetch-depth: 0
 
-      - name: Upload data
-        uses: actions/upload-artifact@v4
-        with:
-          name: data.zip
-          path: data/*
+#      - name: Upload data
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: data.zip
+#          path: data/*
