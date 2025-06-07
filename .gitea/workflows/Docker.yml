@@ -14,12 +14,40 @@ jobs:
 
     steps:
       - name: Sync BaPs
-        uses: actions/checkout@v3
+        run: |
+          target_dir='./app/src'
+          rm -rf "$target_dir"
+          git clone --depth 1 --branch main \
+            "https://${{ secrets.TOKEN }}@github.com/gucooing/BaPs.git" \
+            "$target_dir"
+        shell: bash
+
+      - name: Sync BaData
+        run: |
+          target_dir='./app/src/resources'
+          rm -rf "$target_dir"
+          git clone --depth 1 --branch main \
+            "https://${{ secrets.TOKEN }}@github.com/BanterSR/BaData.git" \
+            "$target_dir"
+        shell: bash
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          repository: gucooing/BaPs
-          ref: "main"
-          lfs: true
-          fetch-depth: 0
+          go-version: "1.23.2"
+          check-latest: true
+
+      - name: Sync Src
+        run: |
+          wget ${{ secrets.EXCEL_URL }} --quiet -O ./app/src/protocol/mx/excel.go
+          wget ${{ secrets.GDCONF_DEV }} --quiet -O ./app/src/gdconf/game.config.dev.go
+          wget ${{ secrets.GENEXCEL }} --quiet -O ./app/src/main.go
+
+      - name: Build Proto
+        run: |
+          cd ./app/src/common/server_only
+          chmod 777 ./protoc ./protoc-gen-go
+          ./protoc --proto_path=. --plugin=protoc-gen-go=./protoc-gen-go --go_out=. *.proto
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -37,9 +65,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./app/src/Dockerfile
           secrets: |
-            excel_url=${{ secrets.EXCEL_URL }}
+            sha=${{ env.SHA }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: gucooing/baps:latest

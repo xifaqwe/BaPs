@@ -14,12 +14,39 @@ jobs:
 
     steps:
       - name: Sync BaPs
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: gucooing/BaPs
           ref: "main"
-          lfs: true
-          fetch-depth: 0
+          fetch-depth: '1'
+          token: ${{ secrets.TOKEN }}
+          path: './app/src'
+
+      - name: Sync BaData
+        uses: actions/checkout@v4
+        with:
+          repository: BanterSR/BaData
+          ref: 'main'
+          token: ${{ secrets.TOKEN }}
+          path: './app/src/resources'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.2"
+          check-latest: true
+
+      - name: Sync Src
+        run: |
+          wget ${{ secrets.EXCEL_URL }} --quiet -O ./app/src/protocol/mx/excel.go
+          wget ${{ secrets.GDCONF_DEV }} --quiet -O ./app/src/gdconf/game.config.dev.go
+          wget ${{ secrets.GENEXCEL }} --quiet -O ./app/src/main.go
+
+      - name: Build Proto
+        run: |
+          cd ./app/src/common/server_only
+          chmod 777 ./protoc ./protoc-gen-go
+          ./protoc --proto_path=. --plugin=protoc-gen-go=./protoc-gen-go --go_out=. *.proto
 
       - uses: benjlevesque/short-sha@v3.0
         id: short-sha
@@ -39,7 +66,6 @@ jobs:
           context: .
           file: ./Dockerfile
           secrets: |
-            excel_url=${{ secrets.EXCEL_URL }}
             sha=${{ env.SHA }}
           platforms: linux/amd64,linux/arm64
           push: true

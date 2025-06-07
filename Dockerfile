@@ -9,23 +9,33 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 WORKDIR /app
 COPY . .
 
-RUN --mount=type=secret,id=excel_url,env=EXCEL_URL \
-    --mount=type=secret,id=sha,env=SHA \
-    wget "$EXCEL_URL" --quiet -O ./protocol/mx/excel.go
-RUN cd ./common/server_only && \
-    protoc --proto_path=. --go_out=. --go_opt=paths=source_relative *.proto && \
-    cd ../../
-RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
+RUN --mount=type=secret,id=sha,env=SHA \
+    GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
     -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1 -X github.com/gucooing/BaPs/pkg.Commit=$SHA" \
-    -o /app/BaPs \
+    -o /usr/ba/BaPs \
     ./cmd/BaPs/BaPs.go
+
+COPY ./data/ /usr/ba/data/
+COPY ./resources/ /usr/ba/resources/
+
+RUN --mount=type=secret,id=sha,env=SHA \
+    GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
+    -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1 -X github.com/gucooing/BaPs/pkg.Commit=$SHA" \
+    -o /usr/ba/GenExcelBin \
+    ./main.go
+
+RUN cd /usr/ba/ && chmod 777 ./GenExcelBin && ./GenExcelBin
+
+RUN cd /usr/ba/ && ls
+
+RUN cd /usr/ba/data && ls
 
 # 最终镜像
 FROM --platform=${TARGETPLATFORM} alpine:latest
 RUN apk add --no-cache bash tzdata
 WORKDIR /usr/ba
-COPY --from=builder /app/BaPs .
-COPY --from=builder /app/data/ ./data/
+COPY --from=builder /usr/ba/BaPs .
+#COPY --from=builder /usr/ba/data/ ./data/
 RUN chmod +x BaPs
 EXPOSE 5000/tcp
 ENTRYPOINT ["./BaPs"]

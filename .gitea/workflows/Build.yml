@@ -39,7 +39,7 @@ jobs:
         with:
           repository: gucooing/BaPs
           ref: "main"
-          lfs: true
+          lfs: false
           fetch-depth: 0
 
       - uses: benjlevesque/short-sha@v3.0
