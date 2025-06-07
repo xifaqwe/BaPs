@@ -9,6 +9,8 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 WORKDIR /app
 COPY . .
 
+RUN ls
+
 RUN --mount=type=secret,id=sha,env=SHA \
     GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
     -ldflags="-s -w -X github.com/gucooing/BaPs/protocol/mx.Docker=1 -X github.com/gucooing/BaPs/pkg.Commit=$SHA" \
