@@ -10,7 +10,7 @@ import (
 )
 
 var C *Command
-var apiVersion = "0.0.1"
+var apiVersion = "0.0.2"
 
 type Command struct {
 	C *cdq.CDQ

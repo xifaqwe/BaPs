@@ -62,7 +62,17 @@ func (c *Command) ApplicationCommandGiveAll() {
 				Description: "需要给予物品的类型",
 				Required:    true,
 				Alias:       "t",
-				ExpectedS:   []string{gaAll, gaMaterial, gaCharacter, gaEquipment, gaFurniture, gaFavor, gaEmblem, gaSticker, gaMemoryLobby},
+				ExpectedS: []string{
+					gaAll,
+					gaMaterial, "m",
+					gaCharacter, "c",
+					gaEquipment, "e",
+					gaFurniture, "f",
+					gaFavor, "fa",
+					gaEmblem, "em",
+					gaSticker, "s",
+					gaMemoryLobby, "ml",
+				},
 			},
 			{
 				Name:        "num",
@@ -93,21 +103,21 @@ func (c *Command) giveALL(ctx *cdq.Context) {
 	switch ctx.GetFlags().String("type") {
 	case gaAll:
 		parcelInfoList = GiveAllTypes(num)
-	case gaMaterial:
+	case gaMaterial, "m":
 		parcelInfoList = GiveAllMaterial(num)
-	case gaCharacter:
+	case gaCharacter, "c":
 		parcelInfoList = GiveAllCharacter(num)
-	case gaEquipment:
+	case gaEquipment, "e":
 		parcelInfoList = GiveAllEquipment(num)
-	case gaFurniture:
+	case gaFurniture, "f":
 		parcelInfoList = GiveAllFurniture(num)
-	case gaFavor:
+	case gaFavor, "fa":
 		parcelInfoList = GiveAllFavor(num)
-	case gaEmblem:
+	case gaEmblem, "em":
 		parcelInfoList = GiveAllEmblem(num)
-	case gaSticker:
+	case gaSticker, "s":
 		parcelInfoList = GiveAllSticker(num)
-	case gaMemoryLobby:
+	case gaMemoryLobby, "ml":
 		parcelInfoList = GiveAllMemoryLobby(num)
 	default:
 		ctx.Return(gaTypeUnknown, "不存在此物品类型")
