@@ -2,12 +2,12 @@ name: GenExcelBin.yml
 on:
   workflow_dispatch:
 
-  push:
-    branches:
-      - main
-
-  schedule:
-    - cron: '0 18 * * *'
+#  push:
+#    branches:
+#      - main
+#
+#  schedule:
+#    - cron: '0 18 * * *'
 
 jobs:
   build:

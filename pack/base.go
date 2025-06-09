@@ -132,10 +132,7 @@ func GmTalk(s *enter.Session, request, response mx.Message) {
 	defer game.AddMail(s, mail)
 	switch req.TestType {
 	case 1:
-		mail.ParcelInfoList = command.GiveAllJsonToProtobuf(&command.ApiGiveAll{
-			Type: "All",
-			Num:  999,
-		})
+		mail.ParcelInfoList = command.GiveAllTypes(999)
 	case 2:
 	case 3:
 

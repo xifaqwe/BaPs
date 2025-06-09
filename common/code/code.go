@@ -82,6 +82,9 @@ func GetAllCode() map[string]*CodeInfo {
 
 // SetCode 设置邮箱的验证码 直接刷新
 func SetCode(account string, code int32) error {
+	if code == 0 {
+		return errors.New("Code 不能为0")
+	}
 	x := getCode()
 	if x == nil {
 		return errors.New("Code is nil")

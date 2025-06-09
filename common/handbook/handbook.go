@@ -2,7 +2,6 @@ package handbook
 
 import (
 	"fmt"
-	"github.com/gucooing/BaPs/command"
 	"github.com/gucooing/BaPs/gdconf"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
@@ -22,9 +21,6 @@ func NewHandbook() {
 	logger.Info("开始生成handbook.txt")
 
 	file := "handbook\n"
-	if x, err := command.C.C.Help(map[string]string{}); err == nil {
-		file += x
-	}
 
 	file += "\nMemoryLobby\n"
 	for _, v := range gdconf.GetMemoryLobbyExcelList() {

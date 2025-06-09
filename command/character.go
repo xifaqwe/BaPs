@@ -1,7 +1,6 @@
 package command
 
 import (
-	"errors"
 	"fmt"
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/gdconf"
@@ -10,14 +9,18 @@ import (
 
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
-	"github.com/gucooing/BaPs/pkg/alg"
 	"github.com/gucooing/cdq"
+)
+
+const (
+	characterPlayer  = -1
+	characterUnknown = -2
 )
 
 func (c *Command) ApplicationCommandCharacter() {
 	character := &cdq.Command{
 		Name:        "character",
-		AliasList:   []string{"character", "c"},
+		AliasList:   []string{"c"},
 		Description: "直接设置角色,角色不存在时将添加角色",
 		Permissions: cdq.User,
 		Options: []*cdq.CommandOption{
@@ -25,98 +28,102 @@ func (c *Command) ApplicationCommandCharacter() {
 				Name:        "uid",
 				Description: "玩家游戏id",
 				Required:    true,
+				Alias:       "u",
 			},
 			{
-				Name:        "id",
+				Name:        "characterId",
 				Description: "角色id",
 				Required:    true,
+				Alias:       "id",
 			},
 			{
 				Name:        "level",
-				Description: "要设置的角色类型",
+				Description: "要设置的角色等级",
 				Required:    false,
+				Alias:       "l",
 			},
 			{
 				Name:        "starGrade",
 				Description: "要设置的角色星级",
 				Required:    false,
+				Alias:       "sg",
 			},
 			{
 				Name:        "favorRank",
 				Description: "要设置的角色好感度等级",
 				Required:    false,
+				Alias:       "fr",
 			},
 			{
 				Name:        "max",
 				Description: "角色属性设置满级",
 				Required:    false,
+				Alias:       "m",
 			},
 		},
-		CommandFunc: c.character,
+		Handlers: cdq.AddHandlers(syncGateWay, c.character),
 	}
 
 	c.C.ApplicationCommand(character)
 }
 
-func (c *Command) character(options map[string]string) (string, error) {
+func (c *Command) character(ctx *cdq.Context) {
 	// 玩家验证
-	uid := alg.S2I64(options["uid"])
+	uid := ctx.GetFlags().Int64("uid")
 	s := enter.GetSessionByAccountServerId(uid)
 	if s == nil {
-		return "", errors.New(fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
+		ctx.Return(characterPlayer, fmt.Sprintf("玩家不在线或未注册 UID:%v", uid))
+		return
 	}
 
-	respMsg := "角色设置成功"
+	m := ctx.GetFlags().Bool("max")
+	level := ctx.GetFlags().Int32("level")
+	starGrade := ctx.GetFlags().Int32("starGrade")
+	favorRank := ctx.GetFlags().Int32("favorRank")
 
 	set := func(characterInfo *sro.CharacterInfo) {
-		if alg.S2I64(options["max"]) != 0 {
-			if game.SetMaxCharacter(characterInfo) {
-				//return "已设置角色满级", nil
-			}
+		if m {
+			game.SetMaxCharacter(characterInfo)
+			return
 		}
-		if level := alg.S2I32(options["level"]); level != 0 {
-			if game.SetCharacterLevel(characterInfo, level) {
-				//respMsg += "角色等级设置成功|"
-			}
+		if level != 0 {
+			game.SetCharacterLevel(characterInfo, level)
 		}
-		if starGrade := alg.S2I32(options["starGrade"]); starGrade != 0 {
-			if game.SetCharacterStarGrade(characterInfo, starGrade) {
-				//respMsg += "角色星级设置成功|"
-			}
+		if starGrade != 0 {
+			game.SetCharacterStarGrade(characterInfo, starGrade)
 		}
-		if favorRank := alg.S2I32(options["favorRank"]); favorRank != 0 {
-			if game.SetCharacterFavorRank(characterInfo, favorRank) {
-				//respMsg += "角色好感度等级设置成功|"
-			}
+		if favorRank != 0 {
+			game.SetCharacterFavorRank(characterInfo, favorRank)
 		}
 	}
 
-	switch options["id"] {
+	switch ctx.GetFlags().String("characterId") {
 	case "all", "All":
 		for _, v := range game.GetCharacterInfoList(s) {
 			set(v)
 		}
 	default:
-		characterId := alg.S2I64(options["id"])
+		characterId := ctx.GetFlags().Int64("characterId")
 		if gdconf.GetCharacterExcel(characterId) == nil {
-			return "", errors.New(fmt.Sprintf("角色不存在 CharacterId:%v", characterId))
+			ctx.Return(characterUnknown, fmt.Sprintf("角色id错误characterId:%v", characterId))
+			return
 		}
 		characterInfo := game.GetCharacterInfo(s, characterId)
 		if characterInfo == nil {
 			if game.AddCharacter(s, characterId) {
 				characterInfo = game.GetCharacterInfo(s, characterId)
 			} else {
-				return "", errors.New("角色id错误")
+				ctx.Return(characterUnknown, fmt.Sprintf("角色id错误characterId:%v", characterId))
+				return
 			}
 		}
 		set(characterInfo)
 	}
 
 	game.AddToast(s, &enter.Toast{
-		Text:      respMsg,
+		Text:      "设置角色成功,请重新登录以刷新",
 		BeginDate: mx.Now(),
 		EndDate:   mx.Now().Add(30 * time.Second),
 	})
-
-	return respMsg, nil
+	ctx.Return(cdq.ApiCodeOk, "设置角色成功")
 }

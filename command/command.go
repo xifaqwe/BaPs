@@ -20,19 +20,27 @@ func NewCommand(router *gin.Engine) {
 	command := new(Command)
 	C = command
 	command.C = cdq.New(&cdq.CDQ{Log: cdqlog.NewLog(cdqlog.LevelInfo, nil)})
-	ginApi := cdq.NewGinApi(command.C, check.GateWaySync)
+	ginApi := cdq.NewGinApi(command.C)
 	ginApi.SetRouter(router)
 	ginApi.SetApiKey(config.GetGucooingApiKey(), mx.Key)
 	command.C.AddCommandRun(ginApi)
+	if mx.Docker == "" {
+		command.C.AddCommandRun(cdq.NewShell(command.C))
+	}
 
 	// 注册指令
 	command.ApplicationCommandGiveAll()
 	command.ApplicationCommandGetPlayer()
-	command.ApplicationCommandEmailCode()
 	command.ApplicationCommandGameMail()
 	command.ApplicationCommandMail()
 	command.ApplicationCommandSet()
 	command.ApplicationCommandPing()
 	command.ApplicationCommandCharacter()
 	command.ApplicationCommandAccount()
+}
+
+func syncGateWay(ctx *cdq.Context) {
+	check.GateWaySync.Lock()
+	ctx.Next()
+	check.GateWaySync.Unlock()
 }

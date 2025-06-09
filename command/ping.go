@@ -12,6 +12,10 @@ import (
 	"sync/atomic"
 )
 
+const (
+	pingMarshalErr = -1
+)
+
 type Ping struct {
 	PlayerNum     int64   `json:"playerNum"`     // 在线玩家数量
 	Tps           int64   `json:"tps"`           // 上一分钟请求量
@@ -28,16 +32,16 @@ type Ping struct {
 func (c *Command) ApplicationCommandPing() {
 	ping := &cdq.Command{
 		Name:        "ping",
-		AliasList:   []string{"ping"},
+		AliasList:   make([]string, 0),
 		Description: "检查服务是否存活",
 		Permissions: cdq.Guest,
 		Options:     nil,
-		CommandFunc: c.ping,
+		Handlers:    cdq.AddHandlers(c.ping),
 	}
 	c.C.ApplicationCommand(ping)
 }
 
-func (c *Command) ping(options map[string]string) (string, error) {
+func (c *Command) ping(ctx *cdq.Context) {
 	response := Ping{
 		PlayerNum:     atomic.LoadInt64(&check.SessionNum),
 		Tps:           check.OLDTPS,
@@ -50,8 +54,11 @@ func (c *Command) ping(options map[string]string) (string, error) {
 		MemoryOc:      MemoryOc(),
 		BaPsMemoryOc:  BaPsMemoryOc(),
 	}
-	bin, err := sonic.MarshalString(response)
-	return bin, err
+	str, err := sonic.MarshalString(response)
+	if err != nil {
+		ctx.Return(pingMarshalErr, "序列化失败")
+	}
+	ctx.Return(cdq.ApiCodeOk, str)
 }
 
 func GetCpuOc() float64 {
