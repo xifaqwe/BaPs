@@ -381,4 +381,6 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_Sticker_Lobby, func() any { return new(proto.StickerLobbyResponse) }, false)
 	c.regMsg(proto.Protocol_Sticker_UseSticker, func() any { return new(proto.StickerUseStickerRequest) }, true)
 	c.regMsg(proto.Protocol_Sticker_UseSticker, func() any { return new(proto.StickerUseStickerResponse) }, false)
+	c.regMsg(proto.Protocol_EventContent_CollectionList, func() any { return new(proto.EventContentCollectionListRequest) }, true)
+	c.regMsg(proto.Protocol_EventContent_CollectionList, func() any { return new(proto.EventContentCollectionListResponse) }, false)
 }

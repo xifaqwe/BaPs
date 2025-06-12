@@ -90,11 +90,12 @@ func (g *Gateway) getEnterTicket(c *gin.Context) {
 		errBestHTTP(c, proto.WebAPIErrorCode_AccountBanned)
 		return
 	}
-	yoStarUserLogin.YostarLoginToken = ""
-	if err = db.GetDBGame().UpdateYoStarUserLogin(yoStarUserLogin); err != nil {
-		errBestHTTP(c, proto.WebAPIErrorCode_DBError)
-		return
-	}
+	// 适配便携码登录提升生命周期
+	//yoStarUserLogin.YostarLoginToken = ""
+	//if err = db.GetDBGame().UpdateYoStarUserLogin(yoStarUserLogin); err != nil {
+	//	errBestHTTP(c, proto.WebAPIErrorCode_DBError)
+	//	return
+	//}
 	enterTicket := mx.GetMxToken(alg.RandCodeInt64(), 30)
 	if !enter.AddEnterTicket(yoStarUserLogin.AccountServerId, req.YostarUID, enterTicket) {
 		errBestHTTP(c, proto.WebAPIErrorCode_DBError)

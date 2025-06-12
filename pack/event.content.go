@@ -148,3 +148,9 @@ func EventContentMainGroundStageResult(s *enter.Session, request, response mx.Me
 	}
 	rsp.CampaignStageHistoryDB = game.GetCampaignStageHistoryDB(bin)
 }
+
+func EventContentCollectionList(s *enter.Session, request, response mx.Message) {
+	rsp := response.(*proto.EventContentCollectionListResponse)
+
+	rsp.EventContentUnlockCGDBs = make([]*proto.EventContentCollectionDB, 0)
+}

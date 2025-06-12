@@ -104,6 +104,7 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_EventContent_StoryStageResult:           pack.EventContentStoryStageResult,           // 活动剧情结算
 	proto.Protocol_EventContent_EnterMainGroundStage:       pack.EventContentEnterMainGroundStage,       // 活动剧情战斗开始
 	proto.Protocol_EventContent_MainGroundStageResult:      pack.EventContentMainGroundStageResult,      // 活动剧情战斗结算
+	proto.Protocol_EventContent_CollectionList:             pack.EventContentCollectionList,             // 活动收藏获取
 	// 咖啡馆
 	proto.Protocol_Cafe_Get:             pack.CafeGetInfo,         // 获取咖啡馆信息
 	proto.Protocol_Cafe_Ack:             pack.CafeAck,             // 确认咖啡馆

@@ -37,6 +37,7 @@ func (s *SDK) initRouter() {
 	{
 		user.POST("/yostar_createlogin", s.YostarCreatelogin)
 		user.POST("/login", s.YostarLogin)
+		//user.POST("/transcode_verify", s.TranscodeVerify)
 		user.Any("/agreement", agreement)
 	}
 	app := s.router.Group("/app")

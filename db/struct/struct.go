@@ -56,6 +56,7 @@ type YostarUserLogin struct {
 	AccountServerId  int64 `gorm:"primarykey;AUTO_INCREMENT"`
 	YostarUid        int64 `gorm:"unique"`
 	YostarLoginToken string
-	Ban              bool
-	BanMsg           string
+	//TransCode        string
+	Ban    bool
+	BanMsg string
 }

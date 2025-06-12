@@ -196,3 +196,30 @@ func (s *SDK) YostarLogin(c *gin.Context) {
 	rsp.YostarUsername = yostarAccount.YostarAccount
 	rsp.AccessToken = yoStarUserLogin.YostarLoginToken
 }
+
+//type TranscodeVerifyRequest struct {
+//	Uid       int64  `form:"uid"`
+//	TransCode string `form:"transcode"`
+//}
+//
+//type TranscodeVerifyResponse struct {
+//	Result int32 `json:"result"`
+//}
+//
+//// TranscodeVerify 便携码登录
+//func (s *SDK) TranscodeVerify(c *gin.Context) {
+//	req := &TranscodeVerifyRequest{}
+//	rsp := &TranscodeVerifyResponse{
+//		Result: -1,
+//	}
+//	defer c.JSON(200, rsp)
+//	err := c.ShouldBind(req)
+//	if err != nil {
+//		return
+//	}
+//	// 拉取YoStarUserLogin
+//	yoStarUserLogin := db.GetDBGame().GetYoStarUserLoginByYostarUid(req.Uid)
+//	if yoStarUserLogin == nil {
+//
+//	}
+//}

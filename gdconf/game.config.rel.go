@@ -5,7 +5,6 @@ package gdconf
 
 import (
 	"fmt"
-	"github.com/gucooing/BaPs/config"
 	"io"
 	"net/http"
 	"os"
@@ -32,7 +31,7 @@ ty:
 	if err != nil {
 		if os.IsNotExist(err) {
 			logger.Error("没有找到Excel.bin尝试自动下载....")
-			err := downloadExcel(g.dataPath + "Excel.bin")
+			err := g.downloadExcel(g.dataPath + "Excel.bin")
 			if err == nil {
 				logger.Error("Excel.bin自动下载成功！")
 				goto ty
@@ -54,8 +53,8 @@ ty:
 	}
 }
 
-func downloadExcel(path string) error {
-	resp, err := http.Get(config.GetExcelUrl())
+func (g *GameConfig) downloadExcel(path string) error {
+	resp, err := http.Get(g.excelUrl)
 	if err != nil {
 		logger.Error("下载Excel.bin失败,请手动下载")
 		return err
