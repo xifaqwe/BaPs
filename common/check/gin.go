@@ -5,7 +5,6 @@ import (
 	"github.com/gucooing/BaPs/pkg/alg"
 	"net"
 	"net/http"
-	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -43,16 +42,6 @@ func GinNetInfo() {
 
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if config.GetIsLite() {
-			host := c.Request.RemoteAddr
-			srts := strings.Split(host, ":")
-			if len(srts) < 2 {
-				c.Abort()
-			}
-			if !alg.IsPrivateIP(net.ParseIP(srts[0])) {
-				c.Abort()
-			}
-		}
 		method := c.Request.Method
 		origin := c.Request.Header.Get("Origin")
 		if origin != "" {
@@ -76,5 +65,32 @@ func GateSync() gin.HandlerFunc {
 		GateWaySync.Lock()
 		c.Next()
 		GateWaySync.Unlock()
+	}
+}
+
+func GinNoPublic() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if config.GetIsLite() {
+			if !alg.IsPrivateIP(net.ParseIP(c.ClientIP())) {
+				c.Abort()
+			}
+			//host := c.Request.Host
+			//srts := strings.Split(host, ":")
+			//if len(srts) < 1 {
+			//	c.Abort()
+			//}
+			//if !alg.IsPrivateIP(net.ParseIP(srts[0])) {
+			//	c.Abort()
+			//}
+		}
+	}
+}
+
+func GinNoLite() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 暂不启用
+		//if config.GetIsLite() {
+		//	c.Abort()
+		//}
 	}
 }

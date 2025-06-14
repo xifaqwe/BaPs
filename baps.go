@@ -141,8 +141,7 @@ func newGin(appNet *config.HttpNet) (*gin.Engine, *http.Server) {
 	} else {
 		router = gin.New()
 	}
-	router.Use(gin.Recovery())
-	router.Use(check.Cors())
+	router.Use(gin.Recovery(), check.Cors(), check.GinNoPublic())
 	addr := fmt.Sprintf("%s:%s", appNet.InnerIp, appNet.InnerPort)
 	if appNet.Tls {
 		logger.Info("监听地址: https://%s", addr)
