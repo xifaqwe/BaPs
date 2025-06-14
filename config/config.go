@@ -12,6 +12,7 @@ import (
 )
 
 type Config struct {
+	IsLite           bool       `json:"IsLite"`
 	LogLevel         string     `json:"LogLevel"`
 	Language         string     `json:"Language"`
 	ResourcesPath    string     `json:"ResourcesPath"`
@@ -82,6 +83,7 @@ var CONF *Config = nil
 func SetDefaultConfig() {
 	log.Printf("config不存在,使用默认配置\n")
 	CONF = DefaultConfig
+	CONF.check()
 }
 
 func GetConfig() *Config {
@@ -94,6 +96,10 @@ func GetConfig() *Config {
 func (c *Config) String() string {
 	str, _ := sonic.MarshalString(c)
 	return str
+}
+
+func GetIsLite() bool {
+	return GetConfig().IsLite
 }
 
 func GetResourcesPath() string {
@@ -174,27 +180,8 @@ func GetBot() *Bot {
 
 var FileNotExist = errors.New("config file not found")
 
-func LoadConfig(filePath string) error {
-	f, err := os.Open(filePath)
-	if err != nil {
-		log.Printf("配置文件读取失败将使用默认配置\n")
-		CONF = DefaultConfig
-	} else {
-		defer func() {
-			_ = f.Close()
-		}()
-		CONF = new(Config)
-		d := json.NewDecoder(f)
-		if err := d.Decode(CONF); err != nil {
-			return err
-		}
-	}
-	//log.Printf("env:%s\n\n", os.Environ())
-	overrideWithEnv(reflect.ValueOf(CONF).Elem(), "Config")
-	return nil
-}
-
 var DefaultConfig = &Config{
+	IsLite:           false,
 	LogLevel:         "Info",
 	Language:         "",
 	ResourcesPath:    "./resources",
@@ -242,6 +229,27 @@ var DefaultConfig = &Config{
 		Host:     "BaPs.com",
 		Port:     587,
 	},
+}
+
+func LoadConfig(filePath string) error {
+	f, err := os.Open(filePath)
+	if err != nil {
+		log.Printf("配置文件读取失败将使用默认配置\n")
+		CONF = DefaultConfig
+	} else {
+		defer func() {
+			_ = f.Close()
+		}()
+		CONF = new(Config)
+		d := json.NewDecoder(f)
+		if err := d.Decode(CONF); err != nil {
+			return err
+		}
+	}
+	//log.Printf("env:%s\n\n", os.Environ())
+	overrideWithEnv(reflect.ValueOf(CONF).Elem(), "Config")
+	CONF.check()
+	return nil
 }
 
 func overrideWithEnv(val reflect.Value, nestKey string) {

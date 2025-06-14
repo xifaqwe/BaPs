@@ -1,7 +1,11 @@
 package check
 
 import (
+	"github.com/gucooing/BaPs/config"
+	"github.com/gucooing/BaPs/pkg/alg"
+	"net"
 	"net/http"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -39,6 +43,16 @@ func GinNetInfo() {
 
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if config.GetIsLite() {
+			host := c.Request.RemoteAddr
+			srts := strings.Split(host, ":")
+			if len(srts) < 2 {
+				c.Abort()
+			}
+			if !alg.IsPrivateIP(net.ParseIP(srts[0])) {
+				c.Abort()
+			}
+		}
 		method := c.Request.Method
 		origin := c.Request.Header.Get("Origin")
 		if origin != "" {
