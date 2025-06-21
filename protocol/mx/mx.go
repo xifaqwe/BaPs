@@ -2,30 +2,31 @@ package mx
 
 
 import (
-    "crypto/md5"
-    "encoding/binary"
-    "encoding/hex"
+	"crypto/rand"
+	"encoding/hex"
 )
 
-// GetMxToken returns a hex-encoded MD5 of the given seed, truncated to 'length' characters.
-// seed:   e.g. account ID, timestamp, or random int.
-// length: desired token length (must be <= 32, since MD5 hex is 32 chars).
-func GetMxToken(seed int64, length int) string {
-    const hexLen = md5.Size * 2 // 16 bytes * 2 = 32 hex chars
-    if length <= 0 || length > hexLen {
-        return ""
-    }
+const maxTokenLength = 64
 
-    // Convert seed to 8-byte big-endian
-    buf := make([]byte, 8)
-    binary.BigEndian.PutUint64(buf, uint64(seed))
+// GetMxToken returns a random hex string of the given length (max 64).
+// Ignores the seed for now.
+func GetMxToken(_ int64, length int) string {
+	if length <= 0 {
+		length = 32 // fallback default
+	} else if length > maxTokenLength {
+		length = maxTokenLength
+	}
 
-    // Compute MD5
-    sum := md5.Sum(buf)           // [16]byte
-    hexStr := hex.EncodeToString(sum[:]) // 32-char string
+	// Generate random bytes (1 hex char = 4 bits → 2 chars = 1 byte)
+	byteLen := (length + 1) / 2
+	buf := make([]byte, byteLen)
 
-    // Truncate
-    return hexStr[:length]
+	if _, err := rand.Read(buf); err != nil {
+		return "" // fallback on failure
+	}
+
+	token := hex.EncodeToString(buf)
+	return token[:length]
 }
 
 var Key string
