@@ -11,7 +11,6 @@ import (
 
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
-	"github.com/gucooing/BaPs/protocol/mx"
 	pb "google.golang.org/protobuf/proto"
 )
 
@@ -40,13 +39,13 @@ ty:
 		logger.Error("Excel.bin 读取失败,err:%s", err)
 		return
 	}
-	bin, err := mx.DeExcelBytes(file)
-	if err != nil {
-		panic("Excel.bin不匹配")
-		return
-	}
+	//bin, err := mx.DeExcelBytes(file)
+	//if err != nil {
+	//	panic("Excel.bin不匹配")
+	//	return
+	//}
 	g.Excel = new(sro.Excel)
-	err = pb.Unmarshal(bin, g.Excel)
+	err = pb.Unmarshal(file, g.Excel)
 	if err != nil {
 		panic("解析Excel失败,请检查Excel.bin版本和服务端版本是否一致")
 		return
