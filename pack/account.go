@@ -38,11 +38,6 @@ func AccountAuth(s *enter.Session, request, response mx.Message) {
 	s.AccountState = proto.AccountState_Normal
 	game.SetLastConnectTime(s)
 
-	game.AddToast(s, &enter.Toast{
-		Text:      "欢迎游玩BaPs,这是一个半开源的免费服务器",
-		BeginDate: mx.Now().Add(-24 * time.Second),
-		EndDate:   mx.Now().Add(24 * time.Second),
-	})
 	// 任务二次处理
 	mission := game.GetMissionBin(s)
 	for t, info := range mission.GetCategoryMissionInfo() {

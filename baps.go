@@ -90,8 +90,6 @@ func NewBaPs() {
 	handbook.NewHandbook()
 	// 初始化排名数据
 	rankInfo := rank.NewRank()
-	// 输出孤儿
-	logOrphan()
 	// 启动服务器
 	go func() {
 		logger.Info("ClientVersion:%s", pkg.ClientVersion)

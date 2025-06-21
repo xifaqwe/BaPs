@@ -156,7 +156,6 @@ func NewClan(s *enter.Session, clanName string, joinOption proto.ClanJoinOption)
 		logger.Debug("新社团设置社长失败")
 		return 15022
 	}
-	clanInfo.SetNotice("欢迎游玩BaPs,这是一个半开源的免费服务器\n----By gucooing")
 	SetClanServerId(s, clanInfo.ServerId)
 	return 0
 }

@@ -18,7 +18,6 @@ var GC *GameConfig
 type GameConfig struct {
 	dataPath string
 	resPath  string
-	excelUrl string
 	gppFunc  []func()
 	Excel    *sro.Excel
 	GPP      *GPP
@@ -105,7 +104,6 @@ type GPP struct {
 func LoadGameConfig() *GameConfig {
 	gc := new(GameConfig)
 	GC = gc
-	gc.excelUrl = config.GetExcelUrl()
 	gc.dataPath = config.GetDataPath()
 	gc.resPath = config.GetResourcesPath()
 	logger.Info("开始读取资源文件")
