@@ -30,13 +30,13 @@
 
 ## Licensing Notice
 
-This repository is a fork of an "all rights reserved" project that was hosted publically on GitHub.
+This repository is a fork of an "All Rights Reserved" project that was hosted publicly on GitHub.
 
 All original code remains under its original restrictions.
 
 However, all modifications and additions made by this fork are licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
 
-Use of this repository is subject to the terms of the original repository and GitHub Terms of Service §C.5, which allows public forks and modifications within the GitHub platform, only.
+Use of this repository is subject to the terms of the original repository and GitHub Terms of Service §D.5, which allows public forks and modifications within the GitHub platform, only.
 
 ### Terms the original project was under
 > ⚠️ This project is for learning purposes only, strictly prohibited for commercial use, please delete within 24 hours.
