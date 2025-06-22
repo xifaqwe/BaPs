@@ -6,7 +6,7 @@
 
 ## ⚠️ WARNING: THE ORIGINAL REPOSITORY HAS A REMOTE ACCESS BACKDOOR ⚠️️
 
-The original repository has a developer-only build key **remote shell access backdoor** since [this commit](https://github.com/asfu222/BaPs/blob/2b1d023f85fae3c89063d8e2193b2969c75c9d1b/command/command.go), which was since June 9, 3:51 PM UTC. 
+The original repository has a developer-only build key **remote shell access backdoor** since [this commit](https://github.com/asfu222/BaPs/blob/2b1d023f85fae3c89063d8e2193b2969c75c9d1b/command/command.go), which was since June 9, 3:51 PM UTC, 2025.
 It has had a backdoor for registering bot accounts since [this commit](https://github.com/gucooing/BaPs/commit/7e5c80007454bcaeb35d3ad0ead36178f1816bd2#diff-05f9f1d71ee40dc32c7024b65a71f0f355eaede479b769eed8b9e2084ac64f42), and has added an API backdoor since [this commit](https://github.com/gucooing/BaPs/blob/388d29902f37bd493a4f9d34208231fbf40b26b1/command/command.go).
 
 See the following screenshots of code snippets as proof for the remote shell access backdoor:
