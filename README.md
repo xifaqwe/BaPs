@@ -78,7 +78,7 @@
 ## 🛠️ 使用方法
 
 #### 建议用户从源码自行编译。请参考构建流程以了解操作方法。  
-#### 若需生成 Excel.bin，请在 Linux 或 WSL2 环境下运行 `fetch_resources.sh` 脚本。
+#### 若需生成Excel.bin所需资源，请在 Linux 或 WSL2 环境下运行 `fetch_resources.sh` 脚本。
 
 ---
 
