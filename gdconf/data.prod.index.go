@@ -2,9 +2,10 @@ package gdconf
 
 import (
 	"encoding/json"
-	"github.com/gucooing/BaPs/pkg"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
+	"net/http"
+	"io"
 )
 
 type ProdIndex struct {
@@ -109,19 +110,43 @@ type Survey struct {
 }
 
 func (g *GameConfig) loadProdIndex() {
+load:
 	g.GetGPP().ProdIndex = new(ProdIndex)
 	name := "ProdIndex.json"
 	file, err := os.ReadFile(g.dataPath + name)
 	if err != nil {
-		logger.Error("文件:%s 读取失败,err:%s", name, err)
-		return
+		if os.IsNotExist(err) {
+			err := g.downloadManagementData(g.dataPath + name)
+			if err == nil {
+				logger.Info("ProdIndex.json自动下载成功！")
+				goto load
+			}
+		} else {
+			logger.Error("文件:%s 读取失败,err:%s", name, err)
+			return
+		}
 	}
 	if err := json.Unmarshal(file, &g.GetGPP().ProdIndex); err != nil {
 		logger.Error("文件:%s 解析失败,err:%s", name, err)
 		return
 	}
-	g.GetGPP().ProdIndex.LatestClientVersion = pkg.ClientVersion
 	logger.Info("公告配置读取成功文件:%s ", name)
+}
+
+func (g *GameConfig) downloadManagementData(path string) error {
+	resp, err := http.Get(g.managementDataUrl)
+	if err != nil {
+		logger.Error("下载ProdIndex.json失败,请手动下载")
+		return err
+	}
+	defer resp.Body.Close()
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = io.Copy(file, resp.Body)
+	return err
 }
 
 func GetProdIndex() *ProdIndex {

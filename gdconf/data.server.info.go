@@ -63,7 +63,7 @@ func GenServerInfo(list []*ConnectionGroup) []*ConnectionGroup {
 		connectionGroups = append(connectionGroups, &ConnectionGroup{
 			Name:                       v.Name,
 			ManagementDataUrl:          config.GetOtherAddr().GetManagementDataUrl(),
-			IsProductionAddressables:   false,
+			IsProductionAddressables:   true,
 			ApiUrl:                     fmt.Sprintf("%s/api/", config.GetHttpNet().GetOuterAddr()),
 			GatewayUrl:                 fmt.Sprintf("%s/getEnterTicket/", config.GetHttpNet().GetOuterAddr()),
 			KibanaLogUrl:               "https://prod-logcollector.bluearchiveyostar.com:5300", //    fmt.Sprintf("%s/client/log/", s.GetOuterAddr()),
