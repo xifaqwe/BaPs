@@ -142,7 +142,7 @@ func main() {
 	}
 
 	// Serialize full Excel struct to protobuf binary
-	outPath := "./resources/Excel.bin"
+	outPath := "./data/Excel.bin"
 	binData, err := proto.Marshal(excel)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to marshal proto: %v\n", err)
