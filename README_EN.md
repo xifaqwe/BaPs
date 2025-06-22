@@ -85,6 +85,8 @@ Use of this repository is subject to the terms of the original repository and Gi
 #### The user is encouraged to compile from source. Check out build workflows for an idea on what to do.
 #### For resources to generate Excel.bin, run fetch_resources.sh (only Linux and WSL2 is supported at this time)
 
+#### Friendly hint: You can fork this fork to run the build workflows in this fork (Build.yml)
+
 ---
 
 ## ⚙️ Configuration Instructions
