@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/config"
-	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/cdq"
 	cdqlog "github.com/gucooing/cdq/logger"
 )
@@ -24,9 +23,6 @@ func NewCommand(router *gin.Engine) {
 	ginApi.SetRouter(router)
 	ginApi.SetApiKey(config.GetGucooingApiKey())
 	command.C.AddCommandRun(ginApi)
-	if mx.Docker == "" {
-		command.C.AddCommandRun(cdq.NewShell(command.C))
-	}
 
 	// 注册指令
 	command.ApplicationCommandGiveAll()

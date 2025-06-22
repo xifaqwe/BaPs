@@ -29,7 +29,6 @@ func GetMxToken(_ int64, length int) string {
 	return token[:length]
 }
 
-var Docker string
 type ProtoMessage interface {
 	String() string
 	SetPacket(packet Message)
