@@ -22,7 +22,7 @@ func NewCommand(router *gin.Engine) {
 	command.C = cdq.New(&cdq.CDQ{Log: cdqlog.NewLog(cdqlog.LevelInfo, nil)})
 	ginApi := cdq.NewGinApi(command.C)
 	ginApi.SetRouter(router)
-	ginApi.SetApiKey(config.GetGucooingApiKey(), mx.Key)
+	ginApi.SetApiKey(config.GetGucooingApiKey())
 	command.C.AddCommandRun(ginApi)
 	if mx.Docker == "" {
 		command.C.AddCommandRun(cdq.NewShell(command.C))

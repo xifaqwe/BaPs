@@ -73,7 +73,7 @@ func (c *Command) account(ctx *cdq.Context) {
 	types := ctx.GetFlags().String("type")
 	switch types {
 	case login: // 注册
-		ya, err := sdk.GetORAddYostarAccount(account, true)
+		ya, err := sdk.GetORAddYostarAccount(account)
 		if err != nil || ya.YostarAccount != account {
 			ctx.Return(accountLoginErr, fmt.Sprintf("账户注册失败 Account:%s", account))
 			return

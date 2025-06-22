@@ -1,7 +1,6 @@
-package sdk
+	package sdk
 
 import (
-	"github.com/gucooing/BaPs/protocol/mx"
 	"strconv"
 	"time"
 
@@ -58,7 +57,7 @@ func (s *SDK) YostarCreatelogin(c *gin.Context) {
 	// 拉取YostarUser
 	yostarUser := db.GetDBGame().GetYostarUserByYostarUid(req.YostarUid)
 	if yostarUser == nil {
-		if !config.GetAutoRegistration() && req.Key != mx.Key {
+		if !config.GetAutoRegistration() {
 			logger.Debug("邮箱:%s,账号不存在且关闭自动注册  user", req.YostarUsername)
 			return
 		}
@@ -153,7 +152,7 @@ func (s *SDK) YostarLogin(c *gin.Context) {
 	// 拉取YoStarUserLogin
 	yoStarUserLogin := db.GetDBGame().GetYoStarUserLoginByYostarUid(yostarAccount.YostarUid)
 	if yoStarUserLogin == nil {
-		if !config.GetAutoRegistration() && req.Key != mx.Key {
+		if !config.GetAutoRegistration() {
 			logger.Debug("邮箱:%s,账号不存在且关闭自动注册  login", yostarAccount.YostarAccount)
 			return
 		}
