@@ -146,13 +146,7 @@ You can view the following docs
 ---
 
 ## ⌨️ GM Tool
-Go to the following repository to download the GM tool for convenient use
-
-- [BlueArchiveGM](https://github.com/PrimeStudentCouncil/BlueArchiveGM/releases/latest)
-
-Online version of GM menu
-
-- [BlueArchiveGM Web](https://gm.bluearchive.cc)
+Download GM [BlueArchiveGM](https://github.com/AzureXuanVerse/BlueArchiveGM/releases/download/v1.0.6/BlueArchiveGM.exe)
 
 Default connection address: `http://127.0.0.1:5000` 
 Default key: `123456` (can be changed in config.json)
