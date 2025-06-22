@@ -66,7 +66,7 @@ jobs:
         name: BaPs_${{ matrix.target }}
         path: bin/*
 
- upload-data:
+  upload-data:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
