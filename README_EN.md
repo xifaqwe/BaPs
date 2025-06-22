@@ -4,6 +4,46 @@
 
 #### [Chinese](README.md)
 
+## ⚠️ WARNING: THE ORIGINAL REPOSITORY HAS A REMOTE ACCESS BACKDOOR ⚠️️
+
+The original repository has a developer-only build key **remote shell access backdoor** since [this commit](https://github.com/asfu222/BaPs/blob/2b1d023f85fae3c89063d8e2193b2969c75c9d1b/command/command.go), which was since June 9, 3:51 PM UTC. 
+It has had a backdoor for registering bot accounts since [this commit](https://github.com/gucooing/BaPs/commit/7e5c80007454bcaeb35d3ad0ead36178f1816bd2#diff-05f9f1d71ee40dc32c7024b65a71f0f355eaede479b769eed8b9e2084ac64f42), and has added an API backdoor since [this commit](https://github.com/gucooing/BaPs/blob/388d29902f37bd493a4f9d34208231fbf40b26b1/command/command.go).
+
+See the following screenshots of code snippets as proof for the remote shell access backdoor:
+![1](README_media/1.png)
+![2](README_media/2.png)
+![3](README_media/3.png)
+
+The original developer could've used API posts to `{your_server_ip}/cdq/api/shell` with any arbitrary shell command as query, and that code will run on your machine. The original author called this a "vulnerability" that does not exist in his repository when this fork was presented as an option due to imminent privatization of the repository, and has thrown terms that he does not take any legal responsibility for anything that happens to users of this software. 
+
+That is not legal tenure. It is not even legal at all. In fact, it is **ILLEGAL** in **many if not ALL juristications**, including the **People's Republic of China**.
+It went against the following laws in the Chinese criminal code:
+- 第二百八十五条 - 中华人民共和国刑法
+  > 违反国家规定，侵入国家事务、国防建设、尖端科学技术领域的计算机信息系统的，处三年以下有期徒刑或者拘役。
+
+  > 违反国家规定，侵入前款规定以外的计算机信息系统或者采用其他技术手段，获取该计算机信息系统中存储、处理或者传输的数据，或者对该计算机信息系统实施非法控制，情节严重的，处三年以下有期徒刑或者拘役，并处或者单处罚金；情节特别严重的，处三年以上七年以下有期徒刑，并处罚金。
+
+  > 提供专门用于侵入、非法控制计算机信息系统的程序、工具，或者明知他人实施侵入、非法控制计算机信息系统的违法犯罪行为而为其提供程序、工具，情节严重的，依照前款的规定处罚。{刑法修正案（七）增加第二款、第三款}
+
+- Article 285 — Criminal Law of the People’s Republic of China
+  > Whoever, in violation of state regulations, intrudes into computer information systems used for state affairs, national defense construction, or cutting-edge science and technology, shall be sentenced to fixed-term imprisonment of not more than three years or criminal detention.
+  > Whoever, in violation of state regulations, intrudes into computer information systems other than those specified above, or uses other technical means to obtain data stored, processed, or transmitted in such systems, or to illegally control such systems, and where the circumstances are serious, shall be sentenced to fixed-term imprisonment of not more than three years, criminal detention, and may also or solely be fined; where the circumstances are especially serious, shall be sentenced to fixed-term imprisonment of not less than three years but not more than seven years, and shall also be fined.
+  > Whoever provides programs or tools specifically designed for intruding into or illegally controlling computer information systems, or knowingly provides such programs or tools to others engaged in illegal intrusion or control of computer information systems, where the circumstances are serious, shall be punished in accordance with the preceding paragraph.
+- 第二百八十六条 - 中华人民共和国刑法
+  > 违反国家规定，对计算机信息系统功能进行删除、修改、增加、干扰，造成计算机信息系统不能正常运行，后果严重的，处五年以下有期徒刑或者拘役；后果特别严重的，处五年以上有期徒刑。
+
+  > 违反国家规定，对计算机信息系统中存储、处理或者传输的数据和应用程序进行删除、修改、增加的操作，后果严重的，依照前款的规定处罚。
+
+  > 故意制作、传播计算机病毒等破坏性程序，影响计算机系统正常运行，后果严重的，依照第一款的规定处罚。
+- Article 286 — Criminal Law of the People’s Republic of China
+  > Whoever, in violation of state regulations, deletes, modifies, adds to, or interferes with the functions of a computer information system, thereby causing the system to be unable to function normally, and where the consequences are serious, shall be sentenced to fixed-term imprisonment of not more than five years or criminal detention; where the consequences are especially serious, shall be sentenced to fixed-term imprisonment of not less than five years.
+  > Whoever, in violation of state regulations, deletes, modifies, or adds data or application programs stored, processed, or transmitted in a computer information system, and where the consequences are serious, shall be punished in accordance with the preceding paragraph.
+
+This is incredibly malicious, and is part of the reason why this fork now exists.
+Relevant code snippets that the screenshots were taken from:
+1. https://github.com/gucooing/BaPs/blob/fd9ce75c83f287022c71e9edb228cae210b7e0b7/command/command.go
+2. https://github.com/gucooing/cdq/blob/57ff61f0f476378761ffa70f31d818179ea7a168/api.gin.go
+3. https://github.com/gucooing/cdq/blob/57ff61f0f476378761ffa70f31d818179ea7a168/shell.go
 #### This fork is a fork of the original project with various patches in the spirit of open-source
 #### This fork is made under the platform license grant to all GitHub users by public repositories, relevant legal information [GitHub Terms of Service §D.5](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service#5-license-grant-to-other-users)
 
