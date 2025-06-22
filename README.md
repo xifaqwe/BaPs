@@ -156,8 +156,7 @@ https://yostar-serverinfo.bluearchiveyostar.com → http://127.0.0.1:5000
 
 ## ⌨️ GM工具
 
-1. 需要注意的是此GM已近乎不可用 [BlueArchiveGM](https://github.com/PrimeStudentCouncil/BlueArchiveGM/releases/latest);web版: [BlueArchiveGM Web](https://gm.bluearchive.cc)
-2. 我们欢迎更多开发者开发适用于BaPs的GM
+1. 下载GM [BlueArchiveGM](https://github.com/AzureXuanVerse/BlueArchiveGM/releases/download/v1.0.6/BlueArchiveGM.exe)
 
 ---
 ## 🤝 参与贡献
