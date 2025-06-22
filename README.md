@@ -8,9 +8,13 @@
 
 原始项目自[此提交](https://github.com/asfu222/BaPs/blob/2b1d023f85fae3c89063d8e2193b2969c75c9d1b/command/command.go)起（2024年6月9日 15:51 UTC），**包含开发者专用构建密钥的远程终端访问后门。**
 此外，自 [此提交](https://github.com/gucooing/BaPs/commit/7e5c80007454bcaeb35d3ad0ead36178f1816bd2#diff-05f9f1d71ee40dc32c7024b65a71f0f355eaede479b769eed8b9e2084ac64f42) 起，该仓库已经存在一个用于注册Bot账户的后门，而在 [这个提交](https://github.com/gucooing/BaPs/blob/388d29902f37bd493a4f9d34208231fbf40b26b1/command/command.go) 中，又新增了一个API远程后门。
+
 以下是远程Shell访问后门相关代码截图作为证据：
+
 ![1](README_media/1.png)
+
 ![2](README_media/2.png)
+
 ![3](README_media/3.png)
 
 原始开发者可以通过向 `{your_server_ip}/cdq/api/shell` 发送任意终端命令（作为参数）来远程执行该命令，而这些代码将在您的计算机上运行。
