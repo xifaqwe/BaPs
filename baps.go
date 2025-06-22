@@ -151,7 +151,7 @@ func newGin(appNet *config.HttpNet) (*gin.Engine, *http.Server) {
 	if appNet.Tls {
 		logger.Info("监听地址: https://%s", addr)
 		logger.Info("对外地址: %s", config.GetHttpNet().GetOuterAddr())
-		server := &http.Server{Addr: addr, Handler: router, TLSConfig: &tls.Config{InsecureSkipVerify: true}}
+		server := &http.Server{Addr: addr, Handler: router}
 		return router, server
 	}
 	logger.Info("监听地址: http://%s", addr)
