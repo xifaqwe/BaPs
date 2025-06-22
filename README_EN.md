@@ -27,6 +27,16 @@
 
 #### Due to various issues, mostly the original author's issue with people being able to access and run information from the original public project easily. As such, the original author has used various forms of encryption and data gatekeeping to gatekeep builds. (Specifically, there is special data encryption and other processing functions such as mx.DeExcelBytes, which are private and not present in the source code. This was not present at the start of the project)
 
+## Licensing Notice
+
+This repository is a fork of an "all rights reserved" project that was hosted publically on GitHub.
+
+All original code remains under its original restrictions.
+
+However, all modifications and additions made by this fork are licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+
+Use of this repository is subject to the terms of the original repository and GitHub Terms of Service §C.5, which allows public forks and modifications within the GitHub platform, only.
+
 ### Terms the original project was under
 > ⚠️ This project is for learning purposes only, strictly prohibited for commercial use, please delete within 24 hours.
 
