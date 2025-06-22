@@ -1,0 +1,9 @@
+requests
+UnityPy==1.20.22
+cloudscraper
+xxhash
+pycryptodome
+flatbuffers
+pykakasi
+cloudscraper
+pyaxmlparser
