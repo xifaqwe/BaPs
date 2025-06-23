@@ -9,6 +9,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"github.com/gucooing/protocol/mx"
 )
 
 type Config struct {
@@ -181,7 +182,7 @@ var DefaultConfig = &Config{
 	Language:         "",
 	ResourcesPath:    "./resources",
 	DataPath:         "./data",
-	GucooingApiKey:   "123456",
+	GucooingApiKey:   mx.GetMxToken(0, 32), // rand secure key, relies on 0 not being used as seed
 	AutoRegistration: true,
 	Tutorial:         false,
 	OtherAddr: &OtherAddr{
