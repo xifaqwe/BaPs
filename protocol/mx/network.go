@@ -7,6 +7,8 @@ import (
 	"github.com/go-resty/resty/v2"
 	"io"
 	"math/rand"
+	"crypto/aes"
+	"crypto/cipher"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/pkg/alg"
@@ -31,17 +33,59 @@ func GetFormMx(c *gin.Context) ([]byte, error) {
 }
 
 func DeMx(bin []byte) ([]byte, error) {
-	if len(bin) <= 12 {
+	if len(bin) <= 14 {
 		return nil, errors.New("binary too short")
 	}
-	alg.Xor(bin, []byte{0xD9})
-	z, err := gzip.NewReader(bytes.NewReader(bin[12:]))
+	r := bytes.NewReader(bin)
+	r.Read(make([]byte, 4)) // CRC
+	r.Read(make([]byte, 4)) // Type conversion
+	keyLen, _ := r.ReadByte()
+	ivLen, _ := r.ReadByte()
+	
+	useAES := keyLen != 0 && ivLen != 0
+	aesKey, aesIv := []byte{}, []byte{}
+	if useAES {
+		if keyLen > 0 {
+			aesKey = make([]byte, keyLen)
+			r.Read(aesKey)
+		}
+		if ivLen > 0 {
+			aesIv = make([]byte, ivLen)
+			r.Read(aesIv)
+		}
+		r.Read(make([]byte, 4)) // payload len
+	} else {
+		r.Read(make([]byte, 4)) // payload len
+	}
+	
+	headerSize := 14 + len(aesKey) + len(aesIv)
+	
+	payload := bin[headerSize:]
+	
+	alg.Xor(payload, []byte{0xD9})
+	z, err := gzip.NewReader(bytes.NewReader(payload))
 	if err != nil {
 		return nil, err
 	}
 	defer z.Close()
-	p, err := io.ReadAll(z)
-	return p, err
+	plain, err := io.ReadAll(z)
+	if err != nil || len(aesKey) != 16 || len(aesIv) != 16 {
+		return plain, err
+	}
+	block, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	if len(plain)%aes.BlockSize != 0 {
+		return nil, errors.New("aes payload not multiple of block size")
+	}
+	decrypted := make([]byte, len(plain))
+	cipher.NewCBCDecrypter(block, aesIv).CryptBlocks(decrypted, plain)
+	padLen := int(decrypted[len(decrypted)-1])
+	if padLen > 0 && padLen <= aes.BlockSize {
+		decrypted = decrypted[:len(decrypted)-padLen]
+	}
+	return decrypted, nil
 }
 
 func SetFormMx(req *resty.Request, bin []byte) error {
