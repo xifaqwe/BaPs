@@ -51,7 +51,7 @@ func GetFavorScheduleInfo(s *enter.Session, characterId int64) *sro.FavorSchedul
 
 func UpMomoTalkInfo(s *enter.Session, characterId, gid, messageId int64) {
 	// 验证是否有这个id
-	conf := gdconf.GetAcademyMessangerExcelTable(gid)
+	conf := gdconf.GetAcademyMessangerExcel(gid)
 	if conf == nil {
 		return
 	}
@@ -84,7 +84,7 @@ func UpMomoTalkInfo(s *enter.Session, characterId, gid, messageId int64) {
 }
 
 func UpScheduleGroup(s *enter.Session, scheduleId int64) []*ParcelResult {
-	conf := gdconf.GetAcademyFavorScheduleExcelTable(scheduleId)
+	conf := gdconf.GetAcademyFavorScheduleExcel(scheduleId)
 	if conf == nil || s == nil {
 		return nil
 	}

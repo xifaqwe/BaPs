@@ -345,7 +345,7 @@ func AddWeapon(s *enter.Session, characterId int64) {
 	if bin == nil {
 		return
 	}
-	conf := gdconf.GetCharacterWeaponExcelTable(characterId)
+	conf := gdconf.GetCharacterWeaponExcel(characterId)
 	if bin.WeaponInfoList == nil {
 		bin.WeaponInfoList = make(map[int64]*sro.WeaponInfo)
 	}

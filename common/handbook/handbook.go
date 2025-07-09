@@ -56,7 +56,7 @@ func NewHandbook() {
 	}
 
 	file += "\nFurniture\n"
-	for _, v := range gdconf.GetFurnitureExcelTableMap() {
+	for _, v := range gdconf.GetFurnitureExcelMap() {
 		file += fmt.Sprintf("%v\n", v.Id)
 	}
 

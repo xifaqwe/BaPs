@@ -30,7 +30,7 @@ func GetAcademyLocationInfoList(s *enter.Session) map[int64]*sro.AcademyLocation
 	if bin.AcademyLocationList == nil {
 		bin.AcademyLocationList = make(map[int64]*sro.AcademyLocationInfo)
 	}
-	for _, conf := range gdconf.GetAcademyLocationExcelTableList() {
+	for _, conf := range gdconf.GetAcademyLocationExcelList() {
 		if bin.AcademyLocationList[conf.Id] == nil {
 			bin.AcademyLocationList[conf.Id] = &sro.AcademyLocationInfo{
 				LocationId: conf.Id,
@@ -79,7 +79,7 @@ func GetAcademyZoneInfoList(s *enter.Session) map[int64]*sro.AcademyZoneInfo {
 
 func UpAcademyZoneInfoList(s *enter.Session) map[int64]*sro.AcademyZoneInfo {
 	list := make(map[int64]*sro.AcademyZoneInfo)
-	for _, conf := range gdconf.GetAcademyZoneExcelTableList() {
+	for _, conf := range gdconf.GetAcademyZoneExcelList() {
 		info := &sro.AcademyZoneInfo{
 			ZoneId:      conf.Id,
 			StudentList: make([]int64, 0),
@@ -117,7 +117,7 @@ func UpAcademyLocationExp(s *enter.Session, locationId int64, exp int64) {
 	bin.Exp += exp
 	// 升级判断
 	for {
-		conf := gdconf.GetAcademyLocationRankExcelTable(bin.Rank)
+		conf := gdconf.GetAcademyLocationRankExcel(bin.Rank)
 		if conf == nil {
 			bin.Rank--
 			return
@@ -138,7 +138,7 @@ func GetAcademyDB(s *enter.Session) *proto.AcademyDB {
 	}
 	for _, bin := range GetAcademyZoneInfoList(s) {
 		if bin.IsUp {
-			conf := gdconf.GetAcademyZoneExcelTable(bin.ZoneId)
+			conf := gdconf.GetAcademyZoneExcel(bin.ZoneId)
 			if conf == nil {
 				continue
 			}

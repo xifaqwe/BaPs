@@ -1,3 +1,4 @@
+git clone https://github.com/asfu222/BlueArchiveLocalizationTools
 pip3 install -r BlueArchiveLocalizationTools/requirements.txt
 python3 BlueArchiveLocalizationTools/update_urls.py ba.env ./data/ServerInfo.json
 export $(grep -v '^#' ba.env | xargs)

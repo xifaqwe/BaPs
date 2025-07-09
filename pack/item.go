@@ -120,7 +120,7 @@ func EquipmentTierUp(s *enter.Session, request, response mx.Message) {
 		return
 	}
 	// 升级蓝图扣除
-	recConf := gdconf.GetRecipeIngredientExcelTable(conf.RecipeId)
+	recConf := gdconf.GetRecipeIngredientExcel(conf.RecipeId)
 	if recConf == nil {
 		return
 	}
@@ -200,7 +200,7 @@ func EquipmentBatchGrowth(s *enter.Session, request, response mx.Message) {
 			}
 
 			// 升级蓝图扣除
-			recConf := gdconf.GetRecipeIngredientExcelTable(newConf.RecipeId)
+			recConf := gdconf.GetRecipeIngredientExcel(newConf.RecipeId)
 			if recConf == nil {
 				break
 			}
@@ -229,7 +229,7 @@ func EquipmentBatchGrowth(s *enter.Session, request, response mx.Message) {
 		if conf == nil {
 			return
 		}
-		recConf := gdconf.GetRecipeIngredientExcelTable(conf.RecipeId)
+		recConf := gdconf.GetRecipeIngredientExcel(conf.RecipeId)
 		if recConf == nil {
 			return
 		}

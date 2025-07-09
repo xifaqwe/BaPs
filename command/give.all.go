@@ -194,7 +194,7 @@ func GiveAllEquipment(num int64) []*sro.ParcelInfo {
 func GiveAllFurniture(num int64) []*sro.ParcelInfo {
 	list := make([]*sro.ParcelInfo, 0)
 	num = alg.MinInt64(num, 3)
-	for _, conf := range gdconf.GetFurnitureExcelTableMap() {
+	for _, conf := range gdconf.GetFurnitureExcelMap() {
 		list = append(list, &sro.ParcelInfo{
 			Type: int32(proto.ParcelType_Furniture),
 			Id:   conf.Id,

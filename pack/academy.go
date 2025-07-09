@@ -25,7 +25,7 @@ func AcademyAttendSchedule(s *enter.Session, request, response mx.Message) {
 		rsp.AcademyDB = game.GetAcademyDB(s)
 		rsp.ParcelResultDB = game.ParcelResultDB(s, parcelResultList)
 	}()
-	conf := gdconf.GetAcademyZoneExcelTable(req.ZoneId)
+	conf := gdconf.GetAcademyZoneExcel(req.ZoneId)
 	if conf == nil {
 		return
 	}
@@ -36,7 +36,7 @@ func AcademyAttendSchedule(s *enter.Session, request, response mx.Message) {
 		zoneInfo == nil || zoneInfo.IsUp {
 		return
 	}
-	rewardConf := gdconf.GetAcademyRewardExcelTable(conf.RewardGroupId, locationInfo.Rank)
+	rewardConf := gdconf.GetAcademyRewardExcel(conf.RewardGroupId, locationInfo.Rank)
 	if rewardConf == nil {
 		return
 	}

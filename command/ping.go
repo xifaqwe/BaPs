@@ -20,6 +20,7 @@ type Ping struct {
 	PlayerNum     int64   `json:"playerNum"`     // 在线玩家数量
 	Tps           int64   `json:"tps"`           // 上一分钟请求量
 	Rt            string  `json:"rt"`            // 上一分钟每一个请求平均处理时间
+	ClientVersion string `json:"clientVersion"`
 	ServerVersion string  `json:"serverVersion"` // 服务端版本
 	ApiVersion    string  `json:"apiVersion"`    // api版本
 	CpuOc         float64 `json:"cpuOc"`         // cpu占用
@@ -44,6 +45,7 @@ func (c *Command) ping(ctx *cdq.Context) {
 		PlayerNum:     atomic.LoadInt64(&check.SessionNum),
 		Tps:           check.OLDTPS,
 		Rt:            check.OLDRT.String(),
+		ClientVersion: pkg.ClientVersion,
 		ServerVersion: pkg.ServerVersion,
 		ApiVersion:    apiVersion,
 		CpuOc:         GetCpuOc(),

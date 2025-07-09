@@ -223,7 +223,7 @@ func RaidSeasonReward(s *enter.Session, request, response mx.Message) {
 	if bin.ReceiveRewardIds == nil {
 		bin.ReceiveRewardIds = make(map[int64]bool)
 	}
-	seasonConf := gdconf.GetRaidSeasonManageExcelTable(bin.SeasonId)
+	seasonConf := gdconf.GetRaidSeasonManageExcel(bin.SeasonId)
 	if seasonConf == nil ||
 		len(seasonConf.StackedSeasonRewardGauge) != len(seasonConf.SeasonRewardId) {
 		return
@@ -233,7 +233,7 @@ func RaidSeasonReward(s *enter.Session, request, response mx.Message) {
 		rewardId := seasonConf.SeasonRewardId[index]
 		if _, ok := bin.ReceiveRewardIds[rewardId]; !ok &&
 			bin.TotalScore >= season {
-			rewardConf := gdconf.GetRaidStageSeasonRewardExcelTable(rewardId)
+			rewardConf := gdconf.GetRaidStageSeasonRewardExcel(rewardId)
 			if rewardConf == nil {
 				continue
 			}
@@ -254,7 +254,7 @@ func RaidRankingReward(s *enter.Session, request, response mx.Message) {
 	if bin == nil || bin.IsRankingReward {
 		return
 	}
-	conf := gdconf.GetRaidRankingRewardExcelTableBySeasonId(bin.SeasonId, bin.Ranking)
+	conf := gdconf.GetRaidRankingRewardExcelBySeasonId(bin.SeasonId, bin.Ranking)
 	if conf == nil {
 		return
 	}
