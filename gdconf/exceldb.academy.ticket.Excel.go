@@ -5,21 +5,21 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 )
 
-func (g *GameConfig) loadAcademyTicketExcelTable() {
-	g.GetExcel().AcademyTicketExcelTable = make([]*sro.AcademyTicketExcelTable, 0)
-	name := "AcademyTicketExcelTable.json"
-	loadExcelFile(excelPath+name, &g.GetExcel().AcademyTicketExcelTable)
+func (g *GameConfig) loadAcademyTicketExcel() {
+	g.GetExcel().AcademyTicketExcel = make([]*sro.AcademyTicketExcel, 0)
+	name := "AcademyTicketExcel.json"
+	loadExcelFile(excelPath+name, &g.GetExcel().AcademyTicketExcel)
 }
 
 type AcademyTicketExcel struct {
-	AcademyTicketExcelMap map[int64]*sro.AcademyTicketExcelTable
+	AcademyTicketExcelMap map[int64]*sro.AcademyTicketExcel
 }
 
-func (g *GameConfig) gppAcademyTicketExcelTable() {
+func (g *GameConfig) gppAcademyTicketExcel() {
 	g.GetGPP().AcademyTicketExcel = &AcademyTicketExcel{
-		AcademyTicketExcelMap: make(map[int64]*sro.AcademyTicketExcelTable),
+		AcademyTicketExcelMap: make(map[int64]*sro.AcademyTicketExcel),
 	}
-	for _, v := range g.GetExcel().GetAcademyTicketExcelTable() {
+	for _, v := range g.GetExcel().GetAcademyTicketExcel() {
 		g.GetGPP().AcademyTicketExcel.AcademyTicketExcelMap[v.ScheduleTicktetMax] = v
 	}
 

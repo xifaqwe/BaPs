@@ -7,23 +7,23 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 )
 
-func (g *GameConfig) loadArenaSeasonExcelTable() {
-	g.GetExcel().ArenaSeasonExcelTable = make([]*sro.ArenaSeasonExcelTable, 0)
-	name := "ArenaSeasonExcelTable.json"
-	loadExcelFile(excelPath+name, &g.GetExcel().ArenaSeasonExcelTable)
+func (g *GameConfig) loadArenaSeasonExcel() {
+	g.GetExcel().ArenaSeasonExcel = make([]*sro.ArenaSeasonExcel, 0)
+	name := "ArenaSeasonExcel.json"
+	loadExcelFile(excelPath+name, &g.GetExcel().ArenaSeasonExcel)
 }
 
 type ArenaSeasonExcel struct {
-	ArenaSeasonExcelMap map[int64]*sro.ArenaSeasonExcelTable
-	CurArenaSeason      *sro.ArenaSeasonExcelTable
+	ArenaSeasonExcelMap map[int64]*sro.ArenaSeasonExcel
+	CurArenaSeason      *sro.ArenaSeasonExcel
 }
 
-func (g *GameConfig) gppArenaSeasonExcelTable() {
+func (g *GameConfig) gppArenaSeasonExcel() {
 	g.GetGPP().ArenaSeasonExcel = &ArenaSeasonExcel{
-		ArenaSeasonExcelMap: make(map[int64]*sro.ArenaSeasonExcelTable),
+		ArenaSeasonExcelMap: make(map[int64]*sro.ArenaSeasonExcel),
 	}
 
-	for _, v := range g.GetExcel().GetArenaSeasonExcelTable() {
+	for _, v := range g.GetExcel().GetArenaSeasonExcel() {
 		g.GetGPP().ArenaSeasonExcel.ArenaSeasonExcelMap[v.UniqueId] = v
 	}
 
@@ -31,8 +31,8 @@ func (g *GameConfig) gppArenaSeasonExcelTable() {
 		len(g.GetGPP().ArenaSeasonExcel.ArenaSeasonExcelMap))
 }
 
-func genCurArenaSeason() *sro.ArenaSeasonExcelTable {
-	for _, v := range GC.GetExcel().GetArenaSeasonExcelTable() { // 读取原始文件,保证顺序
+func genCurArenaSeason() *sro.ArenaSeasonExcel {
+	for _, v := range GC.GetExcel().GetArenaSeasonExcel() { // 读取原始文件,保证顺序
 		startTime, err := time.Parse("2006-01-02 15:04:05", v.SeasonStartDate)
 		endTime, err := time.Parse("2006-01-02 15:04:05", v.SeasonEndDate)
 		if err != nil {
@@ -47,7 +47,7 @@ func genCurArenaSeason() *sro.ArenaSeasonExcelTable {
 	return nil
 }
 
-func GetCurArenaSeason() *sro.ArenaSeasonExcelTable {
+func GetCurArenaSeason() *sro.ArenaSeasonExcel {
 	info := GC.GetGPP().ArenaSeasonExcel
 	if info.CurArenaSeason == nil {
 		info.CurArenaSeason = genCurArenaSeason()
@@ -60,6 +60,6 @@ func GetCurArenaSeason() *sro.ArenaSeasonExcelTable {
 	return info.CurArenaSeason
 }
 
-func GetArenaSeasonExcelTable(id int64) *sro.ArenaSeasonExcelTable {
+func GetArenaSeasonExcel(id int64) *sro.ArenaSeasonExcel {
 	return GC.GetGPP().ArenaSeasonExcel.ArenaSeasonExcelMap[id]
 }

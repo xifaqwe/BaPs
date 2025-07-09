@@ -72,7 +72,7 @@ func GetLastRaidEliminateInfo(s *enter.Session) *sro.RaidEliminateInfo {
 // NewCurRaidEliminateBattleInfo 创建新的大决战
 func NewCurRaidEliminateBattleInfo(s *enter.Session, raidUniqueId int64, isPractice bool) {
 	bin := GetRaidEliminateBin(s)
-	conf := gdconf.GetEliminateRaidStageExcelTable(raidUniqueId)
+	conf := gdconf.GetEliminateRaidStageExcel(raidUniqueId)
 	if bin == nil || conf == nil {
 		logger.Debug("玩家实例不存在或大决战关卡不存在RaidUniqueId:%v", raidUniqueId)
 		return
@@ -114,7 +114,7 @@ func RaidEliminateCheck(s *enter.Session) {
 		return
 	}
 	// 检查总分奖励领取
-	seasonConf := gdconf.GetEliminateRaidSeasonManageExcelTable(bin.SeasonId)
+	seasonConf := gdconf.GetEliminateRaidSeasonManageExcel(bin.SeasonId)
 	if seasonConf == nil ||
 		len(seasonConf.StackedSeasonRewardGauge) != len(seasonConf.SeasonRewardId) {
 		return
@@ -134,7 +134,7 @@ func GetCurRaidEliminateBattleInfo(s *enter.Session) *sro.CurRaidBattleInfo {
 
 func GetEliminateRaidLobbyInfoDB(s *enter.Session) *proto.EliminateRaidLobbyInfoDB {
 	bin := GetCurRaidEliminateInfo(s)
-	conf := gdconf.GetEliminateRaidSeasonManageExcelTable(bin.GetSeasonId())
+	conf := gdconf.GetEliminateRaidSeasonManageExcel(bin.GetSeasonId())
 	if conf == nil || bin == nil {
 		return nil
 	}
@@ -259,7 +259,7 @@ func RaidEliminateClose(s *enter.Session) []*ParcelResult {
 	if curBattle == nil {
 		return nil
 	}
-	conf := gdconf.GetEliminateRaidStageExcelTable(curBattle.RaidUniqueId)
+	conf := gdconf.GetEliminateRaidStageExcel(curBattle.RaidUniqueId)
 	if conf == nil {
 		return nil
 	}
@@ -299,7 +299,7 @@ func RaidEliminateClose(s *enter.Session) []*ParcelResult {
 		}
 		rank.SetRaidEliminateScore(curBattle.SeasonId, s.AccountServerId, float64(allBestScore))
 		// 计算奖励
-		for _, rewardConf := range gdconf.GetEliminateRaidStageRewardExcelTable(conf.RaidRewardGroupId) {
+		for _, rewardConf := range gdconf.GetEliminateRaidStageRewardExcel(conf.RaidRewardGroupId) {
 			list = append(list, &ParcelResult{
 				ParcelType: proto.ParcelType_None.Value(rewardConf.ClearStageRewardParcelType),
 				ParcelId:   rewardConf.ClearStageRewardParcelUniqueId,

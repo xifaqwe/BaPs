@@ -171,11 +171,11 @@ func UpCharacterSkill(characterInfo *sro.CharacterInfo, reqLevel int32, skillSlo
 			return parcelResultList
 		}
 
-		skillConf := gdconf.GetSkillExcelTable(groupId, *level)
+		skillConf := gdconf.GetSkillExcel(groupId, *level)
 		if skillConf == nil {
 			return parcelResultList
 		}
-		recConf := gdconf.GetRecipeIngredientExcelTable(skillConf.RequireLevelUpMaterial)
+		recConf := gdconf.GetRecipeIngredientExcel(skillConf.RequireLevelUpMaterial)
 		if recConf == nil {
 			return parcelResultList
 		}
@@ -315,7 +315,7 @@ func CharacterPotentialGrowth(s *enter.Session, request, response mx.Message) {
 			if statConf == nil {
 				goto ty
 			}
-			recConf := gdconf.GetRecipeIngredientExcelTable(statConf.RecipeId)
+			recConf := gdconf.GetRecipeIngredientExcel(statConf.RecipeId)
 			if recConf == nil {
 				goto ty
 			}

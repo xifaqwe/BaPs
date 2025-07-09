@@ -12,7 +12,7 @@ import (
 )
 
 func NewCampaignMainStageSaveDB(s *enter.Session, stageUniqueId int64) *sro.BattleCampaign {
-	stageConf := gdconf.GetCampaignStageExcelTable(stageUniqueId)
+	stageConf := gdconf.GetCampaignStageExcel(stageUniqueId)
 	if stageConf == nil {
 		logger.Debug("Unknown StageUniqueId:%v", stageUniqueId)
 		return nil
@@ -35,7 +35,7 @@ func NewCampaignMainStageSaveDB(s *enter.Session, stageUniqueId int64) *sro.Batt
 }
 
 func GetCampaignMainStageSaveDB(s *enter.Session, bin *sro.BattleCampaign) *proto.CampaignMainStageSaveDB {
-	stageConf := gdconf.GetCampaignStageExcelTable(bin.StageId)
+	stageConf := gdconf.GetCampaignStageExcel(bin.StageId)
 	if stageConf == nil {
 		return nil
 	}

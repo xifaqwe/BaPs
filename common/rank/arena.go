@@ -18,7 +18,7 @@ import (
 
 // NewArenaRank 此操作会将排名强制覆盖成冷数据中的排名，建议仅用于初始化这个赛季时拉取冷数据使用
 func (x *RankInfo) NewArenaRank(seasonId int64) {
-	conf := gdconf.GetArenaSeasonExcelTable(seasonId)
+	conf := gdconf.GetArenaSeasonExcel(seasonId)
 	if x == nil || conf == nil {
 		return
 	}
@@ -33,7 +33,7 @@ func (x *RankInfo) NewArenaRank(seasonId int64) {
 		s.Set(dbInfo.Rank, dbInfo.Uid)
 	}
 	// 赛季结束
-	nextConf := gdconf.GetArenaSeasonExcelTable(conf.PrevSeasonId)
+	nextConf := gdconf.GetArenaSeasonExcel(conf.PrevSeasonId)
 	if nextConf == nil {
 		logger.Warn("竞技场缺少下一个赛季配置")
 		return

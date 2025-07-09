@@ -17,7 +17,7 @@ func DefaultCafeBin(s *enter.Session) *sro.CafeBin {
 		CafeInfoList:      make(map[int64]*sro.CafeInfo),
 		FurnitureInfoList: make(map[int64]*sro.FurnitureInfo),
 	}
-	for _, conf := range gdconf.GetCafeInfoExcelTables() {
+	for _, conf := range gdconf.GetCafeInfoExcels() {
 		if !conf.IsDefault {
 			continue
 		}
@@ -37,7 +37,7 @@ func NewCafeBin(s *enter.Session, bin *sro.CafeBin, cafeId int64) *sro.CafeInfo 
 	if bin.FurnitureInfoList == nil {
 		bin.FurnitureInfoList = make(map[int64]*sro.FurnitureInfo)
 	}
-	conf := gdconf.GetCafeInfoExcelTableInfo(cafeId)
+	conf := gdconf.GetCafeInfoExcel(cafeId)
 	if conf == nil {
 		return nil
 	}
@@ -71,7 +71,7 @@ func NewCafeBin(s *enter.Session, bin *sro.CafeBin, cafeId int64) *sro.CafeInfo 
 
 func NewRroductionList(cafeId int64) map[int64]*sro.ProductionInfo {
 	list := make(map[int64]*sro.ProductionInfo)
-	for _, conf := range gdconf.GetCafeProductionExcelTableList(cafeId, 1) {
+	for _, conf := range gdconf.GetCafeProductionExcelList(cafeId, 1) {
 		list[conf.CafeProductionParcelId] = &sro.ProductionInfo{
 			ParcelId:   conf.CafeProductionParcelId,
 			ParcelType: int64(proto.ParcelType_value[conf.CafeProductionParcelType]),
@@ -116,8 +116,8 @@ func UpCafeVisitCharacterDB(bin *sro.CafeInfo) {
 	if bin == nil {
 		return
 	}
-	cafeRankConf := gdconf.GetCafeRankExcelTable(bin.CafeId, bin.CafeRank)
-	produConfList := gdconf.GetCafeProductionExcelTableList(bin.CafeId, bin.CafeRank)
+	cafeRankConf := gdconf.GetCafeRankExcel(bin.CafeId, bin.CafeRank)
+	produConfList := gdconf.GetCafeProductionExcelList(bin.CafeId, bin.CafeRank)
 	if cafeRankConf == nil || produConfList == nil {
 		return
 	}
@@ -174,7 +174,7 @@ func UpCafeComfortValue(s *enter.Session, cafeServerId int64) {
 	if cafeBin == nil {
 		return
 	}
-	cafeRankConf := gdconf.GetCafeRankExcelTable(cafeBin.CafeId, cafeBin.CafeRank)
+	cafeRankConf := gdconf.GetCafeRankExcel(cafeBin.CafeId, cafeBin.CafeRank)
 	if cafeRankConf == nil {
 		return
 	}
@@ -187,7 +187,7 @@ func UpCafeComfortValue(s *enter.Session, cafeServerId int64) {
 		if furnitureBin == nil {
 			continue
 		}
-		conf := gdconf.GetFurnitureExcelTable(furnitureBin.FurnitureId)
+		conf := gdconf.GetFurnitureExcel(furnitureBin.FurnitureId)
 		if conf == nil {
 			continue
 		}
@@ -217,7 +217,7 @@ func GetFurnitureInfo(s *enter.Session, serverId int64) *sro.FurnitureInfo {
 
 func AddFurnitureInfo(s *enter.Session, furnitureId int64, num int64) []int64 {
 	list := make([]int64, 0)
-	conf := gdconf.GetFurnitureExcelTable(furnitureId)
+	conf := gdconf.GetFurnitureExcel(furnitureId)
 	if conf == nil {
 		return list
 	}

@@ -5,25 +5,25 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 )
 
-func (g *GameConfig) loadRaidRankingRewardExcelTable() {
-	g.GetExcel().RaidRankingRewardExcelTable = make([]*sro.RaidRankingRewardExcelTable, 0)
-	name := "RaidRankingRewardExcelTable.json"
-	loadExcelFile(excelPath+name, &g.GetExcel().RaidRankingRewardExcelTable)
+func (g *GameConfig) loadRaidRankingRewardExcel() {
+	g.GetExcel().RaidRankingRewardExcel = make([]*sro.RaidRankingRewardExcel, 0)
+	name := "RaidRankingRewardExcel.json"
+	loadExcelFile(excelPath+name, &g.GetExcel().RaidRankingRewardExcel)
 }
 
 type RaidRankingRewardExcel struct {
-	RaidRankingRewardExcelMap map[int64][]*sro.RaidRankingRewardExcelTable
+	RaidRankingRewardExcelMap map[int64][]*sro.RaidRankingRewardExcel
 }
 
-func (g *GameConfig) gppRaidRankingRewardExcelTable() {
+func (g *GameConfig) gppRaidRankingRewardExcel() {
 	g.GetGPP().RaidRankingRewardExcel = &RaidRankingRewardExcel{
-		RaidRankingRewardExcelMap: make(map[int64][]*sro.RaidRankingRewardExcelTable),
+		RaidRankingRewardExcelMap: make(map[int64][]*sro.RaidRankingRewardExcel),
 	}
 
-	for _, v := range g.GetExcel().GetRaidRankingRewardExcelTable() {
+	for _, v := range g.GetExcel().GetRaidRankingRewardExcel() {
 		if g.GetGPP().RaidRankingRewardExcel.RaidRankingRewardExcelMap[v.RankingRewardGroupId] == nil {
 			g.GetGPP().RaidRankingRewardExcel.RaidRankingRewardExcelMap[v.RankingRewardGroupId] =
-				make([]*sro.RaidRankingRewardExcelTable, 0)
+				make([]*sro.RaidRankingRewardExcel, 0)
 		}
 		g.GetGPP().RaidRankingRewardExcel.RaidRankingRewardExcelMap[v.RankingRewardGroupId] =
 			append(g.GetGPP().RaidRankingRewardExcel.RaidRankingRewardExcelMap[v.RankingRewardGroupId], v)
@@ -33,7 +33,7 @@ func (g *GameConfig) gppRaidRankingRewardExcelTable() {
 		len(g.GetGPP().RaidRankingRewardExcel.RaidRankingRewardExcelMap))
 }
 
-func GetRaidRankingRewardExcelTable(gid, ranking int64) *sro.RaidRankingRewardExcelTable {
+func GetRaidRankingRewardExcel(gid, ranking int64) *sro.RaidRankingRewardExcel {
 	for _, conf := range GC.GetGPP().RaidRankingRewardExcel.RaidRankingRewardExcelMap[gid] {
 		if conf.RankStart <= ranking && (conf.RankEnd >= ranking || conf.RankEnd == 0) {
 			return conf

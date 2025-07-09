@@ -93,7 +93,7 @@ func ContentSweepRequest(s *enter.Session, request, response mx.Message) {
 	case proto.ContentType_WeekDungeon:
 		parcelResultList, clearParcels := game.ContentSweepWeekDungeon(req.StageId, req.Count)
 		// 扣钱
-		conf := gdconf.GetWeekDungeonExcelTable(req.StageId)
+		conf := gdconf.GetWeekDungeonExcel(req.StageId)
 		if conf != nil && (len(conf.StageEnterCostType) == len(conf.StageEnterCostId) &&
 			len(conf.StageEnterCostId) == len(conf.StageEnterCostAmount)) {
 			for index, rewardType := range conf.StageEnterCostType {

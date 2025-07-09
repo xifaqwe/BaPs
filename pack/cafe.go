@@ -169,11 +169,11 @@ func CafeRankUp(s *enter.Session, request, response mx.Message) {
 	if cafeInfo == nil {
 		return
 	}
-	cafeRankConf := gdconf.GetCafeRankExcelTable(cafeInfo.CafeId, cafeInfo.CafeRank)
+	cafeRankConf := gdconf.GetCafeRankExcel(cafeInfo.CafeId, cafeInfo.CafeRank)
 	if cafeRankConf == nil {
 		return
 	}
-	recConf := gdconf.GetRecipeIngredientExcelTable(cafeRankConf.RecipeId)
+	recConf := gdconf.GetRecipeIngredientExcel(cafeRankConf.RecipeId)
 	if recConf == nil {
 		return
 	}

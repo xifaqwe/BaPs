@@ -5,34 +5,34 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 )
 
-func (g *GameConfig) loadCampaignUnitExcelTable() {
-	g.GetExcel().CampaignUnitExcelTable = make([]*sro.CampaignUnitExcelTable, 0)
-	name := "CampaignUnitExcelTable.json"
-	loadExcelFile(excelPath+name, &g.GetExcel().CampaignUnitExcelTable)
+func (g *GameConfig) loadCampaignUnitExcel() {
+	g.GetExcel().CampaignUnitExcel = make([]*sro.CampaignUnitExcel, 0)
+	name := "CampaignUnitExcel.json"
+	loadExcelFile(excelPath+name, &g.GetExcel().CampaignUnitExcel)
 }
 
 type CampaignUnitExcel struct {
-	CampaignUnitExcelMap      map[int64]*sro.CampaignUnitExcelTable
+	CampaignUnitExcelMap      map[int64]*sro.CampaignUnitExcel
 	CampaignUnitExcelStageMap map[int64]*CampaignUnitExcelGrade
 }
 
 type CampaignUnitExcelGrade struct {
-	Boss      *sro.CampaignUnitExcelTable
-	GradeList map[string]*sro.CampaignUnitExcelTable
+	Boss      *sro.CampaignUnitExcel
+	GradeList map[string]*sro.CampaignUnitExcel
 }
 
-func (g *GameConfig) gppCampaignUnitExcelTable() {
+func (g *GameConfig) gppCampaignUnitExcel() {
 	info := &CampaignUnitExcel{
-		CampaignUnitExcelMap:      make(map[int64]*sro.CampaignUnitExcelTable, 0),
+		CampaignUnitExcelMap:      make(map[int64]*sro.CampaignUnitExcel, 0),
 		CampaignUnitExcelStageMap: make(map[int64]*CampaignUnitExcelGrade),
 	}
 
-	for _, v := range g.GetExcel().GetCampaignUnitExcelTable() {
+	for _, v := range g.GetExcel().GetCampaignUnitExcel() {
 		info.CampaignUnitExcelMap[v.Id] = v
 		stageId := v.Id / 100
 		if info.CampaignUnitExcelStageMap[stageId] == nil {
 			info.CampaignUnitExcelStageMap[stageId] = &CampaignUnitExcelGrade{
-				GradeList: make(map[string]*sro.CampaignUnitExcelTable, 0),
+				GradeList: make(map[string]*sro.CampaignUnitExcel, 0),
 			}
 		}
 		if v.Grade == "Boss" {

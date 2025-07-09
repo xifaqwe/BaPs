@@ -5,25 +5,25 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 )
 
-func (g *GameConfig) loadEliminateRaidRankingRewardExcelTable() {
-	g.GetExcel().EliminateRaidRankingRewardExcelTable = make([]*sro.EliminateRaidRankingRewardExcelTable, 0)
-	name := "EliminateRaidRankingRewardExcelTable.json"
-	loadExcelFile(excelPath+name, &g.GetExcel().EliminateRaidRankingRewardExcelTable)
+func (g *GameConfig) loadEliminateRaidRankingRewardExcel() {
+	g.GetExcel().EliminateRaidRankingRewardExcel = make([]*sro.EliminateRaidRankingRewardExcel, 0)
+	name := "EliminateRaidRankingRewardExcel.json"
+	loadExcelFile(excelPath+name, &g.GetExcel().EliminateRaidRankingRewardExcel)
 }
 
 type EliminateRaidRankingRewardExcel struct {
-	EliminateRaidRankingRewardExcelMap map[int64][]*sro.EliminateRaidRankingRewardExcelTable
+	EliminateRaidRankingRewardExcelMap map[int64][]*sro.EliminateRaidRankingRewardExcel
 }
 
-func (g *GameConfig) gppEliminateRaidRankingRewardExcelTable() {
+func (g *GameConfig) gppEliminateRaidRankingRewardExcel() {
 	g.GetGPP().EliminateRaidRankingRewardExcel = &EliminateRaidRankingRewardExcel{
-		EliminateRaidRankingRewardExcelMap: make(map[int64][]*sro.EliminateRaidRankingRewardExcelTable),
+		EliminateRaidRankingRewardExcelMap: make(map[int64][]*sro.EliminateRaidRankingRewardExcel),
 	}
 
-	for _, v := range g.GetExcel().GetEliminateRaidRankingRewardExcelTable() {
+	for _, v := range g.GetExcel().GetEliminateRaidRankingRewardExcel() {
 		if g.GetGPP().EliminateRaidRankingRewardExcel.EliminateRaidRankingRewardExcelMap[v.RankingRewardGroupId] == nil {
 			g.GetGPP().EliminateRaidRankingRewardExcel.EliminateRaidRankingRewardExcelMap[v.RankingRewardGroupId] =
-				make([]*sro.EliminateRaidRankingRewardExcelTable, 0)
+				make([]*sro.EliminateRaidRankingRewardExcel, 0)
 		}
 		g.GetGPP().EliminateRaidRankingRewardExcel.EliminateRaidRankingRewardExcelMap[v.RankingRewardGroupId] =
 			append(g.GetGPP().EliminateRaidRankingRewardExcel.EliminateRaidRankingRewardExcelMap[v.RankingRewardGroupId], v)
@@ -33,7 +33,7 @@ func (g *GameConfig) gppEliminateRaidRankingRewardExcelTable() {
 		len(g.GetGPP().EliminateRaidRankingRewardExcel.EliminateRaidRankingRewardExcelMap))
 }
 
-func GetEliminateRaidRankingRewardExcelTable(gid, ranking int64) *sro.EliminateRaidRankingRewardExcelTable {
+func GetEliminateRaidRankingRewardExcel(gid, ranking int64) *sro.EliminateRaidRankingRewardExcel {
 	for _, conf := range GC.GetGPP().EliminateRaidRankingRewardExcel.EliminateRaidRankingRewardExcelMap[gid] {
 		if conf.RankStart <= ranking && (conf.RankEnd >= ranking || conf.RankEnd == 0) {
 			return conf

@@ -23,7 +23,7 @@ func WeekDungeonEnterBattle(s *enter.Session, request, response mx.Message) {
 	req := request.(*proto.WeekDungeonEnterBattleRequest)
 	rsp := response.(*proto.WeekDungeonEnterBattleResponse)
 
-	conf := gdconf.GetWeekDungeonExcelTable(req.StageUniqueId)
+	conf := gdconf.GetWeekDungeonExcel(req.StageUniqueId)
 	if conf == nil {
 		return
 	}
@@ -45,7 +45,7 @@ func WeekDungeonBattleResult(s *enter.Session, request, response mx.Message) {
 	if battleSummary == nil {
 		return
 	}
-	conf := gdconf.GetWeekDungeonExcelTable(req.StageUniqueId)
+	conf := gdconf.GetWeekDungeonExcel(req.StageUniqueId)
 	if conf == nil {
 		return
 	}

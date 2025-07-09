@@ -6,22 +6,22 @@ import (
 	"github.com/gucooing/BaPs/protocol/proto"
 )
 
-func (g *GameConfig) loadEliminateRaidSeasonManageExcelTable() {
-	g.GetExcel().EliminateRaidSeasonManageExcelTable = make([]*sro.EliminateRaidSeasonManageExcelTable, 0)
-	name := "EliminateRaidSeasonManageExcelTable.json"
-	loadExcelFile(excelPath+name, &g.GetExcel().EliminateRaidSeasonManageExcelTable)
+func (g *GameConfig) loadEliminateRaidSeasonManageExcel() {
+	g.GetExcel().EliminateRaidSeasonManageExcel = make([]*sro.EliminateRaidSeasonManageExcel, 0)
+	name := "EliminateRaidSeasonManageExcel.json"
+	loadExcelFile(excelPath+name, &g.GetExcel().EliminateRaidSeasonManageExcel)
 }
 
 type EliminateRaidSeasonManageExcel struct {
-	EliminateRaidSeasonManageExcelMap map[int64]*sro.EliminateRaidSeasonManageExcelTable
+	EliminateRaidSeasonManageExcelMap map[int64]*sro.EliminateRaidSeasonManageExcel
 }
 
-func (g *GameConfig) gppEliminateRaidSeasonManageExcelTable() {
+func (g *GameConfig) gppEliminateRaidSeasonManageExcel() {
 	g.GetGPP().EliminateRaidSeasonManageExcel = &EliminateRaidSeasonManageExcel{
-		EliminateRaidSeasonManageExcelMap: make(map[int64]*sro.EliminateRaidSeasonManageExcelTable),
+		EliminateRaidSeasonManageExcelMap: make(map[int64]*sro.EliminateRaidSeasonManageExcel),
 	}
 
-	for _, v := range g.GetExcel().GetEliminateRaidSeasonManageExcelTable() {
+	for _, v := range g.GetExcel().GetEliminateRaidSeasonManageExcel() {
 		g.GetGPP().EliminateRaidSeasonManageExcel.EliminateRaidSeasonManageExcelMap[v.SeasonId] = v
 	}
 
@@ -29,28 +29,28 @@ func (g *GameConfig) gppEliminateRaidSeasonManageExcelTable() {
 		len(g.GetGPP().EliminateRaidSeasonManageExcel.EliminateRaidSeasonManageExcelMap))
 }
 
-func GetEliminateRaidSeasonManageExcelTable(seasonId int64) *sro.EliminateRaidSeasonManageExcelTable {
+func GetEliminateRaidSeasonManageExcel(seasonId int64) *sro.EliminateRaidSeasonManageExcel {
 	return GC.GetGPP().EliminateRaidSeasonManageExcel.EliminateRaidSeasonManageExcelMap[seasonId]
 }
 
 func GetEliminateRaidTier(seasonId, ranking int64) int32 {
-	conf := GetEliminateRaidSeasonManageExcelTable(seasonId)
+	conf := GetEliminateRaidSeasonManageExcel(seasonId)
 	if conf == nil || ranking < 0 {
 		return 1
 	}
-	return GetEliminateRaidRankingRewardExcelTable(conf.RankingRewardGroupId, ranking).GetTier()
+	return GetEliminateRaidRankingRewardExcel(conf.RankingRewardGroupId, ranking).GetTier()
 }
 
-func GetEliminateRaidRankingRewardExcelTableBySeasonId(seasonId, ranking int64) *sro.EliminateRaidRankingRewardExcelTable {
-	conf := GetEliminateRaidSeasonManageExcelTable(seasonId)
+func GetEliminateRaidRankingRewardExcelBySeasonId(seasonId, ranking int64) *sro.EliminateRaidRankingRewardExcel {
+	conf := GetEliminateRaidSeasonManageExcel(seasonId)
 	if conf == nil {
 		return nil
 	}
-	return GetEliminateRaidRankingRewardExcelTable(conf.RankingRewardGroupId, ranking)
+	return GetEliminateRaidRankingRewardExcel(conf.RankingRewardGroupId, ranking)
 }
 
 func GetEliminateRaidEchelonType(seasonId int64, raidBossGroup string) proto.EchelonType {
-	conf := GetEliminateRaidSeasonManageExcelTable(seasonId)
+	conf := GetEliminateRaidSeasonManageExcel(seasonId)
 	if conf == nil {
 		return proto.EchelonType_None
 	}

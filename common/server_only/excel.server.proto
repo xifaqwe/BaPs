@@ -7,70 +7,70 @@ option go_package = "./;proto";
 // 请使用帕斯卡命名规则
 
 message Excel {
-  repeated CafeInfoExcelTableInfo CafeInfoExcelTableInfo = 25;// 咖啡馆信息
+  repeated CafeInfoExcel CafeInfoExcel = 25;// 咖啡馆信息
   repeated DefaultCharacterExcelTable DefaultCharacterExcelTable = 34; // 默认角色信息
   repeated CharacterExcelTable CharacterExcelTable = 28; // 角色基本数据
-  repeated DefaultFurnitureExcelTable DefaultFurnitureExcelTable = 9; // 默认家具
+  repeated DefaultFurnitureExcel DefaultFurnitureExcel = 9; // 默认家具
   repeated DefaultEchelonExcelTable DefaultEchelonExcelTable = 40; // 默认队伍
   repeated ShopExcel ShopExcel = 26; // 商店数据
   repeated ShopInfoExcel ShopInfoExcel = 16; // 商店配置
   repeated ItemExcel ItemExcel = 43; // 物品配置
   repeated EmblemExcel EmblemExcel = 5; // 称号配置
-  repeated AcademyFavorScheduleExcelTable AcademyFavorScheduleExcelTable = 4; // MomoTalk剧情配置
-  repeated AcademyMessangerExcelTable AcademyMessangerExcelTable = 50; // MomoTalk对话配置
+  repeated AcademyFavorScheduleExcel AcademyFavorScheduleExcel = 4; // MomoTalk剧情配置
+  repeated AcademyMessangerExcel AcademyMessangerExcel = 50; // MomoTalk对话配置
   repeated GuideMissionExcel GuideMissionExcel = 36; // 成就配置
   repeated ScenarioModeExcel ScenarioModeExcel = 8; // 剧情配置
   repeated ScenarioModeRewardExcel ScenarioModeRewardExcel = 59; // 剧情奖励配置
-  repeated CharacterWeaponExcelTable CharacterWeaponExcelTable = 55; // 角色武器配置
+  repeated CharacterWeaponExcel CharacterWeaponExcel = 55; // 角色武器配置
   repeated CharacterSkillListExcelTable CharacterSkillListExcelTable = 56; // 角色技能配置表
-  repeated SkillExcelTable SkillExcelTable = 46; // 全部技能配置
-  repeated RecipeIngredientExcelTable RecipeIngredientExcelTable = 33; // 材料配置
-  repeated CampaignStageExcelTable CampaignStageExcelTable = 14; // 任务关卡信息配置
-  repeated CampaignUnitExcelTable CampaignUnitExcelTable = 41; // 任务关卡怪物信息
-  repeated WeekDungeonExcelTable WeekDungeonExcelTable = 58; // 悬赏通缉关卡信息
+  repeated SkillExcel SkillExcel = 46; // 全部技能配置
+  repeated RecipeIngredientExcel RecipeIngredientExcel = 33; // 材料配置
+  repeated CampaignStageExcel CampaignStageExcel = 14; // 任务关卡信息配置
+  repeated CampaignUnitExcel CampaignUnitExcel = 41; // 任务关卡怪物信息
+  repeated WeekDungeonExcel WeekDungeonExcel = 58; // 悬赏通缉关卡信息
   repeated SchoolDungeonStageExcel SchoolDungeonStageExcel = 7; // 学院交流会关卡信息
   repeated AccountLevelExcel AccountLevelExcel = 24; // 账号等级配置
   repeated EquipmentExcel EquipmentExcel = 17; // 装备配置表
   repeated EquipmentStatExcel EquipmentStatExcel = 30; // 装备详情表
   repeated EquipmentLevelExcel EquipmentLevelExcel = 47; // 装备等级配置
-  repeated FurnitureExcelTable FurnitureExcelTable = 32; // 家具配置
-  repeated CafeRankExcelTable CafeRankExcelTable = 12; // 咖啡厅等级配置
-  repeated CafeProductionExcelTable CafeProductionExcelTable = 38; // 咖啡厅生产配置
+  repeated FurnitureExcel FurnitureExcel = 32; // 家具配置
+  repeated CafeRankExcel CafeRankExcel = 12; // 咖啡厅等级配置
+  repeated CafeProductionExcel CafeProductionExcel = 38; // 咖啡厅生产配置
   repeated IdCardBackgroundExcel IdCardBackgroundExcel = 19; // 账号背景配置
-  repeated WeekDungeonRewardExcelTable WeekDungeonRewardExcelTable = 60; // 悬赏通缉关卡奖励配置
+  repeated WeekDungeonRewardExcel WeekDungeonRewardExcel = 60; // 悬赏通缉关卡奖励配置
   repeated CharacterLevelExcelTable CharacterLevelExcelTable = 48; // 角色等级配置
   repeated CharacterGearExcel CharacterGearExcel = 18; // 角色爱用品配置
   repeated CharacterPotentialExcel CharacterPotentialExcel = 27; // 角色能力解放配置
   repeated CharacterPotentialStatExcel CharacterPotentialStatExcel = 39; // 角色能力解放升级配置
-  repeated AcademyTicketExcelTable AcademyTicketExcelTable = 62; // 课程表最大票信息
-  repeated AcademyLocationExcelTable AcademyLocationExcelTable = 11; // 课程表学院信息
-  repeated AcademyZoneExcelTable AcademyZoneExcelTable = 51; // 课程表教室信息
-  repeated AcademyLocationRankExcelTable AcademyLocationRankExcelTable = 10; // 课程表等级配置
-  repeated AcademyRewardExcelTable AcademyRewardExcelTable = 53; // 课程表奖励配置
+  repeated AcademyTicketExcel AcademyTicketExcel = 62; // 课程表最大票信息
+  repeated AcademyLocationExcel AcademyLocationExcel = 11; // 课程表学院信息
+  repeated AcademyZoneExcel AcademyZoneExcel = 51; // 课程表教室信息
+  repeated AcademyLocationRankExcel AcademyLocationRankExcel = 10; // 课程表等级配置
+  repeated AcademyRewardExcel AcademyRewardExcel = 53; // 课程表奖励配置
   repeated SchoolDungeonRewardExcel SchoolDungeonRewardExcel = 64; // 学院交流会奖励配置
-  repeated RaidSeasonManageExcelTable RaidSeasonManageExcelTable = 57; // 总力战赛季配置
-  repeated RaidRankingRewardExcelTable RaidRankingRewardExcelTable = 6; // 总力战结算奖励配置
-  repeated RaidStageExcelTable RaidStageExcelTable = 49; // 总力战关卡配置
+  repeated RaidSeasonManageExcel RaidSeasonManageExcel = 57; // 总力战赛季配置
+  repeated RaidRankingRewardExcel RaidRankingRewardExcel = 6; // 总力战结算奖励配置
+  repeated RaidStageExcel RaidStageExcel = 49; // 总力战关卡配置
   repeated CharacterStatExcelTable CharacterStatExcelTable = 35; // 实体属性配置
-  repeated RaidStageRewardExcelTable RaidStageRewardExcelTable = 44; // 总力战关卡通过奖励配置
+  repeated RaidStageRewardExcel RaidStageRewardExcel = 44; // 总力战关卡通过奖励配置
   repeated MissionExcel MissionExcel = 23; // 任务配置
-  repeated RaidStageSeasonRewardExcelTable RaidStageSeasonRewardExcelTable = 3; // 总力战总分奖励配置
+  repeated RaidStageSeasonRewardExcel RaidStageSeasonRewardExcel = 3; // 总力战总分奖励配置
   repeated MultiFloorRaidSeasonManageExcel MultiFloorRaidSeasonManageExcel = 13; // 制约解除决战赛季配置
   repeated MultiFloorRaidStageExcel MultiFloorRaidStageExcel = 29; // 制约解除决战关卡
   repeated MultiFloorRaidRewardExcel MultiFloorRaidRewardExcel = 65; // 制约解除决战关卡奖励
   repeated TimeAttackDungeonSeasonManageExcel TimeAttackDungeonSeasonManageExcel = 15; // 综合战术考试排期表
-  repeated EliminateRaidSeasonManageExcelTable EliminateRaidSeasonManageExcelTable = 52; // 大决战赛季配置
-  repeated EliminateRaidRankingRewardExcelTable EliminateRaidRankingRewardExcelTable = 61; // 大决站赛季结算奖励配置
-  repeated EliminateRaidStageExcelTable EliminateRaidStageExcelTable = 63; // 大决战关卡配置
-  repeated EliminateRaidStageRewardExcelTable EliminateRaidStageRewardExcelTable = 21; // 大决战关卡奖励配置
-  repeated EliminateRaidStageSeasonRewardExcelTable EliminateRaidStageSeasonRewardExcelTable = 1; // 大决战总分奖励配置
+  repeated EliminateRaidSeasonManageExcel EliminateRaidSeasonManageExcel = 52; // 大决战赛季配置
+  repeated EliminateRaidRankingRewardExcel EliminateRaidRankingRewardExcel = 61; // 大决站赛季结算奖励配置
+  repeated EliminateRaidStageExcel EliminateRaidStageExcel = 63; // 大决战关卡配置
+  repeated EliminateRaidStageRewardExcel EliminateRaidStageRewardExcel = 21; // 大决战关卡奖励配置
+  repeated EliminateRaidStageSeasonRewardExcel EliminateRaidStageSeasonRewardExcel = 1; // 大决战总分奖励配置
   repeated GachaElementRecursiveExcel GachaElementRecursiveExcel = 22; // 随机组配置
   repeated GachaElementExcel GachaElementExcel = 31; // 随机组池配置
   repeated GoodsExcel GoodsExcel = 45; // 商品配置
   repeated TimeAttackDungeonGeasExcel TimeAttackDungeonGeasExcel = 54; // 综合战术考试关卡配置
   repeated TimeAttackDungeonRewardExcel TimeAttackDungeonRewardExcel = 2; // 综合战术考试奖励配置
   repeated ShopRefreshExcel ShopRefreshExcel = 20; // 可刷新商品配置
-  repeated ArenaSeasonExcelTable ArenaSeasonExcelTable = 37; // 竞技场赛季配置
+  repeated ArenaSeasonExcel ArenaSeasonExcel = 37; // 竞技场赛季配置
   repeated FavorLevelExcel FavorLevelExcel = 42; // 好感系统等级经验配置
   repeated EventContentMissionExcelTable EventContentMissionExcelTable =66; // 活动关卡总表
   repeated EventContentStageExcelTable EventContentStageExcelTable = 67; // 活动关卡详情配置
@@ -81,7 +81,7 @@ message Excel {
 
 // 68
 
-message CafeInfoExcelTableInfo {
+message CafeInfoExcel {
   int64 CafeId = 1;
   bool IsDefault = 2;
   string OpenConditionCafeId = 4;
@@ -131,7 +131,7 @@ message CharacterExcelTable {
   int64 CombineRecipeId = 4;
 }
 
-message DefaultFurnitureExcelTable {
+message DefaultFurnitureExcel {
   int64 Id = 5;
   float PositionX = 4;
   float PositionY = 1;
@@ -257,7 +257,7 @@ message EmblemExcel {
   int64 CheckPassCount = 5;
 }
 
-message AcademyFavorScheduleExcelTable {
+message AcademyFavorScheduleExcel {
   int64 Id = 6;
   int64 CharacterId = 5;
   int64 ScheduleGroupId = 9;
@@ -271,7 +271,7 @@ message AcademyFavorScheduleExcelTable {
   repeated int64 RewardAmount = 2;
 }
 
-message AcademyMessangerExcelTable {
+message AcademyMessangerExcel {
   int64 MessageGroupId = 3;
   int64 Id = 9;
   int64 CharacterId = 4;
@@ -355,7 +355,7 @@ message ScenarioModeRewardExcel {
   bool IsDisplayed = 6;
 }
 
-message CharacterWeaponExcelTable {
+message CharacterWeaponExcel {
   int64 Id = 13;
   string ImagePath = 7;
   int64 SetRecipe = 2;
@@ -396,7 +396,7 @@ message CharacterSkillListExcelTable {
   repeated string HiddenPassiveSkillGroupId = 13;
 }
 
-message SkillExcelTable {
+message SkillExcel {
   int64 Id = 1;
   int64 LocalizeSkillId = 7;
   string GroupId = 3;
@@ -428,7 +428,7 @@ message SkillExcelTable {
   string SkillCardLabelPath = 18;
 }
 
-message RecipeIngredientExcelTable {
+message RecipeIngredientExcel {
   int64 Id = 9;
   string RecipeType = 8;
   repeated string CostParcelType = 5;
@@ -440,7 +440,7 @@ message RecipeIngredientExcelTable {
   int64 CostTimeInSecond = 2;
 }
 
-message CampaignStageExcelTable {
+message CampaignStageExcel {
   int64 Id = 30;
   bool Deprecated = 4;
   string Name = 6;
@@ -471,7 +471,7 @@ message CampaignStageExcelTable {
   string EchelonExtensionType = 20;
 }
 
-message CampaignUnitExcelTable {
+message CampaignUnitExcel {
   int64 Id = 4;
   int64 Key = 11;
   string Name = 7;
@@ -488,7 +488,7 @@ message CampaignUnitExcelTable {
   bool IsTacticSkip = 13;
 }
 
-message WeekDungeonExcelTable {
+message WeekDungeonExcel {
   int64 StageId = 19;
   string WeekDungeonType = 2;
   int64 Difficulty = 9;
@@ -585,7 +585,7 @@ message EquipmentLevelExcel {
   repeated int64 TotalExp = 1;
 }
 
-message FurnitureExcelTable {
+message FurnitureExcel {
   int64 Id = 20;
   string ProductionStep = 38;
   string Rarity = 2;
@@ -629,7 +629,7 @@ message FurnitureExcelTable {
   repeated string CafeCharacterStateOnly = 11;
 }
 
-message CafeRankExcelTable {
+message CafeRankExcel {
   int64 CafeId = 10;
   int32 Rank = 7;
   int64 RecipeId = 4;
@@ -642,7 +642,7 @@ message CafeRankExcelTable {
   repeated int64 CafeVisitWeightTagBonus = 2;
 }
 
-message CafeProductionExcelTable {
+message CafeProductionExcel {
   int64 CafeId = 6;
   int32 Rank = 5;
   string CafeProductionParcelType = 3;
@@ -663,7 +663,7 @@ message IdCardBackgroundExcel {
   string Icon = 4;
 }
 
-message WeekDungeonRewardExcelTable{
+message WeekDungeonRewardExcel{
   int64 GroupId = 4;
   string DungeonType = 1;
   string RewardParcelType = 7;
@@ -712,12 +712,12 @@ message CharacterPotentialStatExcel {
   int64 StatBonusRate = 3;
 }
 
-message AcademyTicketExcelTable {
+message AcademyTicketExcel {
   int64 LocationRankSum = 2;
   int64 ScheduleTicktetMax = 1;
 }
 
-message AcademyLocationExcelTable {
+message AcademyLocationExcel {
   int64 Id = 7;
   int64 LocalizeEtcId = 5;
   repeated string OpenCondition = 4;
@@ -727,7 +727,7 @@ message AcademyLocationExcelTable {
   int64 OpenTeacherRank = 2;
 }
 
-message AcademyZoneExcelTable {
+message AcademyZoneExcel {
   int64 Id = 3;
   int64 LocationId = 2;
   int64 LocationRankForUnlock = 1;
@@ -737,13 +737,13 @@ message AcademyZoneExcelTable {
   repeated string Tags = 6;
 }
 
-message AcademyLocationRankExcelTable {
+message AcademyLocationRankExcel {
   int64 Rank = 1;
   int64 RankExp = 3;
   int64 TotalExp = 2;
 }
 
-message AcademyRewardExcelTable {
+message AcademyRewardExcel {
   string Location = 6;
   int64 ScheduleGroupId = 20;
   int64 OrderInGroup = 4;
@@ -777,7 +777,7 @@ message SchoolDungeonRewardExcel {
   bool IsDisplayed = 2;
 }
 
-message RaidSeasonManageExcelTable {
+message RaidSeasonManageExcel {
   int64 SeasonId = 8;
   int64 SeasonDisplay = 3;
   string SeasonStartData = 1;
@@ -790,7 +790,7 @@ message RaidSeasonManageExcelTable {
   repeated int64 SeasonRewardId = 7;
 }
 
-message RaidRankingRewardExcelTable {
+message RaidRankingRewardExcel {
   int64 RankingRewardGroupId = 3;
   int64 Id = 11;
   int64 RankStart = 5;
@@ -804,7 +804,7 @@ message RaidRankingRewardExcelTable {
   repeated int64 RewardParcelAmount = 4;
 }
 
-message RaidStageExcelTable {
+message RaidStageExcel {
   int64 Id = 21;
   bool UseBossIndex = 19;
   bool UseBossAIPhaseSync = 32;
@@ -924,7 +924,7 @@ message CharacterStatExcelTable {
   int64 RegenCost = 15;
 }
 
-message RaidStageRewardExcelTable {
+message RaidStageRewardExcel {
   int64 GroupId = 3;
   bool IsClearStageRewardHideInfo = 2;
   int64 ClearStageRewardProb = 4;
@@ -965,7 +965,7 @@ message MissionExcel {
   repeated int64 MissionRewardAmount = 12;
 }
 
-message RaidStageSeasonRewardExcelTable {
+message RaidStageSeasonRewardExcel {
   int64 SeasonRewardId = 2;
   repeated string SeasonRewardParcelType = 5;
   repeated int64 SeasonRewardParcelUniqueId = 4;
@@ -1035,7 +1035,7 @@ message TimeAttackDungeonSeasonManageExcel {
   int64 RoomLifeTimeInSeconds = 2;
 }
 
-message EliminateRaidSeasonManageExcelTable {
+message EliminateRaidSeasonManageExcel {
   int64 SeasonId = 8;
   int64 SeasonDisplay = 6;
   string SeasonStartData = 12;
@@ -1059,7 +1059,7 @@ message EliminateRaidSeasonManageExcelTable {
   int64 LimitedRewardIdTorment = 7;
 }
 
-message EliminateRaidRankingRewardExcelTable {
+message EliminateRaidRankingRewardExcel {
   int64 RankingRewardGroupId = 6;
   int64 Id = 9;
   int64 RankStart = 3;
@@ -1073,7 +1073,7 @@ message EliminateRaidRankingRewardExcelTable {
   repeated int64 RewardParcelAmount = 10;
 }
 
-message EliminateRaidStageExcelTable {
+message EliminateRaidStageExcel {
   int64 Id = 33;
   bool UseBossIndex = 10;
   bool UseBossAiphaseSync = 30;
@@ -1115,7 +1115,7 @@ message EliminateRaidStageExcelTable {
   string EchelonExtensionType = 19;
 }
 
-message EliminateRaidStageRewardExcelTable {
+message EliminateRaidStageRewardExcel {
   int64 GroupId = 1;
   bool IsClearStageRewardHideInfo = 3;
   int64 ClearStageRewardProb = 7;
@@ -1125,7 +1125,7 @@ message EliminateRaidStageRewardExcelTable {
   int64 ClearStageRewardAmount = 6;
 }
 
-message EliminateRaidStageSeasonRewardExcelTable {
+message EliminateRaidStageSeasonRewardExcel {
   int64 SeasonRewardId = 1;
   repeated string SeasonRewardParcelType = 5;
   repeated int64 SeasonRewardParcelUniqueId = 3;
@@ -1222,7 +1222,7 @@ message ShopRefreshExcel {
   string DisplayTag = 3;
 }
 
-message ArenaSeasonExcelTable {
+message ArenaSeasonExcel {
   int64 UniqueId = 3;
   string SeasonStartDate = 5;
   string SeasonEndDate = 1;

@@ -79,7 +79,7 @@ func GetCurRaidTeamList(s *enter.Session) map[int32]*sro.RaidTeamInfo {
 // NewCurRaidBattleInfo 创建新的总力战
 func NewCurRaidBattleInfo(s *enter.Session, raidUniqueId int64, isPractice bool) {
 	bin := GetRaidBin(s)
-	conf := gdconf.GetRaidStageExcelTable(raidUniqueId)
+	conf := gdconf.GetRaidStageExcel(raidUniqueId)
 	if bin == nil || conf == nil {
 		logger.Debug("玩家实例不存在或总力战关卡不存在RaidUniqueId:%v", raidUniqueId)
 		return
@@ -119,7 +119,7 @@ func RaidCheck(s *enter.Session) {
 		return
 	}
 	// 检查总分奖励领取
-	seasonConf := gdconf.GetRaidSeasonManageExcelTable(bin.SeasonId)
+	seasonConf := gdconf.GetRaidSeasonManageExcel(bin.SeasonId)
 	if seasonConf == nil ||
 		len(seasonConf.StackedSeasonRewardGauge) != len(seasonConf.SeasonRewardId) {
 		return
@@ -151,7 +151,7 @@ func GetClearDifficulty(s *enter.Session) []proto.Difficulty {
 func GetPlayableHighestDifficulty(s *enter.Session) map[string]proto.Difficulty {
 	list := make(map[string]proto.Difficulty, 0)
 	if cur := gdconf.GetCurRaidSchedule(); cur != nil {
-		conf := gdconf.GetRaidSeasonManageExcelTable(cur.SeasonId)
+		conf := gdconf.GetRaidSeasonManageExcel(cur.SeasonId)
 		for _, name := range conf.OpenRaidBossGroup {
 			list[name] = proto.Difficulty(alg.MinInt32(GetCurRaidInfo(s).GetDifficulty()+1, int32(proto.Difficulty_Lunatic)))
 		}
@@ -451,7 +451,7 @@ func CheckRaidCharacter(s *enter.Session, echelonId int64,
 	}
 	echelonType := proto.EchelonType_Raid
 	if curBattle.ContentType == int32(proto.ContentType_EliminateRaid) {
-		conf := gdconf.GetEliminateRaidStageExcelTable(curBattle.RaidUniqueId)
+		conf := gdconf.GetEliminateRaidStageExcel(curBattle.RaidUniqueId)
 		echelonType = gdconf.GetEliminateRaidEchelonType(curBattle.SeasonId, conf.GetRaidBossGroup())
 	}
 	if echelonType == proto.EchelonType_None {
@@ -526,7 +526,7 @@ func RaidClose(s *enter.Session) []*ParcelResult {
 	if curBattle == nil {
 		return nil
 	}
-	conf := gdconf.GetRaidStageExcelTable(curBattle.RaidUniqueId)
+	conf := gdconf.GetRaidStageExcel(curBattle.RaidUniqueId)
 	if conf == nil {
 		return nil
 	}
@@ -558,7 +558,7 @@ func RaidClose(s *enter.Session) []*ParcelResult {
 			rank.SetRaidScore(curBattle.SeasonId, s.AccountServerId, float64(rankingPoint))
 		}
 		// 计算奖励
-		for _, rewardConf := range gdconf.GetRaidStageRewardExcelTable(conf.RaidRewardGroupId) {
+		for _, rewardConf := range gdconf.GetRaidStageRewardExcel(conf.RaidRewardGroupId) {
 			list = append(list, &ParcelResult{
 				ParcelType: proto.ParcelType_None.Value(rewardConf.ClearStageRewardParcelType),
 				ParcelId:   rewardConf.ClearStageRewardParcelUniqueId,
