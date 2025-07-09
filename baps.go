@@ -100,6 +100,7 @@ func NewBaPs() {
 	
 	// 启动服务器
 	go func() {
+		logger.Info("SupportedClientVersions:%s", pkg.ClientVersion)
 		logger.Info("ServerVersion:%s", pkg.ServerVersion)
 		logger.Info("BaPs启动成功!")
 		if err = Run(config.GetHttpNet(), server); err != nil {
