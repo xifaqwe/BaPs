@@ -9,7 +9,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
-	"github.com/gucooing/protocol/mx"
+	"github.com/gucooing/BaPs/protocol/mx"
 )
 
 type Config struct {
