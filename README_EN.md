@@ -194,14 +194,11 @@ You can view the following docs
 
 ---
 
-## ⌨️ GM Tool
-Download GM [BlueArchiveGM](https://github.com/AzureXuanVerse/BlueArchiveGM/releases/download/v1.0.6/BlueArchiveGM.exe)
+## ⌨️ GM Tool - [BlueArchiveGM](https://github.com/AzureXuanVerse/BlueArchiveGM)
+Download from [GitHub Actions](https://github.com/AzureXuanVerse/BlueArchiveGM/actions) 
 
 Default connection address: `http://127.0.0.1:5000` 
-Default key: `123456` (can be changed in config.json)
-
-**GM updates may not be timely, if you need to use locally, please use the local version**
-**The online version of GM supports local use too~**
+Default key: Random secure hash (can be changed in config.json)
 
 ---
 ## 🤝 Contribute

@@ -198,9 +198,11 @@ https://yostar-serverinfo.bluearchiveyostar.com → http://127.0.0.1:5000
 
 ---
 
-## ⌨️ GM工具
+## ⌨️ GM工具 - [BlueArchiveGM](https://github.com/AzureXuanVerse/BlueArchiveGM)
+从 [GitHub Actions](https://github.com/AzureXuanVerse/BlueArchiveGM/actions) 下载
 
-1. 下载GM [BlueArchiveGM](https://github.com/AzureXuanVerse/BlueArchiveGM/releases/download/v1.0.6/BlueArchiveGM.exe)
+默认连接网址: `http://127.0.0.1:5000` 
+默认认证密钥： 随机密码 (在config.json改)
 
 ---
 ## 🤝 参与贡献
