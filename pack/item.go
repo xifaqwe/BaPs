@@ -327,6 +327,8 @@ func CharacterWeaponExpGrowth(s *enter.Session, request, response mx.Message) {
 		waeponInfo.Level = 40
 	case 3:
 		waeponInfo.Level = 50
+	case 4:
+		waeponInfo.Level = 60
 
 	}
 

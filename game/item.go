@@ -362,8 +362,8 @@ func AddWeapon(s *enter.Session, characterId int64) {
 		Level:             1,
 		Exp:               0,
 	}
-	info.Level = 50 // TODO 没有表
-	info.StarGrade = 3
+	info.Level = 60 // TODO 没有表
+	info.StarGrade = 4
 	bin.WeaponInfoList[characterId] = info
 }
 
