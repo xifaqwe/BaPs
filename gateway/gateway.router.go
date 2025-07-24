@@ -230,6 +230,8 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_MultiFloorRaid_EnterBattle:   pack.MultiFloorRaidEnterBattle,   // 制约解除决战开始战斗
 	proto.Protocol_MultiFloorRaid_EndBattle:     pack.MultiFloorRaidEndBattle,     // 制约解除决战结束战斗
 	proto.Protocol_MultiFloorRaid_ReceiveReward: pack.MultiFloorRaidReceiveReward, // 制约解除决战领取奖励
+	proto.Protocol_BattlePass_GetInfo:           pack.BattlePassGetInfo,
+	proto.Protocol_BattlePass_MissionList:       pack.BattlePassMissionList,
 }
 
 func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *proto.BasePacket) {
