@@ -2,6 +2,7 @@ package enter
 
 import (
 	"errors"
+
 	"github.com/bytedance/sonic"
 	"github.com/gucooing/BaPs/db"
 	dbstruct "github.com/gucooing/BaPs/db/struct"

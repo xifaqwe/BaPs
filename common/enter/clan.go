@@ -2,11 +2,12 @@ package enter
 
 import (
 	"errors"
+	"time"
+
 	"github.com/bytedance/sonic"
 	"github.com/gucooing/BaPs/common/check"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"github.com/gucooing/BaPs/protocol/mx"
-	"time"
 
 	"github.com/gucooing/BaPs/db"
 	"github.com/gucooing/BaPs/pkg/alg"

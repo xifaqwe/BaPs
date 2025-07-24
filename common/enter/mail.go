@@ -2,6 +2,7 @@ package enter
 
 import (
 	"encoding/json"
+
 	"github.com/gucooing/BaPs/common/check"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 

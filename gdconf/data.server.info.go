@@ -3,11 +3,12 @@ package gdconf
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gucooing/BaPs/config"
-	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/gucooing/BaPs/config"
+	"github.com/gucooing/BaPs/pkg/logger"
 )
 
 type ServerInfo struct {

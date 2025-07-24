@@ -3,8 +3,9 @@ package gdconf
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
+
+	"github.com/gucooing/BaPs/pkg/logger"
 )
 
 type Attendance struct {

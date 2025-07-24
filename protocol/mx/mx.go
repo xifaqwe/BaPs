@@ -1,6 +1,5 @@
 package mx
 
-
 import (
 	"crypto/rand"
 	"encoding/hex"

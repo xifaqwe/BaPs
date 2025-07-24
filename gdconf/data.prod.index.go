@@ -2,10 +2,11 @@ package gdconf
 
 import (
 	"encoding/json"
-	"github.com/gucooing/BaPs/pkg/logger"
-	"os"
-	"net/http"
 	"io"
+	"net/http"
+	"os"
+
+	"github.com/gucooing/BaPs/pkg/logger"
 )
 
 type ProdIndex struct {

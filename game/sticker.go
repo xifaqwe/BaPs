@@ -2,6 +2,7 @@ package game
 
 import (
 	"errors"
+
 	"github.com/gucooing/BaPs/common/enter"
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/protocol/proto"

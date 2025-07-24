@@ -1,6 +1,9 @@
 package pack
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
@@ -8,8 +11,6 @@ import (
 	"github.com/gucooing/BaPs/protocol/cmd"
 	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
-	"strconv"
-	"time"
 )
 
 func AccountAuth(s *enter.Session, request, response mx.Message) {

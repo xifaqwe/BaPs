@@ -3,12 +3,13 @@ package mx
 import (
 	"bytes"
 	"compress/gzip"
-	"errors"
-	"github.com/go-resty/resty/v2"
-	"io"
-	"math/rand"
 	"crypto/aes"
 	"crypto/cipher"
+	"errors"
+	"io"
+	"math/rand"
+
+	"github.com/go-resty/resty/v2"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/pkg/alg"
@@ -41,7 +42,7 @@ func DeMx(bin []byte) ([]byte, error) {
 	r.Read(make([]byte, 4)) // Type conversion
 	keyLen, _ := r.ReadByte()
 	ivLen, _ := r.ReadByte()
-	
+
 	useAES := keyLen != 0 && ivLen != 0
 	aesKey, aesIv := []byte{}, []byte{}
 	if useAES {
@@ -57,11 +58,11 @@ func DeMx(bin []byte) ([]byte, error) {
 	} else {
 		r.Read(make([]byte, 4)) // payload len
 	}
-	
+
 	headerSize := 14 + len(aesKey) + len(aesIv)
-	
+
 	payload := bin[headerSize:]
-	
+
 	alg.Xor(payload, []byte{0xD9})
 	z, err := gzip.NewReader(bytes.NewReader(payload))
 	if err != nil {

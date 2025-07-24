@@ -4,8 +4,9 @@ package config
 
 import (
 	"fmt"
-	"github.com/gucooing/BaPs/pkg/alg"
 	"net"
+
+	"github.com/gucooing/BaPs/pkg/alg"
 )
 
 func (c *Config) check() {

@@ -1,6 +1,9 @@
 package gateway
 
 import (
+	"sync"
+	"sync/atomic"
+
 	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/common/check"
@@ -13,8 +16,6 @@ import (
 	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
 	pb "google.golang.org/protobuf/proto"
-	"sync"
-	"sync/atomic"
 )
 
 var loginNum int64              // 登录玩家数量

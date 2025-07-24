@@ -3,12 +3,13 @@ package mail
 import (
 	"bytes"
 	"errors"
+	ht "html/template"
+	tt "text/template"
+
 	"github.com/gucooing/BaPs/config"
 	"github.com/gucooing/BaPs/gdconf"
 	"github.com/gucooing/BaPs/pkg/logger"
 	"github.com/wneessen/go-mail"
-	ht "html/template"
-	tt "text/template"
 )
 
 var mc *Mail

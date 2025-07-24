@@ -1,12 +1,13 @@
 package db
 
 import (
+	"log"
+
 	"github.com/gucooing/BaPs/config"
 	dbgorm "github.com/gucooing/BaPs/db/gorm"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"github.com/gucooing/BaPs/pkg/logger"
 	_ "github.com/ncruces/go-sqlite3/embed"
-	"log"
 )
 
 // DBGame 接口

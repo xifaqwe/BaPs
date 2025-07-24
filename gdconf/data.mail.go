@@ -2,10 +2,11 @@ package gdconf
 
 import (
 	"encoding/json"
-	"github.com/gucooing/BaPs/pkg/logger"
 	ht "html/template"
 	"os"
 	tt "text/template"
+
+	"github.com/gucooing/BaPs/pkg/logger"
 )
 
 type MailInfo struct {

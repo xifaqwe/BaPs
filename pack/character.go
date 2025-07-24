@@ -1,8 +1,9 @@
 package pack
 
 import (
-	"github.com/gucooing/BaPs/protocol/mx"
 	"strings"
+
+	"github.com/gucooing/BaPs/protocol/mx"
 
 	"github.com/gucooing/BaPs/common/enter"
 	sro "github.com/gucooing/BaPs/common/server_only"
