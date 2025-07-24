@@ -12,3 +12,7 @@ func BattlePassGetInfo(s *enter.Session, request, response mx.Message) {
 func BattlePassMissionList(s *enter.Session, request, response mx.Message) {
 
 }
+
+func BattlePassCheck(s *enter.Session, request, response mx.Message) {
+
+}
