@@ -230,3 +230,7 @@ func ContentSweepMultiSweepPresetList(s *enter.Session, request, response mx.Mes
 
 	rsp.MultiSweepPresetDBs = make([]*proto.MultiSweepPresetDB, 0)
 }
+
+func ReceiveAccountLevelReward(s *enter.Session, request, response mx.Message) {
+
+}

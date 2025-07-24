@@ -233,6 +233,7 @@ var funcRouteMap = map[proto.Protocol]handlerFunc{
 	proto.Protocol_BattlePass_GetInfo:           pack.BattlePassGetInfo,
 	proto.Protocol_BattlePass_MissionList:       pack.BattlePassMissionList,
 	proto.Protocol_BattlePass_Check:             pack.BattlePassCheck,
+	proto.Protocol_Account_ReceiveAccountLevelReward: pack.ReceiveAccountLevelReward,
 }
 
 func (g *Gateway) registerMessage(c *gin.Context, request mx.Message, base *proto.BasePacket) {

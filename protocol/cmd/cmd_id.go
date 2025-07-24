@@ -389,4 +389,6 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_BattlePass_MissionList, func() any { return new(proto.BattlePassMissionListResponse) }, false)
 	c.regMsg(proto.Protocol_BattlePass_Check, func() any { return new(proto.BattlePassCheckRequest) }, true)
 	c.regMsg(proto.Protocol_BattlePass_Check, func() any { return new(proto.BattlePassCheckResponse) }, false)
+	c.regMsg(proto.Protocol_Account_ReceiveAccountLevelReward, func() any { return new(proto.ReceiveAccountLevelRewardRequest) }, true)
+	c.regMsg(proto.Protocol_Account_ReceiveAccountLevelReward, func() any { return new(proto.ReceiveAccountLevelRewardResponse) }, false)
 }
