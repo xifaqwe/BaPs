@@ -1165,8 +1165,8 @@ message GoodsExcel {
   repeated int64 ConsumeParcelId = 3;
   repeated int64 ConsumeParcelAmount = 1;
   repeated string ConsumeCondition = 15;
-  string ConsumeGachaTicketType = 18;
-  int64 ConsumeGachaTicketTypeAmount = 11;
+  repeated string ConsumeGachaTicketType = 18;
+  repeated int64 ConsumeGachaTicketTypeAmount = 11;
   int64 ProductIdAos = 9;
   int64 ProductIdiOs = 2;
   repeated int64 ConsumeExtraStep = 12;
