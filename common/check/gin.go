@@ -1,13 +1,14 @@
 package check
 
 import (
-	"github.com/gucooing/BaPs/config"
-	"github.com/gucooing/BaPs/pkg/alg"
 	"net"
 	"net/http"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/gucooing/BaPs/config"
+	"github.com/gucooing/BaPs/pkg/alg"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/pkg/logger"

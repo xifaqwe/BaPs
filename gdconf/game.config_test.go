@@ -1,10 +1,11 @@
 package gdconf
 
 import (
-	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/gucooing/BaPs/pkg/logger"
 )
 
 var dataPath = "./data"

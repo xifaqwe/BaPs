@@ -2,14 +2,15 @@ package command
 
 import (
 	"fmt"
+	"runtime"
+	"sync/atomic"
+
 	"github.com/bytedance/sonic"
 	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/pkg"
 	"github.com/gucooing/cdq"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
-	"runtime"
-	"sync/atomic"
 )
 
 const (
@@ -17,10 +18,10 @@ const (
 )
 
 type Ping struct {
-	PlayerNum     int64   `json:"playerNum"`     // 在线玩家数量
-	Tps           int64   `json:"tps"`           // 上一分钟请求量
-	Rt            string  `json:"rt"`            // 上一分钟每一个请求平均处理时间
-	ClientVersion string `json:"clientVersion"`
+	PlayerNum     int64   `json:"playerNum"` // 在线玩家数量
+	Tps           int64   `json:"tps"`       // 上一分钟请求量
+	Rt            string  `json:"rt"`        // 上一分钟每一个请求平均处理时间
+	ClientVersion string  `json:"clientVersion"`
 	ServerVersion string  `json:"serverVersion"` // 服务端版本
 	ApiVersion    string  `json:"apiVersion"`    // api版本
 	CpuOc         float64 `json:"cpuOc"`         // cpu占用

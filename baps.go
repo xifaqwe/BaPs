@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/gin-contrib/pprof"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +14,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/gin-contrib/pprof"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/command"
@@ -89,15 +90,15 @@ func NewBaPs() {
 	handbook.NewHandbook()
 	// 初始化排名数据
 	rankInfo := rank.NewRank()
-	
+
 	logger.Info("--------------------许可申明--------------------")
 	logger.Warn("本分支是一个在“保留所有权利”（All Rights Reserved）项目基础上所进行的分支项目。")
 	logger.Warn("原始代码仍受其原始许可限制的约束。")
 	logger.Warn("但本分支所作出的所有修改和新增内容，均以 GNU Affero General Public License v3.0（AGPL-3.0）开源协议发布。")
-	logger.Warn("本项目的使用需遵守原始仓库的许可条款以及 GitHub 服务条款 §C.5，其中允许在 GitHub 平台上进行公共分支和修改。")
+	logger.Warn("本项目的使用需遵守原始仓库的许可条款以及 GitHub 服务条款 §D.5，其中允许在 GitHub 平台上进行公共分支和修改。")
 	logger.Warn("原项目作者禁止传播源代码，编译文件，和任意信息。虽然部分条款没有法律效应，但是为了您的合法权力，不得将本项目商用")
 	logger.Info("---------------------------------------------")
-	
+
 	// 启动服务器
 	go func() {
 		logger.Info("SupportedClientVersions:%s", pkg.ClientVersion)

@@ -383,4 +383,12 @@ func (c *CmdProtoMap) registerAllMessage() {
 	c.regMsg(proto.Protocol_Sticker_UseSticker, func() any { return new(proto.StickerUseStickerResponse) }, false)
 	c.regMsg(proto.Protocol_EventContent_CollectionList, func() any { return new(proto.EventContentCollectionListRequest) }, true)
 	c.regMsg(proto.Protocol_EventContent_CollectionList, func() any { return new(proto.EventContentCollectionListResponse) }, false)
+	c.regMsg(proto.Protocol_BattlePass_GetInfo, func() any { return new(proto.BattlePassGetInfoRequest) }, true)
+	c.regMsg(proto.Protocol_BattlePass_GetInfo, func() any { return new(proto.BattlePassGetInfoResponse) }, false)
+	c.regMsg(proto.Protocol_BattlePass_MissionList, func() any { return new(proto.BattlePassMissionListRequest) }, true)
+	c.regMsg(proto.Protocol_BattlePass_MissionList, func() any { return new(proto.BattlePassMissionListResponse) }, false)
+	c.regMsg(proto.Protocol_BattlePass_Check, func() any { return new(proto.BattlePassCheckRequest) }, true)
+	c.regMsg(proto.Protocol_BattlePass_Check, func() any { return new(proto.BattlePassCheckResponse) }, false)
+	c.regMsg(proto.Protocol_Account_ReceiveAccountLevelReward, func() any { return new(proto.ReceiveAccountLevelRewardRequest) }, true)
+	c.regMsg(proto.Protocol_Account_ReceiveAccountLevelReward, func() any { return new(proto.ReceiveAccountLevelRewardResponse) }, false)
 }

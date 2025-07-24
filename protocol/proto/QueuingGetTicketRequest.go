@@ -17,6 +17,7 @@ type QueuingGetTicketRequest struct {
 	PassCheckYostar bool
 	WaitingTicket   string
 	ClientVersion   string
+	OSType          string
 }
 
 func (x *QueuingGetTicketRequest) String() string {

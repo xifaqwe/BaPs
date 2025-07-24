@@ -2,9 +2,10 @@ package command
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gucooing/BaPs/common/mail"
 	"github.com/gucooing/cdq"
-	"strings"
 )
 
 const (

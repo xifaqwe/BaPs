@@ -1,8 +1,9 @@
 package enter
 
 import (
-	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"time"
+
+	dbstruct "github.com/gucooing/BaPs/db/struct"
 
 	"github.com/gucooing/BaPs/pkg/alg"
 )

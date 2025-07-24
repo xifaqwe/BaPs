@@ -3,11 +3,12 @@ package gdconf
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gucooing/BaPs/config"
 	"os"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/gucooing/BaPs/config"
 
 	sro "github.com/gucooing/BaPs/common/server_only"
 	"github.com/gucooing/BaPs/pkg/logger"
@@ -16,12 +17,12 @@ import (
 var GC *GameConfig
 
 type GameConfig struct {
-	dataPath string
-	resPath  string
+	dataPath          string
+	resPath           string
 	managementDataUrl string
-	gppFunc  []func()
-	Excel    *sro.Excel
-	GPP      *GPP
+	gppFunc           []func()
+	Excel             *sro.Excel
+	GPP               *GPP
 }
 
 type GPP struct {

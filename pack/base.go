@@ -1,6 +1,8 @@
 package pack
 
 import (
+	"time"
+
 	"github.com/gucooing/BaPs/command"
 	"github.com/gucooing/BaPs/common/enter"
 	sro "github.com/gucooing/BaPs/common/server_only"
@@ -9,7 +11,6 @@ import (
 	"github.com/gucooing/BaPs/pkg/logger"
 	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
-	"time"
 )
 
 func EventContentPermanentList(s *enter.Session, request, response mx.Message) {

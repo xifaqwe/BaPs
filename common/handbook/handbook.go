@@ -2,10 +2,11 @@ package handbook
 
 import (
 	"fmt"
-	"github.com/gucooing/BaPs/gdconf"
-	"github.com/gucooing/BaPs/pkg/logger"
 	"os"
 	"path/filepath"
+
+	"github.com/gucooing/BaPs/gdconf"
+	"github.com/gucooing/BaPs/pkg/logger"
 )
 
 func NewHandbook() {

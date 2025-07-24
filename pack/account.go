@@ -1,6 +1,9 @@
 package pack
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/gucooing/BaPs/common/check"
 	"github.com/gucooing/BaPs/common/enter"
 	"github.com/gucooing/BaPs/game"
@@ -8,8 +11,6 @@ import (
 	"github.com/gucooing/BaPs/protocol/cmd"
 	"github.com/gucooing/BaPs/protocol/mx"
 	"github.com/gucooing/BaPs/protocol/proto"
-	"strconv"
-	"time"
 )
 
 func AccountAuth(s *enter.Session, request, response mx.Message) {
@@ -228,4 +229,8 @@ func ContentSweepMultiSweepPresetList(s *enter.Session, request, response mx.Mes
 	rsp := response.(*proto.ContentSweepMultiSweepPresetListResponse)
 
 	rsp.MultiSweepPresetDBs = make([]*proto.MultiSweepPresetDB, 0)
+}
+
+func ReceiveAccountLevelReward(s *enter.Session, request, response mx.Message) {
+
 }

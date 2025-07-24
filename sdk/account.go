@@ -3,11 +3,12 @@ package sdk
 import (
 	"errors"
 	"fmt"
+	"regexp"
+	"strconv"
+
 	"github.com/gucooing/BaPs/common/mail"
 	dbstruct "github.com/gucooing/BaPs/db/struct"
 	"github.com/gucooing/BaPs/gdconf"
-	"regexp"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gucooing/BaPs/common/code"

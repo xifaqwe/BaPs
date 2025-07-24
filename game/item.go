@@ -1,8 +1,9 @@
 package game
 
 import (
-	"github.com/gucooing/BaPs/protocol/mx"
 	"time"
+
+	"github.com/gucooing/BaPs/protocol/mx"
 
 	"github.com/gucooing/BaPs/common/enter"
 	sro "github.com/gucooing/BaPs/common/server_only"
@@ -361,8 +362,8 @@ func AddWeapon(s *enter.Session, characterId int64) {
 		Level:             1,
 		Exp:               0,
 	}
-	info.Level = 50 // TODO 没有表
-	info.StarGrade = 3
+	info.Level = 60 // TODO 没有表
+	info.StarGrade = 4
 	bin.WeaponInfoList[characterId] = info
 }
 
