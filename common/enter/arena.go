@@ -39,16 +39,19 @@ func (x *Session) GenArenaUserList(seasonId int64) {
 	besaR := r
 
 	ranks := make(map[int64]bool, 0)
-	if r <= 3 {
-		for i := int64(1); i < 5; i++ {
+	if r <= 5 {
+		for i := int64(1); i < 6; i++ {
 			if i == r {
 				continue
 			}
 			ranks[i] = true
+			if int64(len(ranks)) == 3 {
+				break
+			}
 		}
 	} else {
 		for i := 0; i < 3; i++ {
-			rr := rand.Int63n(besaR/5-1) + 1 + (besaR * 4 / 5)
+			rr := rand.Int63n(besaR-int64(float64(besaR)*0.7)) + int64(float64(besaR)*0.7)
 			if ranks[rr] {
 				i--
 				continue
