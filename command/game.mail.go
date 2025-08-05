@@ -1,81 +1,81 @@
-package command
+packagepackage命令
 
-import (
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"time"
+import导入(
+"数据库/sql""database/sql"
+"编码/json""encoding/json"
+"fmt""fmt"
+"时间""time"
 
-	dbstruct "github.com/gucooing/BaPs/db/struct"
+dbstruct"github.com/gucoing/BAPS/db/struct""github.com/gucooing/BaPs/db/struct"
 
-	"github.com/gucooing/BaPs/common/enter"
-	sro "github.com/gucooing/BaPs/common/server_only"
-	"github.com/gucooing/BaPs/game"
-	"github.com/gucooing/cdq"
+"github.com/gucoing/BAPS/common/enter""github.com/gucooing/BaPs/common/enter"
+SRO"github.com/gucoing/BAPS/common/server_only""github.com/gucooing/BaPs/common/server_only"
+"github.com/gucoing/BAPS/game""github.com/gucooing/BaPs/game"
+"github.com/gucoing/cdq""github.com/gucooing/cdq"
 )
 
-const (
-	gmDelAllMailErr       = -1
-	gmDelMailErr          = -2
-	gmGenParcelInfoErr    = -3
-	gmSendMailErr         = -4
-	gmPlayerUnknown       = -5
-	gmDelAllPlayerMailErr = -6
-	gmDelPlayerMailErr    = -7
-	gmSendPlayerMailErr   = -8
+const常数(
+gmDelAllMailErr=-11
+gmDelMailErr=-22
+gmGenParcelInfoErr=-33
+gmSendMailErr=-44
+gmPlayerUnknown=-55
+gmDelAllPlayerMailErr=-66
+gmDelPlayerMailErr=-77
+gmSendPlayerMailErr=-88
 )
 
-func (c *Command) ApplicationCommandGameMail() {
-	mail := &cdq.Command{
-		Name:        "gameMail",
-		AliasList:   []string{"gm"},
-		Description: "发送一封游戏邮件,对象可以是全局或单个玩家",
-		Permissions: cdq.Admin,
-		Options: []*cdq.CommandOption{
+funcfunc(c*命令)ApplicationCommandGameMail(){
+邮件：=&cdq.Command{.Command{
+名称："gameMail"，"gameMail",
+别名列表：[]线}，string{"gm"}，string{
+说明：“”发送一封游戏邮件，对象可以是全局或单个玩家"发送一封游戏邮件,对象可以是全局或单个玩家"发送一封游戏邮件,对象可以是全局或单个玩家",
+权限：cdq.Admin，.Admin,
+选项：[]*cdq.CommandOption{.CommandOption{
 			{
-				Name:        "recipient",
-				Description: "玩家游戏id或all全局对象",
-				Required:    true,
-				Alias:       "r",
+姓名："收件人"，"recipient",
+说明："玩家游戏id或all全局对象"玩家游戏id或all全局对象"玩家游戏id或all全局对象"玩家游戏id或all全局对象",
+必填项：true，true,
+别名："r"，"r",
 			},
 			{
 				Name:        "sender",
-				Description: "发件人",
-				Required:    false,
-				Default:     "gucooing",
-				Alias:       "s",
+说明：“”发件人"发件人"发件人",
+必填项：false，false,
+默认："goooing"，"gucooing",
+别名："s"，"s",
 			},
 			{
-				Name:        "comment",
-				Description: "邮件文本内容",
-				Required:    false,
-				Default:     "请查收邮件",
-				Alias:       "c",
+名称："comment"，"comment",
+说明：“”邮件文本内容"邮件文本内容"邮件文本内容",
+必填项：false，false,
+默认值：“”请查收邮件"请查收邮件"请查收邮件",
+别名："c"，"c",
 			},
 			{
-				Name:        "sendDate",
-				Description: "领取开始时间",
-				Required:    false,
-				Default:     "946656000",
-				Alias:       "sd",
+名称："sendDate"，"sendDate",
+说明：“”领取开始时间"领取开始时间"领取开始时间",
+必填项：false，false,
+默认值："946656000"，"946656000",
+别名："sd"，"sd",
 			},
 			{
 				Name:        "expireDate",
 				Description: "邮件有效截至时间",
-				Required:    false,
+必填项：false，
 				Default:     "4070880000",
 				Alias:       "ed",
 			},
 			{
 				Name:        "parcelInfoList",
 				Description: "附件 json格式",
-				Required:    false,
+必填项：false，
 				Alias:       "ps",
 			},
 			{
 				Name:        "del",
 				Description: "删除邮件 可传入邮件id或all",
-				Required:    false,
+必填项：false，
 				Alias:       "d",
 			},
 		},
@@ -87,7 +87,7 @@ func (c *Command) ApplicationCommandGameMail() {
 
 func (c *Command) gameMail(ctx *cdq.Context) {
 	switch ctx.GetFlags().String("recipient") {
-	case "all", "All": // 全局邮件操作
+	case "xiaa", "All": // 全局邮件操作
 		gmYostarMail(ctx)
 	default:
 		gmPlayerMail(ctx)
