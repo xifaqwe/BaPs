@@ -8,7 +8,12 @@ import (
 
 func GetNoRefreshShopProductList(s *enter.Session, categoryType proto.ShopCategoryType) []*proto.ShopProductDB {
 	list := make([]*proto.ShopProductDB, 0)
-	for _, product := range gdconf.GetShopExcelType(categoryType.String()) {
+	products := gdconf.GetShopExcelType(categoryType.String())
+	if products == nil {
+		return list
+	}
+
+	for _, product := range products {
 		if categoryType == proto.ShopCategoryType_SecretStone {
 			if GetCharacterInfo(s, product.Id) == nil {
 				continue
@@ -31,7 +36,12 @@ func GetNoRefreshShopProductList(s *enter.Session, categoryType proto.ShopCatego
 
 func GetRefreshShopProductList(categoryType proto.ShopCategoryType) []*proto.ShopProductDB {
 	list := make([]*proto.ShopProductDB, 0)
-	for _, product := range gdconf.GetShopRefreshExcelMap(categoryType.String()) {
+	products := gdconf.GetShopRefreshExcelMap(categoryType.String())
+	if products == nil {
+		return list
+	}
+
+	for _, product := range products {
 		list = append(list, &proto.ShopProductDB{
 			EventContentId:     0,
 			ShopExcelId:        product.Id,
