@@ -1,58 +1,22 @@
-package game
+package pack
 
 import (
-	"github.com/gucooing/BaPs/common/enter"
-	"github.com/gucooing/BaPs/gdconf"
-	"github.com/gucooing/BaPs/protocol/proto"
+	"github.com/gin-gonic/gin"
 )
 
-func GetNoRefreshShopProductList(s *enter.Session, categoryType proto.ShopCategoryType) []*proto.ShopProductDB {
-	list := make([]*proto.ShopProductDB, 0)
-	products := gdconf.GetShopExcelType(categoryType.String())
-	if products == nil {
-		return list
-	}
-
-	for _, product := range products {
-		if categoryType == proto.ShopCategoryType_SecretStone {
-			if GetCharacterInfo(s, product.Id) == nil {
-				continue
-			}
-		}
-		list = append(list, &proto.ShopProductDB{
-			EventContentId:     0,
-			ShopExcelId:        product.Id,
-			Category:           categoryType,
-			DisplayOrder:       product.DisplayOrder,
-			PurchaseCount:      0,
-			PurchaseCountLimit: product.PurchaseCountLimit,
-			Price:              0,
-			ProductType:        proto.ShopProductType_General,
-		})
-	}
-
-	return list
+func ShopList(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"code":    0,
+		"message": "success",
+		"data": gin.H{
+			"shop_list": []interface{}{},      
+			"category_list": []interface{}{}, 
+			"refresh_time": 0,                 
+		},
+	})
 }
 
-func GetRefreshShopProductList(categoryType proto.ShopCategoryType) []*proto.ShopProductDB {
-	list := make([]*proto.ShopProductDB, 0)
-	products := gdconf.GetShopRefreshExcelMap(categoryType.String())
-	if products == nil {
-		return list
-	}
-
-	for _, product := range products {
-		list = append(list, &proto.ShopProductDB{
-			EventContentId:     0,
-			ShopExcelId:        product.Id,
-			Category:           categoryType,
-			DisplayOrder:       product.DisplayOrder,
-			PurchaseCount:      0,
-			PurchaseCountLimit: 1, // product.PurchaseCountLimit,
-			Price:              0,
-			ProductType:        proto.ShopProductType_Refresh,
-		})
-	}
-
-	return list
+func RegisterShopRoutes(router *gin.Engine) {
+	router.GET("/shop/list", ShopList)
+	router.POST("/shop/list", ShopList)
 }
