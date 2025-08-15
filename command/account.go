@@ -12,12 +12,12 @@ import (
 
 var (
 	login      = "login"
-	ban        = "ban"
-	unban      = "unban"
+	qzsban        = "qzsban"
+	lopban      = "lopban"
 	getAccount = "getAccount"
-	setCode    = "setCode"
-	getCode    = "getCode"
-	delCode    = "delCode"
+	akecode    = "akecode"
+	ajxcode    = "ajxcode"
+	qcgCode    = "qcgCode"
 )
 
 const (
@@ -80,7 +80,7 @@ func (c *Command) account(ctx *cdq.Context) {
 			return
 		}
 		ctx.Return(cdq.ApiCodeOk, fmt.Sprintf("账户注册成功 Account:%s", account))
-	case ban: // 封禁
+	case qzsban: // 封禁
 		yul := sdk.GetYostarUserLoginByAccount(account)
 		if yul == nil {
 			ctx.Return(accountUnknown, fmt.Sprintf("账户不存在 Account:%s", account))
@@ -93,7 +93,7 @@ func (c *Command) account(ctx *cdq.Context) {
 			return
 		}
 		ctx.Return(cdq.ApiCodeOk, fmt.Sprintf("ban Account:%s up!", account))
-	case unban: // 解除封禁
+	case lopban: // 解除封禁
 		yul := sdk.GetYostarUserLoginByAccount(account)
 		if yul == nil {
 			ctx.Return(accountUnknown, fmt.Sprintf("账户不存在 Account:%s", account))
@@ -124,20 +124,20 @@ func (c *Command) account(ctx *cdq.Context) {
 			return
 		}
 		ctx.Return(cdq.ApiCodeOk, str)
-	case getCode: // 获取验证码
+	case ajxcode: // 获取验证码
 		if codeInfo := code.GetCodeInfo(account); codeInfo != nil {
 			ctx.Return(cdq.ApiCodeOk, fmt.Sprintf("Account:%s Code:%v", account, codeInfo.Code))
 		} else {
 			ctx.Return(accountCodeErr, fmt.Sprintf("Account:%s 验证码已过期或失效", account))
 		}
-	case setCode: // 设置验证码
+	case akecode: // 设置验证码
 		cd := ctx.GetFlags().Int32("code")
 		if err := code.SetCode(account, cd); err == nil {
 			ctx.Return(cdq.ApiCodeOk, fmt.Sprintf("Account:%s Code:%v 设置成功", account, cd))
 		} else {
 			ctx.Return(accountSetCodeErr, fmt.Sprintf("Account:%s Code:%v 设置Code失败原因:%s", account, cd, err.Error()))
 		}
-	case delCode: // 删除验证码
+	case qcgCode: // 删除验证码
 		code.DelCode(account)
 		ctx.Return(cdq.ApiCodeOk, fmt.Sprintf("Account:%s 删除Code成功", account))
 	default:
